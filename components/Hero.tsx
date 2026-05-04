@@ -41,7 +41,7 @@ export function Hero() {
               AtlaXia sustituye los umbrales estáticos del SCADA legado y las reglas por firma de
               Fortinet OT con redes neuronales de grafos que{" "}
               <em className="not-italic font-semibold">tokenizan</em> el funcionamiento normal de tus
-              sensores &mdash; y predicen y señalan la deriva en cuanto aparece.
+              sensores que predicen y señalan la deriva en cuanto aparece.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">

@@ -1,4 +1,4 @@
-# AtlaXia — Landing page
+# AtlaXia: Landing page
 
 Sitio público de marketing de **AtlaXia**, plataforma AI-native de detección de
 anomalías para infraestructura hidráulica ICS/SCADA. Construido sobre Next.js 15
@@ -6,7 +6,7 @@ anomalías para infraestructura hidráulica ICS/SCADA. Construido sobre Next.js 
 
 > AtlaXia sustituye los umbrales estáticos del SCADA legado y las reglas por
 > firma de Fortinet OT con redes neuronales de grafos que tokenizan lo normal
-> de tus sensores — y predicen y señalan la deriva en cuanto aparece.
+> de tus sensores: y predicen y señalan la deriva en cuanto aparece.
 
 ---
 
@@ -114,15 +114,15 @@ visita real desde "interesado" hasta "comprador".
 
 ## Fortalezas a preservar
 
-- **Arquitectura de información** — Hero → 3 diferenciadores → 3 deep dives → onboarding → CTA. Sin desperdicios.
-- **Lenguaje visual** — Marketing cream / producto oscuro. Open Runde + JetBrains Mono cargan peso.
-- **Visualizaciones reales** — Mini-charts vivos, bucle de anomalía, banda de predicción, comparativa token-vs-reglas. Demuestra en lugar de ilustrar.
-- **Accesibilidad base** — Skip-link, focus rings, contraste >=AA, aria-labels descriptivos, prefers-reduced-motion respetado.
-- **Sistema de tokens** heredado de `design.md` — camino directo a un paquete compartido con el dashboard.
+- **Arquitectura de información**: Hero → 3 diferenciadores → 3 deep dives → onboarding → CTA. Sin desperdicios.
+- **Lenguaje visual**: Marketing cream / producto oscuro. Open Runde + JetBrains Mono cargan peso.
+- **Visualizaciones reales**: Mini-charts vivos, bucle de anomalía, banda de predicción, comparativa token-vs-reglas. Demuestra en lugar de ilustrar.
+- **Accesibilidad base**: Skip-link, focus rings, contraste >=AA, aria-labels descriptivos, prefers-reduced-motion respetado.
+- **Sistema de tokens** heredado de `design.md`: camino directo a un paquete compartido con el dashboard.
 
 ## Gaps priorizados
 
-### P0 — Bloqueantes (legal / comercial)
+### P0: Bloqueantes (legal / comercial)
 
 | # | Gap | Acción |
 |---|-----|--------|
@@ -131,18 +131,18 @@ visita real desde "interesado" hasta "comprador".
 | **P0.3** | **No hay navegación móvil.** Por debajo de `md` el menú está `hidden`. Visitantes en móvil no pueden saltar entre secciones. | Sheet/hamburger menu estándar. |
 | **P0.4** | **Sin sección de cumplimiento / seguridad.** Compradores OT preguntan ISO 27001, IEC 62443, NIS2, on-prem, airgap, RBAC, audit logs, dónde residen los datos. | Bloque explícito con la postura de seguridad. |
 
-### P1 — Alto valor (lift de conversión)
+### P1: Alto valor (lift de conversión)
 
 | # | Gap | Acción |
 |---|-----|--------|
 | **P1.5** | **FAQ.** Anticipa las 5–7 objeciones de cada comprador OT. | ¿Funciona airgap? · ¿Cuánto tarda en entrenar? · ¿Y si no tenemos historian? · ¿Sensores mínimos? · ¿Piloto sin compromiso? · ¿Integración con SCADA? Schema.org FAQPage para SEO. |
 | **P1.6** | **Timeline time-to-value.** Hoy solo "1 visita" y "11m". Faltan los hitos del ciclo: Día 1 visita · Día 7 modelo entrenado · Día 14 primeras detecciones · Día 30 informe. | Timeline horizontal visual. |
 | **P1.7** | **Diagrama de arquitectura.** SVG anotado mostrando AtlaXia dentro de la red de planta: SCADA / historian → AtlaXia (on-prem) → dashboard, con protocolos etiquetados (OPC-UA, MQTT) y el límite "no hay datos saliendo de la planta". | Calma la ansiedad de infraestructura mejor que 200 palabras de copy. |
-| **P1.8** | **"Cómo trabajar con nosotros" — paso comercial concreto.** Hoy el viaje termina en el form. | Piloto 30 días sin compromiso · entregable de modelo · contrato de soporte. Quita la fricción "¿qué pasa después de enviar?". |
+| **P1.8** | **"Cómo trabajar con nosotros": paso comercial concreto.** Hoy el viaje termina en el form. | Piloto 30 días sin compromiso · entregable de modelo · contrato de soporte. Quita la fricción "¿qué pasa después de enviar?". |
 | **P1.9** | **Pausa/play en animaciones continuas.** 7 RAF loops simultáneos (Hero AnomalyLiveDemo + TokenVsRules ×2 + ForecastChart + 3 mini-charts). | Botón de pausa global en el hero. Accesibilidad + batería + descanso visual. |
 | **P1.10** | **Footer expandido.** Hoy logo + 4 chips. | Privacidad / Términos / LinkedIn / (eventualmente) Documentación + dirección legal. |
 
-### P2 — Pulido (valor medio)
+### P2: Pulido (valor medio)
 
 | # | Gap | Acción |
 |---|-----|--------|
@@ -158,14 +158,14 @@ visita real desde "interesado" hasta "comprador".
 
 | ID | Item | Acción |
 |----|------|--------|
-| **A** | **Métricas del hero — `2.148` sensores · `11m` anticipación.** Se leen como stats operativos en vivo. No lo son. | Etiquetar claramente ("objetivo en piloto" / "demostrado en pruebas") o quitar. Números engañosos son peor que ningún número en OT. |
+| **A** | **Métricas del hero: `2.148` sensores · `11m` anticipación.** Se leen como stats operativos en vivo. No lo son. | Etiquetar claramente ("objetivo en piloto" / "demostrado en pruebas") o quitar. Números engañosos son peor que ningún número en OT. |
 | **B** | **Inconsistencia en nombres de sensores.** `pump-3.flow_rate` (hero) · `tank-2.pressure` (forecast) · `FIT201_PV` (form mock). Lee como tres plantas. | Unificar en una planta demo coherente ("EDAR AcmeAguas Norte") con sensores relacionados. |
 | **C** | **Badge `DEMO` en el mock del form y en el live demo.** Refuerza "esto es una captura, no datos reales". |
-| **D** | **Card de diferenciador del medio — body.** "CoGNN y STGNN aprenden la variedad normal..." es jerga densa para compradores no-ingeniería. | Liderar con lenguaje de operario ("Aprende lo normal de tu planta"), cerrar con jerga ("GNN sobre grafos · CoGNN/STGNN"). |
-| **E** | **Acentos editoriales en cursiva — sobreusados.** 6+ secciones usan el dispositivo italic-teal-fragment. | Recortar a las 3 ocurrencias de mayor impacto (Hero, TokenVsRules, CTA). |
+| **D** | **Card de diferenciador del medio: body.** "CoGNN y STGNN aprenden la variedad normal..." es jerga densa para compradores no-ingeniería. | Liderar con lenguaje de operario ("Aprende lo normal de tu planta"), cerrar con jerga ("GNN sobre grafos · CoGNN/STGNN"). |
+| **E** | **Acentos editoriales en cursiva: sobreusados.** 6+ secciones usan el dispositivo italic-teal-fragment. | Recortar a las 3 ocurrencias de mayor impacto (Hero, TokenVsRules, CTA). |
 | **F** | **Ambigüedad de marca TrueData / AtlaXia.** El footer dice "TrueData", la nav dice "AtlaXia". | Elegir: "AtlaXia by TrueData" en todo, o unificar bajo una marca. |
-| **G** | **Promesa del CTA — "Te mostramos la deriva en una semana".** Fuerte si se cumple; arriesgada si no. | O comprometer, o suavizar a "Te mostramos lo que el modelo encuentra en tus datos". |
-| **H** | **Estado de éxito del form — sin camino de vuelta.** Tras "Hemos recibido tu solicitud" no hay forma de volver. | Enlace sutil "Enviar otra solicitud". |
+| **G** | **Promesa del CTA: "Te mostramos la deriva en una semana".** Fuerte si se cumple; arriesgada si no. | O comprometer, o suavizar a "Te mostramos lo que el modelo encuentra en tus datos". |
+| **H** | **Estado de éxito del form: sin camino de vuelta.** Tras "Hemos recibido tu solicitud" no hay forma de volver. | Enlace sutil "Enviar otra solicitud". |
 | **I** | **Auto-focus tras error de form.** Ahora la alerta aparece pero el foco se queda en el botón submit. | WCAG: mover el foco a la alerta o al primer campo inválido. |
 | **J** | **Densidad del rail izquierdo en el mock del form.** A md+, 5 bullets + info note compiten con el panel principal. | Recortar a los 3 más importantes. |
 
@@ -173,11 +173,11 @@ visita real desde "interesado" hasta "comprador".
 
 Si tuviera que elegir el próximo sprint de 5:
 
-1. **Cumplimiento de privacidad** (P0.1) — checkbox + `/privacidad` + `/terminos`. Bloqueante legal.
-2. **Mobile nav sheet** (P0.3) — los visitantes en móvil no pueden navegar.
-3. **Sección de cumplimiento/seguridad** (P0.4) — ISO 27001 / IEC 62443 / NIS2 / on-prem / airgap / RBAC explícitos. Bloqueante de procurement.
-4. **Sección de prueba social** (P0.2) — incluso aspiracional. La señal de confianza más grande que falta.
-5. **Sección FAQ** (P1.5) — anticipa cinco objeciones.
+1. **Cumplimiento de privacidad** (P0.1): checkbox + `/privacidad` + `/terminos`. Bloqueante legal.
+2. **Mobile nav sheet** (P0.3): los visitantes en móvil no pueden navegar.
+3. **Sección de cumplimiento/seguridad** (P0.4): ISO 27001 / IEC 62443 / NIS2 / on-prem / airgap / RBAC explícitos. Bloqueante de procurement.
+4. **Sección de prueba social** (P0.2): incluso aspiracional. La señal de confianza más grande que falta.
+5. **Sección FAQ** (P1.5): anticipa cinco objeciones.
 
 **Fase 2:** timeline · diagrama de arquitectura · pausa de animaciones · footer expandido.
 

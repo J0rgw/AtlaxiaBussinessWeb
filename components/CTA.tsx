@@ -21,7 +21,7 @@ export function CTA() {
           <p className="mt-6 text-[16px] text-cream-ink2 max-w-2xl mx-auto leading-relaxed">
             Envíanos 30 días de export OPC-UA o historian. Entrenamos un GNN específico para tu planta,
             lo replayamos contra tu ventana operativa, y te enseñamos cada deriva que ha encontrado el
-            modelo &mdash; incluida la que tu SCADA actual nunca marcó.
+            modelo, incluida la que tu SCADA actual nunca marcó.
           </p>
         </div>
 

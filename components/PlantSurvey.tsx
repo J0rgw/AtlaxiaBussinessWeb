@@ -36,7 +36,7 @@ export function PlantSurvey() {
               <code className="font-mono text-[14px] text-cream-ink bg-cream-inset px-1.5 py-0.5 rounded">
                 plant_survey.schema.json
               </code>{" "}
-              &mdash; un formulario que captura cada capa de tu planta, desde el fabricante del
+              un formulario que captura cada capa de tu planta, desde el fabricante del
               SCADA hasta la causalidad y los problemas de datos conocidos de cada sensor.
             </p>
           </div>

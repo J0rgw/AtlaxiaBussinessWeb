@@ -53,8 +53,8 @@ export function TokenVsRules() {
             <p className="text-[16px] leading-relaxed text-cream-ink2">
               SCADA típica + Fortinet OT alerta en cuanto un valor cruza una línea afinada a mano.
               Para entonces el evento ya ha ocurrido. La red neuronal de grafos de AtlaXia aprende
-              un <em className="not-italic font-semibold">token</em> &mdash; un embedding de alta
-              dimensión &mdash; de la variedad normal de cada sensor, condicionado por el resto de
+              un <em className="not-italic font-semibold">token</em>, un embedding de alta
+              dimensión, de la variedad normal de cada sensor, condicionado por el resto de
               la planta. La deriva aparece en cuanto el token se desvía.
             </p>
           </div>

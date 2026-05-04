@@ -65,7 +65,7 @@ export function ForecastChart() {
           <p className="mt-6 text-[16px] text-cream-ink2 leading-relaxed">
             AtlaXia predice los próximos 30 minutos de cada sensor desde el contexto
             espacio-temporal del GNN. Cuando la banda prevista se separa de la traza real, tienes
-            ventaja &mdash; mucho antes de que cualquier sistema basado en reglas alertara.
+            ventaja, mucho antes de que cualquier sistema basado en reglas alertara.
           </p>
           <ul className="mt-8 space-y-3.5 text-[14px]">
             <Bullet color="#58a6ff" label="Banda prevista" desc="Predicción STGNN con banda de confianza" />

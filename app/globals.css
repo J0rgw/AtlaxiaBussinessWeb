@@ -1,0 +1,107 @@
+@import "@fontsource/open-runde/400.css";
+@import "@fontsource/open-runde/500.css";
+@import "@fontsource/open-runde/600.css";
+@import "@fontsource/open-runde/700.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Marketing tokens (from AtlaXia Landing standalone) */
+  --bg: #F7F6F2;
+  --bg-inset: #EFEEE8;
+  --bg-elevated: #FFFFFF;
+  --line: #E4E3DC;
+  --line2: #DEDDD6;
+  --ink: #0F100E;
+  --ink2: #1F201D;
+  --mute: #5F605A;
+  --mute2: #6E6F69;
+
+  --accent-h: 165;
+  --accent: oklch(0.62 0.10 var(--accent-h));
+  --accent-ink: oklch(0.42 0.10 var(--accent-h));
+  --accent-soft: oklch(0.94 0.04 var(--accent-h));
+
+  --container: 1280px;
+  --gutter: clamp(20px, 4vw, 56px);
+
+  color-scheme: light;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Open Runde", Nunito, ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-feature-settings: "ss01", "ss03";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+.container-x {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.display {
+  font-family: "Open Runde", Nunito, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.96;
+  font-size: clamp(56px, 8vw, 112px);
+}
+
+.h-section {
+  font-family: "Open Runde", Nunito, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  font-size: clamp(32px, 4.5vw, 56px);
+}
+
+.eyebrow {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.rule {
+  border-color: var(--line);
+}
+
+.cream-grid {
+  background-image:
+    linear-gradient(to right, rgba(15, 16, 14, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 16, 14, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.dark-product {
+  /* Embedded product chrome on cream pages */
+  background: #0d1117;
+  color: #e6edf3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

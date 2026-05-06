@@ -32,7 +32,7 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
-          NEXT_PUBLIC_BASE_PATH: ${{ vars.BASE_PATH }}
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
           NEXT_PUBLIC_FORMSPREE_ID: ${{ vars.FORMSPREE_ID }}
 
       - name: Ensure .nojekyll

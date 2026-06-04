@@ -155,14 +155,6 @@ export function LiveSensorChart() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between px-4 sm:px-5 py-2 text-[11px] font-mono text-cream-mute2 border-b border-cream-line/60">
-        <span className="flex items-center gap-2">
-          <span className="size-1.5 rounded-full bg-status-normal animate-pulse" aria-hidden />
-          en directo · 1 Hz
-        </span>
-        <span className="tabular">historian · ventana 5 h</span>
-      </div>
-
       <div
         className="relative"
         role="img"

@@ -14,28 +14,22 @@ export function Hero() {
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-8">
           <span className="size-1.5 rounded-full bg-status-normal shrink-0" aria-hidden />
           <span className="eyebrow">ICS · SCADA · Infraestructura hidráulica</span>
-          <span className="hidden sm:inline-block h-px w-12 bg-cream-line" aria-hidden />
-          <span className="hidden sm:inline-block eyebrow">Colorimetría ISA-101</span>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-6">
             <h1 className="font-display font-semibold text-display-hero text-cream-ink">
-              Infraestructura
+              Software
               <br />
               <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
-                para la ambición
+                de vigilancia
               </span>
               <br />
-              desmedida.
+              en senores OT.
             </h1>
 
-            <p className="mt-6 text-[16px] leading-[1.55] text-cream-ink2 max-w-xl">
-              AtlaXia sustituye los umbrales estáticos del SCADA legado y las reglas por firma de
-              Fortinet OT con redes neuronales de grafos que{" "}
-              <em className="not-italic font-semibold">tokenizan</em> el funcionamiento normal de tus
-              sensores. Señalan la deriva el segundo en que ocurre, sobre la misma señal que ya
-              vigilas.
+            <p className="mt-6 text-[16px] leading-[1.55] text-cream-ink2 max-w-md">
+              Cada anomalía al instante en que ocurre. Sin tocar tu SCADA.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -56,10 +50,10 @@ export function Hero() {
               </a>
             </div>
 
-            <dl className="mt-8 grid grid-cols-3 gap-6 max-w-md border-t border-cream-line pt-5">
-              <Metric value="1s" label="Latencia tiempo real" />
-              <Metric value="GNN" label="Tokens del normal" />
-              <Metric value="OT" label="Sin cloud" />
+            <dl className="mt-8 grid grid-cols-3 items-start gap-6 max-w-md border-t border-cream-line pt-5">
+              <Metric value="1s" label="Latencia" />
+              <Metric value="GNN" label="Modelo de anomalías" />
+              <Metric value="OT" label="on-premise"  />
             </dl>
           </div>
 
@@ -74,8 +68,7 @@ export function Hero() {
                 <LiveSensorChart />
               </ProductFrame>
               <p className="mt-3 text-[12px] font-mono text-cream-mute2">
-                AIT203 · conductividad · el punto rojo marca el valor que el modelo esperaba en el
-                pico; la distancia entre ambos puntos es la anomalía que el umbral estático no ve.
+                AIT203 · el rojo es el valor esperado que el modelo predice.
               </p>
             </div>
           </div>

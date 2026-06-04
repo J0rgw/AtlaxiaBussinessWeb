@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-04T00:00:00Z",
+  "title": "Design System: AtlaXia",
+  "extensions": {
+    "colorMeta": {
+      "cream-bg": {
+        "role": "neutral",
+        "displayName": "Procurement Paper",
+        "canonical": "oklch(0.965 0.005 80)",
+        "tonalRamp": [
+          "oklch(0.15 0.008 80)",
+          "oklch(0.25 0.008 80)",
+          "oklch(0.35 0.008 80)",
+          "oklch(0.50 0.008 80)",
+          "oklch(0.65 0.008 80)",
+          "oklch(0.80 0.006 80)",
+          "oklch(0.90 0.005 80)",
+          "oklch(0.965 0.005 80)"
+        ]
+      },
+      "cream-ink": {
+        "role": "neutral",
+        "displayName": "Hand-Set Ink",
+        "canonical": "oklch(0.16 0.005 80)",
+        "tonalRamp": [
+          "oklch(0.10 0.005 80)",
+          "oklch(0.16 0.005 80)",
+          "oklch(0.22 0.005 80)",
+          "oklch(0.35 0.005 80)",
+          "oklch(0.50 0.005 80)",
+          "oklch(0.65 0.005 80)",
+          "oklch(0.80 0.005 80)",
+          "oklch(0.93 0.005 80)"
+        ]
+      },
+      "cream-mute": {
+        "role": "neutral",
+        "displayName": "Field Note Mute",
+        "canonical": "oklch(0.42 0.005 80)"
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "After-Hours Teal",
+        "canonical": "oklch(0.62 0.10 165)",
+        "tonalRamp": [
+          "oklch(0.18 0.04 165)",
+          "oklch(0.28 0.06 165)",
+          "oklch(0.42 0.10 165)",
+          "oklch(0.52 0.10 165)",
+          "oklch(0.62 0.10 165)",
+          "oklch(0.75 0.07 165)",
+          "oklch(0.86 0.05 165)",
+          "oklch(0.94 0.04 165)"
+        ]
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "Italic Fragment Ink",
+        "canonical": "oklch(0.42 0.10 165)"
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Teal Mist Halo",
+        "canonical": "oklch(0.94 0.04 165)"
+      },
+      "dark-base": {
+        "role": "tertiary",
+        "displayName": "Operations Floor",
+        "canonical": "oklch(0.16 0.015 250)",
+        "tonalRamp": [
+          "oklch(0.10 0.020 250)",
+          "oklch(0.16 0.015 250)",
+          "oklch(0.22 0.015 250)",
+          "oklch(0.30 0.015 250)",
+          "oklch(0.45 0.010 250)",
+          "oklch(0.62 0.008 250)",
+          "oklch(0.78 0.005 250)",
+          "oklch(0.92 0.003 250)"
+        ]
+      },
+      "status-normal": {
+        "role": "secondary",
+        "displayName": "Telemetry Green",
+        "canonical": "oklch(0.72 0.18 142)"
+      },
+      "status-advisory": {
+        "role": "secondary",
+        "displayName": "Operator Blue",
+        "canonical": "oklch(0.68 0.18 245)"
+      },
+      "status-warning": {
+        "role": "secondary",
+        "displayName": "Drift Amber",
+        "canonical": "oklch(0.72 0.15 75)"
+      },
+      "status-critical": {
+        "role": "secondary",
+        "displayName": "Breach Red",
+        "canonical": "oklch(0.62 0.22 25)"
+      },
+      "status-emergency": {
+        "role": "secondary",
+        "displayName": "Out-of-Spec Red",
+        "canonical": "oklch(0.55 0.22 25)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Hero Display",
+        "purpose": "One-per-fold hero headlines only. Carries the italic-fragment signature."
+      },
+      "headline": {
+        "displayName": "Section Headline",
+        "purpose": "Section openers (.h-section). One per section."
+      },
+      "title": {
+        "displayName": "Card Title",
+        "purpose": "ProductFrame labels and subsection headers."
+      },
+      "body": {
+        "displayName": "Reading Body",
+        "purpose": "Paragraph copy. Cap line length at 65–75ch."
+      },
+      "label": {
+        "displayName": "Eyebrow / Metric Label",
+        "purpose": "Mono tracked uppercase. Eyebrows above sections (sparingly), metric labels, chart annotations, mobile menu trigger."
+      }
+    },
+    "shadows": [
+      {
+        "name": "cream",
+        "value": "0 1px 0 rgba(15,16,14,0.04), 0 24px 48px -28px rgba(15,16,14,0.18)",
+        "purpose": "Reserved for ProductFrame only. The paper-on-paper hint plus a deep lift that signals 'live system inside'."
+      },
+      {
+        "name": "glow-advisory",
+        "value": "0 0 0 1px rgba(88,166,255,0.18), 0 8px 32px -8px rgba(88,166,255,0.18)",
+        "purpose": "Dark-side only. Advisory-state aura around critical telemetry frames. Never on the cream surface."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Default easing for state transitions and sheet entries. No bounce, no elastic."
+      },
+      {
+        "name": "duration-fast",
+        "value": "180ms",
+        "purpose": "Hover and focus color transitions."
+      },
+      {
+        "name": "duration-sheet",
+        "value": "300ms",
+        "purpose": "Mobile menu sheet enter/exit."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.001ms",
+        "purpose": "Global override under prefers-reduced-motion: reduce. All animation- and transition-duration collapse to a single tick."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "container-max", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Cream-ink pill with directional chevron. The site's only filled CTA shape.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#contact\">Solicitar demo <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" aria-hidden=\"true\"><path d=\"M2 7h9M7 3l4 4-4 4\" stroke=\"currentColor\" stroke-width=\"1.6\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 9999px; background: #0F100E; color: #F7F6F2; font-family: 'Open Runde', Nunito, system-ui, sans-serif; font-weight: 500; font-size: 14px; line-height: 1; text-decoration: none; transition: background 180ms cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary:hover { background: #1F201D; } .ds-btn-primary:focus-visible { outline: 2px solid #3D8A7E; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Transparent pill with hairline ring. Secondary action paired with the primary.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#detection\">Ver detección en directo</a>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 9999px; background: transparent; color: #0F100E; box-shadow: inset 0 0 0 1px #E4E3DC; font-family: 'Open Runde', Nunito, system-ui, sans-serif; font-weight: 500; font-size: 14px; line-height: 1; text-decoration: none; transition: box-shadow 180ms cubic-bezier(0.22,1,0.36,1); } .ds-btn-ghost:hover { box-shadow: inset 0 0 0 1px rgba(15,16,14,0.40); } .ds-btn-ghost:focus-visible { outline: 2px solid #3D8A7E; outline-offset: 2px; }"
+    },
+    {
+      "name": "Mobile Menu Trigger",
+      "kind": "button",
+      "refersTo": "menu-trigger-mobile",
+      "description": "Hairline-bordered pill with MENU label in tracked mono caps and a chevron. Inverts to filled on open.",
+      "html": "<button class=\"ds-menu-trigger\" type=\"button\" aria-expanded=\"false\"><span>Menú</span><svg width=\"9\" height=\"9\" viewBox=\"0 0 9 9\" aria-hidden=\"true\"><path d=\"M1.5 3.25 4.5 6.25 7.5 3.25\" stroke=\"currentColor\" stroke-width=\"1.4\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button>",
+      "css": ".ds-menu-trigger { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 9999px; border: 1px solid #DEDDD6; background: transparent; color: #0F100E; font-family: ui-monospace, 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: background 180ms cubic-bezier(0.22,1,0.36,1), color 180ms cubic-bezier(0.22,1,0.36,1), border-color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-menu-trigger[aria-expanded=\"true\"] { background: #0F100E; color: #F7F6F2; border-color: #0F100E; } .ds-menu-trigger[aria-expanded=\"true\"] svg { transform: rotate(180deg); } .ds-menu-trigger svg { transition: transform 300ms cubic-bezier(0.22,1,0.36,1); } .ds-menu-trigger:focus-visible { outline: 2px solid #3D8A7E; outline-offset: 2px; }"
+    },
+    {
+      "name": "Product Frame",
+      "kind": "card",
+      "refersTo": "card-product-frame",
+      "description": "Signature component. Cream-elevated card with traffic-light header and dark control-room interior. The only legitimate cream-to-dark transition.",
+      "html": "<div class=\"ds-product-frame\"><div class=\"ds-product-frame__head\"><div class=\"ds-product-frame__dots\"><span></span><span></span><span></span></div><span class=\"ds-product-frame__label\">atlaxia.local · pump-3 · en directo</span><span class=\"ds-product-frame__spacer\"></span></div><div class=\"ds-product-frame__body\">[ live telemetry ]</div></div>",
+      "css": ".ds-product-frame { border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 0 1px #E4E3DC, 0 1px 0 rgba(15,16,14,0.04), 0 24px 48px -28px rgba(15,16,14,0.18); background: #FFFFFF; } .ds-product-frame__head { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #EFEEE8; border-bottom: 1px solid #E4E3DC; } .ds-product-frame__dots { display: inline-flex; gap: 6px; } .ds-product-frame__dots span { width: 10px; height: 10px; border-radius: 9999px; background: #E4E3DC; } .ds-product-frame__label { font-family: ui-monospace, 'JetBrains Mono', monospace; font-size: 11px; color: #5A5B55; font-variant-numeric: tabular-nums; } .ds-product-frame__spacer { width: 48px; } .ds-product-frame__body { background: #0d1117; color: #e6edf3; min-height: 200px; padding: 24px; font-family: ui-monospace, 'JetBrains Mono', monospace; font-size: 12px; }"
+    },
+    {
+      "name": "Status Pill",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "Operational status chip. Lives inside dark frames only. Tonal background, ring at 30-40%, dot at full saturation.",
+      "html": "<span class=\"ds-status-pill ds-status-pill--normal\"><span class=\"ds-status-pill__dot\"></span>Nominal</span>",
+      "css": ".ds-status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 6px; font-family: ui-monospace, 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: inset 0 0 0 1px currentColor; } .ds-status-pill__dot { width: 6px; height: 6px; border-radius: 9999px; background: currentColor; } .ds-status-pill--normal { color: #3fb950; background: rgba(63,185,80,0.10); } .ds-status-pill--advisory { color: #58a6ff; background: rgba(88,166,255,0.10); } .ds-status-pill--warning { color: #d29922; background: rgba(210,153,34,0.10); } .ds-status-pill--critical { color: #f85149; background: rgba(248,81,73,0.10); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Cream-elevated with hairline ring. Focus shows the accent-ink outline shared with all interactive elements.",
+      "html": "<label class=\"ds-input-text\"><span class=\"ds-input-text__label\">Email corporativo</span><input type=\"email\" placeholder=\"tu.nombre@empresa.es\" /></label>",
+      "css": ".ds-input-text { display: flex; flex-direction: column; gap: 6px; font-family: 'Open Runde', Nunito, system-ui, sans-serif; } .ds-input-text__label { font-size: 13px; font-weight: 600; color: #1F201D; } .ds-input-text input { padding: 10px 12px; border-radius: 6px; background: #FFFFFF; color: #0F100E; box-shadow: inset 0 0 0 1px #E4E3DC; font: inherit; font-size: 14px; transition: box-shadow 180ms cubic-bezier(0.22,1,0.36,1); } .ds-input-text input::placeholder { color: #8E8F88; } .ds-input-text input:focus-visible { outline: 2px solid #3D8A7E; outline-offset: 2px; box-shadow: inset 0 0 0 1px #D6D5CC; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Editorial body-14 anchor in cream-mute. Hover shifts to cream-ink. Used in the desktop nav cluster.",
+      "html": "<a class=\"ds-nav-link\" href=\"#platform\">Plataforma</a>",
+      "css": ".ds-nav-link { font-family: 'Open Runde', Nunito, system-ui, sans-serif; font-size: 14px; color: #5F605A; text-decoration: none; transition: color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-nav-link:hover { color: #0F100E; } .ds-nav-link:focus-visible { outline: 2px solid #3D8A7E; outline-offset: 2px; border-radius: 4px; }"
+    },
+    {
+      "name": "Eyebrow Label",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "Mono tracked uppercase eyebrow used above sections. Sparingly: three or four per page, never above every section.",
+      "html": "<p class=\"ds-eyebrow\">ICS · SCADA · Infraestructura hidráulica</p>",
+      "css": ".ds-eyebrow { font-family: ui-monospace, 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #5F605A; margin: 0; font-feature-settings: 'ss01','ss03'; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Control Room After Hours",
+    "overview": "AtlaXia lives in two physical spaces and the website is the bridge. The cream surface is the procurement office at four in the afternoon: warm paper, hand-set type, italic anchors in muted teal, sparse mono labels above each section. The dark frames embedded inside that surface are the operations floor at three in the morning: live telemetry, real curves diverging from real thresholds, status pills that mean something. Marketing is the daylight world that explains. The product is the after-hours world that proves. The website holds both, calmly, in one composition.\n\nThe voice is attentive and slightly intimate. It is not corporate. It does not perform expertise; it shows working systems. The Spanish copy reads like a careful operator wrote it, not a sales team. Italic teal fragments inside roman headlines do the emotional work that gradients and illustrations do on competing OT sites. The category's reflex is navy and amber; AtlaXia commits to cream and a single muted teal. The category's reflex is stock dashboard screenshots; AtlaXia ships real animated specimens of model behavior.",
+    "keyCharacteristics": [
+      "Two worlds, never blended: cream marketing surface, dark control-room frames embedded as evidence.",
+      "One accent only: a single muted teal (oklch(0.62 0.10 165)), used almost exclusively as italic sub-clauses inside roman display headlines. Never as background, never as button fill.",
+      "Specimens, not illustrations: every chart animates real model behavior. No icon cards, no stock dashboards.",
+      "Hand-set rhythm: numbered taxonomy (01/ 02/ 03/), mono eyebrow labels above sections, varied spacing per fold. The page reads as composed, not templated.",
+      "Refuses what the category does: not editorial-magazine-with-a-Cormorant-headline, not navy-and-amber OT, not gradient-on-glass SaaS, not hero-metric grids."
+    ],
+    "rules": [
+      { "name": "The Two Worlds Rule", "body": "Cream is marketing argument; dark is product evidence. They never blend. A cream surface never contains a dark band; a dark surface never contains a cream patch. The only transitions between worlds are inside a ProductFrame card.", "section": "colors" },
+      { "name": "The One Voice Rule", "body": "The teal accent appears as italic sub-clauses inside roman display headlines and as a low-opacity gradient halo behind frames. Nowhere else. Not on buttons, not on links, not on borders, not on hover states, not on chart strokes.", "section": "colors" },
+      { "name": "The No-Pure-Black Rule", "body": "#000 and #fff are forbidden. The ink is #0F100E (cream-ink) or #0d1117 (dark-base). White interiors are reserved for the inside of ProductFrame only.", "section": "colors" },
+      { "name": "The Italic Fragment Rule", "body": "The brand's signature gesture: a single italic teal sub-clause inside an otherwise roman display headline. Reserved for the page's two emotional poles: the Hero and the final CTA. Section headlines between hold in roman, using weight contrast (font-semibold + font-normal) for second-line emphasis.", "section": "typography" },
+      { "name": "The Sparse Eyebrow Rule", "body": "Mono uppercase tracked eyebrow labels are voice, not section grammar. Three or four per page is correct. Above every section is template scaffolding and should be removed.", "section": "typography" },
+      { "name": "The Tabular Numerals Rule", "body": "Any number a reader will compare to another number uses font-variant-numeric: tabular-nums so digit widths align.", "section": "typography" },
+      { "name": "The Flat-by-Default Rule", "body": "Every cream surface is flat. Hairline cream-line borders convey grouping; tonal shifts between cream-bg / cream-inset / cream-elevated convey nesting. The only legitimate shadow on the marketing surface is shadow-cream under a ProductFrame.", "section": "elevation" },
+      { "name": "The Ring-Not-Border Rule", "body": "When a cream surface needs a visible boundary, use ring-1 ring-cream-line rather than border. Rings do not affect layout box-sizing and read as paper edges, not boxes.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use italic teal fragments inside roman display headlines, but only at the Hero and CTA. Section headlines between hold in roman with weight contrast.",
+      "Do embed ProductFrame cards as the only legitimate bridge between cream and dark worlds.",
+      "Do use cream-mute (#5F605A) for body-size mute text and cream-mute2 (#5A5B55) for the smallest captions. Both pass AA on cream-bg.",
+      "Do use tabular-nums on every numeric comparison and metric.",
+      "Do keep mobile menu typography at display scale with numbered taxonomy (01/ 02/). The menu is a table of contents, not a hamburger drawer.",
+      "Do use Open Runde for display, JetBrains Mono for labels and chart annotations. The pairing is the brand.",
+      "Do ship real animations of model behavior. Animations are evidence."
+    ],
+    "donts": [
+      "Don't use the OT category reflex palette: navy + amber, gunmetal + safety-orange, terminal-green-on-black. AtlaXia is cream + teal + control-room.",
+      "Don't use #000 or #fff. Cream-ink is #0F100E; dark-base is #0d1117; the only legitimate white is the inside of a ProductFrame.",
+      "Don't use the teal accent as a button fill, a chart stroke, a hover color, or a background block. Italic ink and gradient halo only.",
+      "Don't repeat the mono tracked eyebrow above every section. Sparingly is voice; on every section is AI scaffolding.",
+      "Don't add italic-teal fragments to mid-page section headlines. The mid-page voice is roman + font-normal weight contrast on the emphasized line. Italic-teal is reserved for the Hero and the CTA.",
+      "Don't ship a hamburger-icon mobile menu. The mobile nav is a numbered typographic sheet at display scale.",
+      "Don't use cream-mute3 (#8E8F88) for any text under 18px equivalent. It fails contrast.",
+      "Don't introduce border-left greater than 1px as a colored stripe on cards, callouts, or alerts.",
+      "Don't use background-clip: text with a gradient. Solid color, weight contrast for emphasis.",
+      "Don't use glassmorphism as decoration.",
+      "Don't ship the SaaS hero-metric template.",
+      "Don't ship identical icon-title-text card grids.",
+      "Don't wrap chart numerics or inline SVG colors as literal hex. Promote to CSS vars.",
+      "Don't use em dashes or en dashes in prose.",
+      "Don't name competitors. Comparative copy is structural, not adversarial."
+    ]
+  }
+}

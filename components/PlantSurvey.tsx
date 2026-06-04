@@ -24,7 +24,7 @@ export function PlantSurvey() {
             <h2 className="h-section text-cream-ink mt-4">
               De la visita a planta a datos listos para el modelo
               <br />
-              <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
+              <span className="font-normal">
                 en un único schema estructurado.
               </span>
             </h2>
@@ -52,12 +52,7 @@ export function PlantSurvey() {
             {taxonomy.map((t, i) => (
               <div key={t.label} className="px-5 py-6 flex items-start gap-4">
                 <span
-                  className="font-display italic font-normal leading-none tabular shrink-0"
-                  style={{
-                    color: "var(--accent-ink)",
-                    fontSize: "32px",
-                    letterSpacing: "-0.04em",
-                  }}
+                  className="font-display italic font-normal leading-none tabular shrink-0 text-[32px] tracking-[-0.04em] text-accent-ink"
                   aria-hidden
                 >
                   0{i + 1}

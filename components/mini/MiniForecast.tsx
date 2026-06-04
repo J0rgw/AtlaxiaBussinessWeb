@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useInView } from "@/lib/use-in-view";
 
 const W = 240;
 const H = 80;
@@ -33,14 +34,16 @@ function pathAt(values: number[], offsetIdx: number) {
 
 export function MiniForecast() {
   const [seed, setSeed] = useState(0);
+  const { ref: svgRef, inView } = useInView<SVGSVGElement>();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
+    if (!inView) return;
     const id = setInterval(() => setSeed((s) => s + 1), 1100);
     return () => clearInterval(id);
-  }, []);
+  }, [inView]);
 
   const { actual, forecast } = build(seed);
   const upper = forecast.map((v) => v - 6);
@@ -60,6 +63,7 @@ export function MiniForecast() {
 
   return (
     <svg
+      ref={svgRef}
       viewBox={`0 0 ${W} ${H}`}
       className="w-full h-[80px] block"
       preserveAspectRatio="none"
@@ -67,7 +71,7 @@ export function MiniForecast() {
     >
       <defs>
         <pattern id="mf-grid" width="20" height="16" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 16" fill="none" stroke="#0F100E" strokeOpacity="0.05" strokeWidth="1" />
+          <path d="M 20 0 L 0 0 0 16" fill="none" stroke="var(--ink)" strokeOpacity="0.05" strokeWidth="1" />
         </pattern>
       </defs>
       <rect width={W} height={H} fill="url(#mf-grid)" />
@@ -77,18 +81,18 @@ export function MiniForecast() {
       <path
         d={actualPath}
         fill="none"
-        stroke="#0F100E"
+        stroke="var(--ink)"
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <line x1={nowX} x2={nowX} y1={6} y2={H - 6} stroke="#0F100E" strokeOpacity="0.3" strokeDasharray="1 3" />
+      <line x1={nowX} x2={nowX} y1={6} y2={H - 6} stroke="var(--ink)" strokeOpacity="0.3" strokeDasharray="1 3" />
       <text
         x={nowX + 4}
         y={12}
         fontFamily="ui-monospace, monospace"
         fontSize="7"
-        fill="#0F100E"
+        fill="var(--ink)"
         fillOpacity="0.5"
       >
         ahora

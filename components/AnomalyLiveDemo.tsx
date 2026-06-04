@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { StatusPill } from "./StatusPill";
+import { useInView } from "@/lib/use-in-view";
 
 type Status = "normal" | "advisory" | "warning" | "critical";
 
@@ -47,9 +48,18 @@ export function AnomalyLiveDemo() {
   const [clock, setClock] = useState<string>("--:--:--");
   const startRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
+  const { ref: containerRef, inView } = useInView<HTMLDivElement>();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setT(40);
+      setStage(3);
+      return;
+    }
+    if (!inView) return;
+
     const fmt = () => {
       const now = new Date();
       return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
@@ -57,12 +67,6 @@ export function AnomalyLiveDemo() {
     setClock(fmt());
     const clockId = setInterval(() => setClock(fmt()), 1000);
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      setT(40);
-      setStage(3);
-      return () => clearInterval(clockId);
-    }
     const tick = (ts: number) => {
       if (startRef.current === null) startRef.current = ts;
       const elapsed = (ts - startRef.current) / 1000;
@@ -79,8 +83,9 @@ export function AnomalyLiveDemo() {
     return () => {
       clearInterval(clockId);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      startRef.current = null;
     };
-  }, []);
+  }, [inView]);
 
   const stageData = cycleStages[stage];
   const series = genSeed(t, stageData.anomaly);
@@ -88,14 +93,15 @@ export function AnomalyLiveDemo() {
   const last = series[series.length - 1];
   const lastX = W;
   const statusColor = {
-    normal: "#3fb950",
-    advisory: "#58a6ff",
-    warning: "#d29922",
-    critical: "#f85149",
+    normal: "var(--status-normal)",
+    advisory: "var(--status-advisory)",
+    warning: "var(--status-warning)",
+    critical: "var(--status-critical)",
   }[stageData.status];
 
   return (
     <div
+      ref={containerRef}
       className="relative bg-bg-base text-text-primary overflow-hidden"
       role="img"
       aria-label="Demostración en directo: caudal del pump-3 escalando de nominal a anomalía crítica en un bucle de 7 segundos."
@@ -120,14 +126,11 @@ export function AnomalyLiveDemo() {
               <stop offset="100%" stopColor={statusColor} stopOpacity="0" />
             </linearGradient>
             <pattern id="grid" width="40" height="32" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 32" fill="none" stroke="#21262d" strokeWidth="1" />
+              <path d="M 40 0 L 0 0 0 32" fill="none" stroke="var(--chart-grid)" strokeWidth="1" />
             </pattern>
           </defs>
           <rect width={W} height={H} fill="url(#grid)" />
-          <line x1="0" x2={W} y1={BASE - 38} y2={BASE - 38} stroke="#484f58" strokeDasharray="3 4" strokeWidth="1" />
-          <text x="6" y={BASE - 42} fill="#8b949e" fontSize="10" fontFamily="monospace">
-            umbral estático
-          </text>
+          <line x1="0" x2={W} y1={BASE - 38} y2={BASE - 38} stroke="var(--chart-baseline)" strokeDasharray="3 4" strokeWidth="1" />
           <path d={`${d} L ${W} ${H} L 0 ${H} Z`} fill="url(#series-fill)" />
           <path d={d} fill="none" stroke={statusColor} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
           <circle cx={lastX} cy={last} r="3.5" fill={statusColor} />
@@ -136,6 +139,14 @@ export function AnomalyLiveDemo() {
             <animate attributeName="fill-opacity" values="0.28;0;0.28" dur="1.4s" repeatCount="indefinite" />
           </circle>
         </svg>
+
+        <span
+          aria-hidden
+          className="absolute font-mono text-[10px] text-text-secondary pointer-events-none"
+          style={{ left: "1.2%", top: `${((BASE - 48) / H) * 100}%` }}
+        >
+          umbral estático
+        </span>
 
         <div className="absolute top-3 left-3">
           <StatusPill status={stageData.status} label={stageData.label} />

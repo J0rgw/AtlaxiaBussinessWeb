@@ -11,7 +11,7 @@ export function CTA() {
       <div className="container-x relative py-28">
         <div className="text-center max-w-3xl mx-auto">
           <p className="eyebrow">Empezar</p>
-          <h2 className="mt-5 mx-auto max-w-[18ch] font-display font-semibold tracking-tightest text-cream-ink text-[clamp(40px,6vw,80px)] leading-[0.98]">
+          <h2 className="mt-5 mx-auto max-w-[18ch] font-display font-semibold text-display-cta text-cream-ink">
             Conecta tu historian.
             <br />
             <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>

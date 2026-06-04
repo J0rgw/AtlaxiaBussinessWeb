@@ -5,7 +5,7 @@ import { MiniTokens } from "./mini/MiniTokens";
 const items = [
   {
     Visual: MiniDetect,
-    dot: "#3fb950",
+    dot: "var(--status-normal)",
     eyebrow: "Detección",
     title: "Bucle de 1 segundo, en tiempo real.",
     body: "Telemetría WebSocket a 1 Hz, inferencia en línea. Sin polling, sin retraso de batch, sin esperar a pipelines nocturnos.",
@@ -15,11 +15,11 @@ const items = [
     dot: "var(--accent-ink)",
     eyebrow: "Diseño de tokens",
     title: "GNN sobre grafos de planta.",
-    body: "CoGNN y STGNN aprenden la variedad normal de cada sensor condicionada por sus vecinos — no una línea estática afinada a mano.",
+    body: "CoGNN y STGNN aprenden la variedad normal de cada sensor condicionada por sus vecinos. No una línea estática afinada a mano.",
   },
   {
     Visual: MiniForecast,
-    dot: "#d29922",
+    dot: "var(--status-warning)",
     eyebrow: "Predicción",
     title: "Anticípate al fallo.",
     body: "Banda de predicción de 30 minutos por sensor. La alerta es la divergencia, no el cruce del umbral.",

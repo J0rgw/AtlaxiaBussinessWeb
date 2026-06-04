@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useInView } from "@/lib/use-in-view";
 
 const W = 720;
 const H = 280;
@@ -27,13 +28,16 @@ function toPath(values: number[]) {
 
 export function ForecastChart() {
   const [seed, setSeed] = useState(0);
+  const { ref: sectionRef, inView } = useInView<HTMLElement>();
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
+    if (!inView) return;
     const id = setInterval(() => setSeed((s) => s + 1), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [inView]);
 
   const { actual, forecast } = build(seed);
   const upper = forecast.map((v) => v - 14);
@@ -49,14 +53,14 @@ export function ForecastChart() {
   const divergeX = ((40 / (N - 1)) * W).toFixed(1);
 
   return (
-    <section id="forecasting" className="border-t border-cream-line bg-cream-inset">
+    <section ref={sectionRef} id="forecasting" className="border-t border-cream-line bg-cream-inset">
       <div className="container-x py-24 grid lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-5">
           <p className="eyebrow">02 · Predicción</p>
           <h2 className="h-section text-cream-ink mt-4">
             Vemos la incidencia
             <br />
-            <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
+            <span className="font-normal">
               once minutos antes
             </span>
             <br />
@@ -68,9 +72,9 @@ export function ForecastChart() {
             ventaja, mucho antes de que cualquier sistema basado en reglas alertara.
           </p>
           <ul className="mt-8 space-y-3.5 text-[14px]">
-            <Bullet color="#58a6ff" label="Banda prevista" desc="Predicción STGNN con banda de confianza" />
-            <Bullet color="#0F100E" label="Real en directo" desc="Flujo del historian a 1 Hz" />
-            <Bullet color="#c44" label="Divergencia" desc="La predicción se separa del real en t+11m" />
+            <Bullet color="var(--status-advisory)" label="Banda prevista" desc="Predicción STGNN con banda de confianza" />
+            <Bullet color="var(--ink)" label="Real en directo" desc="Flujo del historian a 1 Hz" />
+            <Bullet color="var(--status-critical)" label="Divergencia" desc="La predicción se separa del real en t+11m" />
           </ul>
         </div>
 
@@ -94,21 +98,38 @@ export function ForecastChart() {
               <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[280px] block" preserveAspectRatio="none">
                 <defs>
                   <pattern id="grid-fc" width="48" height="32" patternUnits="userSpaceOnUse">
-                    <path d="M 48 0 L 0 0 0 32" fill="none" stroke="#21262d" strokeWidth="1" />
+                    <path d="M 48 0 L 0 0 0 32" fill="none" stroke="var(--chart-grid)" strokeWidth="1" />
                   </pattern>
                 </defs>
                 <rect width={W} height={H} fill="url(#grid-fc)" />
-                <rect x={divergeX} y={0} width={W - Number(divergeX)} height={H} fill="#f85149" fillOpacity="0.05" />
-                <path d={bandPath} fill="#58a6ff" fillOpacity="0.12" stroke="none" />
-                <path d={forecastPath} fill="none" stroke="#58a6ff" strokeWidth="1.6" strokeDasharray="4 4" />
-                <path d={actualPath} fill="none" stroke="#e6edf3" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                <line x1={divergeX} x2={divergeX} y1={20} y2={H - 8} stroke="#f85149" strokeOpacity="0.55" strokeDasharray="2 3" />
-                <text x={Number(divergeX) + 8} y={32} fill="#f85149" fontSize="11" fontFamily="monospace">
-                  t+11m · la predicción diverge
-                </text>
-                <text x="6" y={H - 6} fill="#484f58" fontSize="10" fontFamily="monospace">ahora</text>
-                <text x={W - 36} y={H - 6} fill="#484f58" fontSize="10" fontFamily="monospace">+30m</text>
+                <rect x={divergeX} y={0} width={W - Number(divergeX)} height={H} fill="var(--status-critical)" fillOpacity="0.05" />
+                <path d={bandPath} fill="var(--status-advisory)" fillOpacity="0.12" stroke="none" />
+                <path d={forecastPath} fill="none" stroke="var(--status-advisory)" strokeWidth="1.6" strokeDasharray="4 4" />
+                <path d={actualPath} fill="none" stroke="var(--chart-probe)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                <line x1={divergeX} x2={divergeX} y1={20} y2={H - 8} stroke="var(--status-critical)" strokeOpacity="0.55" strokeDasharray="2 3" />
               </svg>
+
+              <span
+                aria-hidden
+                className="absolute font-mono text-[11px] pointer-events-none whitespace-nowrap text-status-critical"
+                style={{ left: `${((Number(divergeX) + 8) / W) * 100}%`, top: `${((32 - 12) / H) * 100}%` }}
+              >
+                t+11m · la predicción diverge
+              </span>
+              <span
+                aria-hidden
+                className="absolute bottom-1.5 left-1.5 font-mono text-[10px] pointer-events-none"
+                style={{ color: "var(--chart-baseline)" }}
+              >
+                ahora
+              </span>
+              <span
+                aria-hidden
+                className="absolute bottom-1.5 right-2 font-mono text-[10px] pointer-events-none"
+                style={{ color: "var(--chart-baseline)" }}
+              >
+                +30m
+              </span>
             </div>
           </div>
         </div>

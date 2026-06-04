@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useInView } from "@/lib/use-in-view";
 
 const W = 240;
 const H = 80;
@@ -34,17 +35,20 @@ const edges: [number, number][] = [
 
 export function MiniTokens() {
   const [active, setActive] = useState(0);
+  const { ref: svgRef, inView } = useInView<SVGSVGElement>();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
+    if (!inView) return;
     const id = setInterval(() => setActive((a) => (a + 1) % nodes.length), 700);
     return () => clearInterval(id);
-  }, []);
+  }, [inView]);
 
   return (
     <svg
+      ref={svgRef}
       viewBox={`0 0 ${W} ${H}`}
       className="w-full h-[80px] block"
       preserveAspectRatio="none"
@@ -52,7 +56,7 @@ export function MiniTokens() {
     >
       <defs>
         <pattern id="mt-grid" width="20" height="16" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 16" fill="none" stroke="#0F100E" strokeOpacity="0.05" strokeWidth="1" />
+          <path d="M 20 0 L 0 0 0 16" fill="none" stroke="var(--ink)" strokeOpacity="0.05" strokeWidth="1" />
         </pattern>
       </defs>
       <rect width={W} height={H} fill="url(#mt-grid)" />
@@ -66,7 +70,7 @@ export function MiniTokens() {
             y1={nodes[a].y}
             x2={nodes[b].x}
             y2={nodes[b].y}
-            stroke={isActive ? "var(--accent-ink)" : "#0F100E"}
+            stroke={isActive ? "var(--accent-ink)" : "var(--ink)"}
             strokeOpacity={isActive ? 0.55 : 0.16}
             strokeWidth="0.9"
             style={{ transition: "stroke 0.35s, stroke-opacity 0.35s" }}
@@ -88,7 +92,7 @@ export function MiniTokens() {
               cx={n.x}
               cy={n.y}
               r={isActive ? 3 : 2}
-              fill={isActive ? "var(--accent-ink)" : "#0F100E"}
+              fill={isActive ? "var(--accent-ink)" : "var(--ink)"}
               style={{ transition: "fill 0.35s" }}
             />
           </g>

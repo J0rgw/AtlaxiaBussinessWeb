@@ -17,12 +17,29 @@
   --ink: #0F100E;
   --ink2: #1F201D;
   --mute: #5F605A;
-  --mute2: #6E6F69;
+  --mute2: #5A5B55;
 
   --accent-h: 165;
   --accent: oklch(0.62 0.10 var(--accent-h));
   --accent-ink: oklch(0.42 0.10 var(--accent-h));
   --accent-soft: oklch(0.94 0.04 var(--accent-h));
+
+  /* OT operational status — mirrors Tailwind status.* tokens for use in SVG attributes */
+  --status-normal: #3fb950;
+  --status-advisory: #58a6ff;
+  --status-warning: #d29922;
+  --status-critical: #f85149;
+  --status-emergency: #da3633;
+
+  /* Chart chrome (used inside ProductFrame dark interiors) */
+  --chart-grid: #21262d;
+  --chart-baseline: #484f58;
+  --chart-stroke-mute: #8b949e;
+  --chart-probe: #e6edf3;
+
+  /* Form alert */
+  --error-bg: #fdecec;
+  --error-ink: #8a1f1f;
 
   --container: 1280px;
   --gutter: clamp(20px, 4vw, 56px);
@@ -52,14 +69,6 @@ html, body {
   padding-inline: var(--gutter);
 }
 
-.display {
-  font-family: "Open Runde", Nunito, ui-sans-serif, system-ui, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 0.96;
-  font-size: clamp(56px, 8vw, 112px);
-}
-
 .h-section {
   font-family: "Open Runde", Nunito, ui-sans-serif, system-ui, sans-serif;
   font-weight: 600;
@@ -85,12 +94,6 @@ html, body {
     linear-gradient(to right, rgba(15, 16, 14, 0.045) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(15, 16, 14, 0.045) 1px, transparent 1px);
   background-size: 64px 64px;
-}
-
-.dark-product {
-  /* Embedded product chrome on cream pages */
-  background: #0d1117;
-  color: #e6edf3;
 }
 
 @media (prefers-reduced-motion: reduce) {

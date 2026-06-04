@@ -25,12 +25,12 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "AtlaXia — Infraestructura para la ambición desmedida",
+  title: "AtlaXia: Infraestructura para la ambición desmedida",
   description:
-    "Monitoreo ICS/SCADA AI-native para infraestructura hidráulica. Las redes neuronales de grafos sustituyen los umbrales estáticos por tokens aprendidos del funcionamiento normal — detección de anomalías en tiempo real y predicción antes del fallo.",
+    "Monitoreo ICS/SCADA AI-native para infraestructura hidráulica. Las redes neuronales de grafos sustituyen los umbrales estáticos por tokens aprendidos del funcionamiento normal: detección de anomalías en tiempo real y predicción antes del fallo.",
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "AtlaXia — Infraestructura para la ambición desmedida",
+    title: "AtlaXia: Infraestructura para la ambición desmedida",
     description:
       "Detección de anomalías con GNN para infraestructura hidráulica ICS/SCADA. Una plataforma unificada que sustituye el stack SCADA + Fortinet OT.",
     type: "website",

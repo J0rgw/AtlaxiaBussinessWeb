@@ -105,8 +105,7 @@ export function RequestDemoForm() {
         <div
           role="alert"
           aria-live="polite"
-          className="mt-4 px-3 py-2.5 rounded text-[13px]"
-          style={{ background: "#fdecec", color: "#8a1f1f" }}
+          className="mt-4 px-3 py-2.5 rounded text-[13px] bg-error-bg text-error-ink ring-1 ring-error-ink/15"
         >
           {error}
         </div>
@@ -125,7 +124,7 @@ export function RequestDemoForm() {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[14px] font-medium bg-cream-ink text-cream-bg hover:bg-cream-ink2 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded-full text-[14px] font-medium bg-cream-ink text-cream-bg hover:bg-cream-ink2 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
           {status === "loading" ? (
             <>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useInView } from "@/lib/use-in-view";
 
 const W = 240;
 const H = 80;
@@ -37,6 +38,7 @@ export function MiniDetect() {
   const [t, setT] = useState(0);
   const startRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
+  const { ref: svgRef, inView } = useInView<SVGSVGElement>();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -45,6 +47,7 @@ export function MiniDetect() {
       setT(2.6);
       return;
     }
+    if (!inView) return;
     const tick = (ts: number) => {
       if (startRef.current === null) startRef.current = ts;
       setT((ts - startRef.current) / 1000);
@@ -53,16 +56,18 @@ export function MiniDetect() {
     rafRef.current = requestAnimationFrame(tick);
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      startRef.current = null;
     };
-  }, []);
+  }, [inView]);
 
   const { values, anomaly } = buildSeries(t);
   const d = toPath(values);
   const last = values[values.length - 1];
-  const stroke = anomaly ? "#f85149" : "#0F100E";
+  const stroke = anomaly ? "var(--status-critical)" : "var(--ink)";
 
   return (
     <svg
+      ref={svgRef}
       viewBox={`0 0 ${W} ${H}`}
       className="w-full h-[80px] block"
       preserveAspectRatio="none"
@@ -74,7 +79,7 @@ export function MiniDetect() {
           <stop offset="100%" stopColor={stroke} stopOpacity="0" />
         </linearGradient>
         <pattern id="md-grid" width="20" height="16" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 16" fill="none" stroke="#0F100E" strokeOpacity="0.05" strokeWidth="1" />
+          <path d="M 20 0 L 0 0 0 16" fill="none" stroke="var(--ink)" strokeOpacity="0.05" strokeWidth="1" />
         </pattern>
       </defs>
       <rect width={W} height={H} fill="url(#md-grid)" />

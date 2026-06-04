@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useInView } from "@/lib/use-in-view";
 
 const W = 360;
 const H = 200;
@@ -27,16 +28,19 @@ const tokenAlertIdx = 30;
 
 export function TokenVsRules() {
   const [tick, setTick] = useState(0);
+  const { ref: sectionRef, inView } = useInView<HTMLElement>();
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
+    if (!inView) return;
     const id = setInterval(() => setTick((t) => (t + 1) % 60), 80);
     return () => clearInterval(id);
-  }, []);
+  }, [inView]);
 
   return (
-    <section id="detection" className="border-t border-cream-line bg-cream-bg">
+    <section ref={sectionRef} id="detection" className="border-t border-cream-line bg-cream-bg">
       <div className="container-x py-24">
         <div className="grid lg:grid-cols-12 gap-10 items-end mb-12">
           <div className="lg:col-span-7">
@@ -44,7 +48,7 @@ export function TokenVsRules() {
             <h2 className="h-section text-cream-ink mt-4">
               Los umbrales atrapan incidentes.
               <br />
-              <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
+              <span className="font-normal">
                 Los tokens detectan la deriva antes del incidente.
               </span>
             </h2>
@@ -68,7 +72,7 @@ export function TokenVsRules() {
             alertLabel={ruleAlertIdx > 0 ? `Alerta en t+${ruleAlertIdx}s` : "—"}
             footnote="Se pierde los 30 segundos de deriva previos al cruce."
           >
-            <ChartPanel tick={tick} alertIdx={ruleAlertIdx} alertColor="#f85149" showThreshold variant="rules" />
+            <ChartPanel tick={tick} alertIdx={ruleAlertIdx} alertColor="var(--status-critical)" showThreshold variant="rules" />
           </Panel>
 
           <Panel
@@ -78,7 +82,7 @@ export function TokenVsRules() {
             alertLabel={`Deriva detectada en t+${tokenAlertIdx}s`}
             footnote={`${ruleAlertIdx - tokenAlertIdx}s antes que el enfoque por umbral.`}
           >
-            <ChartPanel tick={tick} alertIdx={tokenAlertIdx} alertColor="#58a6ff" variant="tokens" />
+            <ChartPanel tick={tick} alertIdx={tokenAlertIdx} alertColor="var(--status-advisory)" variant="tokens" />
           </Panel>
         </div>
       </div>
@@ -150,7 +154,7 @@ function ChartPanel({
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[220px] block" preserveAspectRatio="none" aria-hidden>
         <defs>
           <pattern id={`grid-${variant}`} width="36" height="28" patternUnits="userSpaceOnUse">
-            <path d="M 36 0 L 0 0 0 28" fill="none" stroke="#21262d" strokeWidth="1" />
+            <path d="M 36 0 L 0 0 0 28" fill="none" stroke="var(--chart-grid)" strokeWidth="1" />
           </pattern>
           <linearGradient id={`fill-${variant}`} x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor={alertColor} stopOpacity={passedAlert ? 0.22 : 0.08} />
@@ -164,9 +168,9 @@ function ChartPanel({
             d={`M 0 ${data[0].y - 14} ${data
               .map((p) => `L ${p.x} ${p.y - 14}`)
               .join(" ")} ${[...data].reverse().map((p) => `L ${p.x} ${p.y + 14}`).join(" ")} Z`}
-            fill="#58a6ff"
+            fill="var(--status-advisory)"
             fillOpacity="0.08"
-            stroke="#58a6ff"
+            stroke="var(--status-advisory)"
             strokeOpacity="0.3"
             strokeDasharray="2 3"
             strokeWidth="1"
@@ -174,29 +178,45 @@ function ChartPanel({
         )}
 
         {showThreshold && (
-          <>
-            <line x1="0" x2={W} y1={150} y2={150} stroke="#f85149" strokeOpacity="0.55" strokeDasharray="3 4" strokeWidth="1" />
-            <text x="6" y="146" fill="#f85149" fillOpacity="0.7" fontSize="10" fontFamily="monospace">
-              umbral = 150
-            </text>
-          </>
+          <line x1="0" x2={W} y1={150} y2={150} stroke="var(--status-critical)" strokeOpacity="0.55" strokeDasharray="3 4" strokeWidth="1" />
         )}
 
         <path d={areaPath} fill={`url(#fill-${variant})`} />
-        <path d={linePath} fill="none" stroke={passedAlert ? alertColor : "#8b949e"} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={linePath} fill="none" stroke={passedAlert ? alertColor : "var(--chart-stroke-mute)"} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
 
         {alertIdx > 0 && (
           <g>
             <line x1={data[alertIdx].x} x2={data[alertIdx].x} y1={0} y2={H} stroke={alertColor} strokeOpacity="0.35" strokeDasharray="2 3" />
             <circle cx={data[alertIdx].x} cy={data[alertIdx].y} r="4" fill={alertColor} />
-            <text x={data[alertIdx].x + 6} y={data[alertIdx].y - 8} fill={alertColor} fontSize="10" fontFamily="monospace">
-              {variant === "tokens" ? "deriva" : "alerta"}
-            </text>
           </g>
         )}
 
-        <circle cx={probe.x} cy={probe.y} r="3" fill="#e6edf3" />
+        <circle cx={probe.x} cy={probe.y} r="3" fill="var(--chart-probe)" />
       </svg>
+
+      {showThreshold && (
+        <span
+          aria-hidden
+          className="absolute font-mono text-[10px] pointer-events-none opacity-70"
+          style={{ left: "1.7%", top: `${((150 - 14) / H) * 100}%`, color: "var(--status-critical)" }}
+        >
+          umbral = 150
+        </span>
+      )}
+
+      {alertIdx > 0 && (
+        <span
+          aria-hidden
+          className="absolute font-mono text-[10px] pointer-events-none whitespace-nowrap"
+          style={{
+            left: `${((data[alertIdx].x + 6) / W) * 100}%`,
+            top: `${((data[alertIdx].y - 18) / H) * 100}%`,
+            color: alertColor,
+          }}
+        >
+          {variant === "tokens" ? "deriva" : "alerta"}
+        </span>
+      )}
     </div>
   );
 }

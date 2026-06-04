@@ -7,7 +7,7 @@ const rows: { feature: string; legacy: string; atlaxia: string; legacyOk?: boole
   { feature: "Contexto entre sensores", legacy: "Reglas por tag, aisladas", atlaxia: "Grafo de planta completa, condicionado por vecinos" },
   { feature: "Seguridad de red", legacy: "Fortinet OT, basada en firmas", atlaxia: "Anomalía + firmas, panel unificado" },
   { feature: "UX para operario", legacy: "Cuadros de mando del fabricante", atlaxia: "Sala de control ISA-101, dark-first" },
-  { feature: "Despliegue", legacy: "Stack de 4–6 herramientas a integrar", atlaxia: "Un contenedor, on-prem / airgap" },
+  { feature: "Despliegue", legacy: "Stack de 4 a 6 herramientas a integrar", atlaxia: "Un contenedor, on-prem / airgap" },
   { feature: "Tiempo hasta primera alerta", legacy: "Cruce de umbral (tras el evento)", atlaxia: "Deriva del token (a menudo minutos antes)" },
 ];
 
@@ -20,7 +20,7 @@ export function StackComparison() {
           <h2 className="h-section text-cream-ink mt-4">
             Una plataforma AI-native sustituye
             <br />
-            <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
+            <span className="font-normal">
               al stack OT remendado.
             </span>
           </h2>
@@ -59,7 +59,7 @@ export function StackComparison() {
                     {r.legacyOk ? (
                       <Check className="size-4 mt-0.5 shrink-0 text-cream-mute2" aria-hidden />
                     ) : (
-                      <X className="size-4 mt-0.5 shrink-0 text-[#c44]" aria-hidden />
+                      <X className="size-4 mt-0.5 shrink-0 text-status-critical" aria-hidden />
                     )}
                     <span>{r.legacy}</span>
                   </div>

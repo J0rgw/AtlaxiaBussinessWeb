@@ -20,14 +20,7 @@ export function Hero() {
 
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-6">
-            <h1
-              className="font-display font-semibold text-cream-ink"
-              style={{
-                fontSize: "clamp(40px, 5.4vw, 72px)",
-                lineHeight: 0.98,
-                letterSpacing: "-0.03em",
-              }}
-            >
+            <h1 className="font-display font-semibold text-display-hero text-cream-ink">
               Infraestructura
               <br />
               <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
@@ -41,13 +34,13 @@ export function Hero() {
               AtlaXia sustituye los umbrales estáticos del SCADA legado y las reglas por firma de
               Fortinet OT con redes neuronales de grafos que{" "}
               <em className="not-italic font-semibold">tokenizan</em> el funcionamiento normal de tus
-              sensores que predicen y señalan la deriva en cuanto aparece.
+              sensores. Predicen y señalan la deriva en cuanto aparece.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[14px] font-medium bg-cream-ink text-cream-bg hover:bg-cream-ink2 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded-full text-[14px] font-medium bg-cream-ink text-cream-bg hover:bg-cream-ink2 transition-colors"
               >
                 Solicitar demo
                 <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
@@ -56,7 +49,7 @@ export function Hero() {
               </a>
               <a
                 href="#detection"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[14px] font-medium bg-transparent text-cream-ink ring-1 ring-cream-line hover:ring-cream-ink/40 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded-full text-[14px] font-medium bg-transparent text-cream-ink ring-1 ring-cream-line hover:ring-cream-ink/40 transition-colors"
               >
                 Ver detección en directo
               </a>
@@ -92,13 +85,13 @@ export function Hero() {
 
 function Metric({ value, label }: { value: string; label: string }) {
   return (
-    <div>
-      <div className="font-display tabular text-[28px] leading-none text-cream-ink tracking-tighter2">
-        {value}
-      </div>
-      <div className="mt-1.5 text-[10px] font-mono uppercase tracking-tracked text-cream-mute">
+    <div className="flex flex-col-reverse">
+      <dt className="mt-1.5 text-[10px] font-mono uppercase tracking-tracked text-cream-mute">
         {label}
-      </div>
+      </dt>
+      <dd className="font-display tabular text-[28px] leading-none text-cream-ink tracking-tighter2">
+        {value}
+      </dd>
     </div>
   );
 }
@@ -114,9 +107,9 @@ export function ProductFrame({
     <div className="rounded-card overflow-hidden ring-1 ring-cream-line shadow-cream bg-cream-elevated">
       <div className="flex items-center justify-between px-3 py-2 border-b border-cream-line bg-cream-inset">
         <div className="flex items-center gap-1.5">
-          <span className="size-2.5 rounded-full bg-[#E4E3DC]" aria-hidden />
-          <span className="size-2.5 rounded-full bg-[#E4E3DC]" aria-hidden />
-          <span className="size-2.5 rounded-full bg-[#E4E3DC]" aria-hidden />
+          <span className="size-2.5 rounded-full bg-cream-line" aria-hidden />
+          <span className="size-2.5 rounded-full bg-cream-line" aria-hidden />
+          <span className="size-2.5 rounded-full bg-cream-line" aria-hidden />
         </div>
         <span className="text-[11px] font-mono text-cream-mute2 tabular">{label}</span>
         <span className="w-12" aria-hidden />

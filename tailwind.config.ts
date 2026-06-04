@@ -16,7 +16,7 @@ const config: Config = {
           ink: "#0F100E",
           ink2: "#1F201D",
           mute: "#5F605A",
-          mute2: "#6E6F69",
+          mute2: "#5A5B55",
           mute3: "#8E8F88",
         },
         accent: {
@@ -48,6 +48,10 @@ const config: Config = {
           critical: "#f85149",
           emergency: "#da3633",
         },
+        error: {
+          bg: "#fdecec",
+          ink: "#8a1f1f",
+        },
       },
       fontFamily: {
         display: ["'Open Runde'", "Nunito", "ui-sans-serif", "system-ui", "sans-serif"],
@@ -64,7 +68,8 @@ const config: Config = {
         xl: ["28px", "36px"],
         "2xl": ["36px", "44px"],
         "3xl": ["48px", "56px"],
-        display: ["clamp(56px, 8vw, 112px)", { lineHeight: "0.96", letterSpacing: "-0.035em" }],
+        "display-hero": ["clamp(40px, 5.4vw, 72px)", { lineHeight: "0.98", letterSpacing: "-0.03em" }],
+        "display-cta": ["clamp(40px, 6vw, 80px)", { lineHeight: "0.98", letterSpacing: "-0.035em" }],
         eyebrow: ["12px", "16px"],
       },
       letterSpacing: {

@@ -1,11 +1,12 @@
 import Image from "next/image";
+import logoMark from "./imgs/logo-mark.png";
 
 export function Footer() {
   return (
     <footer className="border-t border-cream-line bg-cream-inset">
       <div className="container-x py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-3">
-          <Image src="/logo-mark.png" alt="" aria-hidden width={28} height={28} className="rounded-sm" />
+          <Image src={logoMark} alt="" aria-hidden width={28} height={28} className="rounded-sm" />
           <div>
             <div className="font-display text-[16px] font-semibold text-cream-ink tracking-tighter2">AtlaXia</div>
             <div className="text-[11px] font-mono text-cream-mute2 tabular">TrueData &middot; ICS/SCADA · infraestructura hidráulica</div>

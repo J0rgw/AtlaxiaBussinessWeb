@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import logoMark from "./imgs/logosinfondo.png";
 
 const ITEMS = [
   { href: "#platform", label: "Plataforma" },
@@ -67,7 +68,7 @@ export function Nav() {
         <div className="container-x h-[60px] flex items-center justify-between gap-3">
           <Link href="/" className="flex items-center gap-2.5">
             <Image
-              src="/imgs/logosinfondo.png"
+              src={logoMark}
               alt=""
               aria-hidden
               width={28}

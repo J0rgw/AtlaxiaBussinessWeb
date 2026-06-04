@@ -107,7 +107,7 @@ function Panel({
 }) {
   const accentStyle = tone === "accent" ? { color: "var(--accent-ink)" } : undefined;
   return (
-    <div className="rounded-card bg-cream-elevated ring-1 ring-cream-line shadow-cream overflow-hidden">
+    <div className="rounded-card bg-cream-elevated ring-1 ring-cream-line overflow-hidden">
       <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-cream-line">
         <div>
           <div className="font-display text-[18px] font-semibold tracking-tighter2 text-cream-ink" style={accentStyle}>

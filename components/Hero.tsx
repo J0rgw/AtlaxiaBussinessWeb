@@ -1,4 +1,4 @@
-import { AnomalyLiveDemo } from "./AnomalyLiveDemo";
+import { LiveSensorChart } from "./LiveSensorChart";
 
 export function Hero() {
   return (
@@ -15,7 +15,7 @@ export function Hero() {
           <span className="size-1.5 rounded-full bg-status-normal shrink-0" aria-hidden />
           <span className="eyebrow">ICS · SCADA · Infraestructura hidráulica</span>
           <span className="hidden sm:inline-block h-px w-12 bg-cream-line" aria-hidden />
-          <span className="hidden sm:inline-block eyebrow">v0.9 · ISA-101</span>
+          <span className="hidden sm:inline-block eyebrow">Colorimetría ISA-101</span>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-10 items-center">
@@ -34,13 +34,14 @@ export function Hero() {
               AtlaXia sustituye los umbrales estáticos del SCADA legado y las reglas por firma de
               Fortinet OT con redes neuronales de grafos que{" "}
               <em className="not-italic font-semibold">tokenizan</em> el funcionamiento normal de tus
-              sensores. Predicen y señalan la deriva en cuanto aparece.
+              sensores. Señalan la deriva el segundo en que ocurre, sobre la misma señal que ya
+              vigilas.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded-full text-[14px] font-medium bg-cream-ink text-cream-bg hover:bg-cream-ink2 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded text-[14px] font-medium bg-accent text-white hover:bg-accent-ink transition-colors"
               >
                 Solicitar demo
                 <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
@@ -49,16 +50,16 @@ export function Hero() {
               </a>
               <a
                 href="#detection"
-                className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded-full text-[14px] font-medium bg-transparent text-cream-ink ring-1 ring-cream-line hover:ring-cream-ink/40 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded text-[14px] font-medium bg-transparent text-cream-ink border border-cream-line hover:border-accent hover:text-accent-ink transition-colors"
               >
                 Ver detección en directo
               </a>
             </div>
 
             <dl className="mt-8 grid grid-cols-3 gap-6 max-w-md border-t border-cream-line pt-5">
-              <Metric value="1s" label="Bucle WebSocket" />
-              <Metric value="2.148" label="Sensores activos" />
-              <Metric value="11m" label="Anticipación media" />
+              <Metric value="1s" label="Latencia tiempo real" />
+              <Metric value="GNN" label="Tokens del normal" />
+              <Metric value="OT" label="Sin cloud" />
             </dl>
           </div>
 
@@ -69,11 +70,12 @@ export function Hero() {
                 style={{ background: "radial-gradient(closest-side, var(--accent-soft), transparent 70%)" }}
                 aria-hidden
               />
-              <ProductFrame label="atlaxia.local · pump-3 · en directo">
-                <AnomalyLiveDemo />
+              <ProductFrame label="atlaxia.local · AIT203">
+                <LiveSensorChart />
               </ProductFrame>
               <p className="mt-3 text-[12px] font-mono text-cream-mute2">
-                Bucle de repetición · desviación inyectada en pump-3 · el umbral estático (discontinuo) se pierde la deriva inicial.
+                AIT203 · conductividad · el punto rojo marca el valor que el modelo esperaba en el
+                pico; la distancia entre ambos puntos es la anomalía que el umbral estático no ve.
               </p>
             </div>
           </div>
@@ -104,17 +106,17 @@ export function ProductFrame({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-card overflow-hidden ring-1 ring-cream-line shadow-cream bg-cream-elevated">
+    <div className="rounded-card overflow-hidden ring-1 ring-cream-line shadow-float bg-cream-elevated">
       <div className="flex items-center justify-between px-3 py-2 border-b border-cream-line bg-cream-inset">
         <div className="flex items-center gap-1.5">
-          <span className="size-2.5 rounded-full bg-cream-line" aria-hidden />
-          <span className="size-2.5 rounded-full bg-cream-line" aria-hidden />
-          <span className="size-2.5 rounded-full bg-cream-line" aria-hidden />
+          <span className="size-2.5 rounded-full bg-cream-line2" aria-hidden />
+          <span className="size-2.5 rounded-full bg-cream-line2" aria-hidden />
+          <span className="size-2.5 rounded-full bg-cream-line2" aria-hidden />
         </div>
         <span className="text-[11px] font-mono text-cream-mute2 tabular">{label}</span>
         <span className="w-12" aria-hidden />
       </div>
-      <div className="bg-bg-base">{children}</div>
+      <div>{children}</div>
     </div>
   );
 }

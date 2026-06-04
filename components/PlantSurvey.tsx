@@ -91,7 +91,7 @@ function Stat({ value, label }: { value: string; label: string }) {
 
 function SurveyMock() {
   return (
-    <div className="rounded-card ring-1 ring-cream-line bg-cream-elevated shadow-cream overflow-hidden text-cream-ink">
+    <div className="rounded-card ring-1 ring-cream-line bg-cream-elevated overflow-hidden text-cream-ink">
       {/* App top bar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-cream-line bg-cream-inset">
         <span className="font-display font-semibold text-[14px] tracking-tighter2 text-cream-ink">

@@ -104,7 +104,7 @@ export function Nav() {
             </a>
             <a
               href="#contact"
-              className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium bg-cream-ink text-cream-bg hover:bg-cream-ink2 transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded text-[13px] font-medium bg-accent text-white hover:bg-accent-ink transition-colors"
             >
               Solicitar demo
               <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>
@@ -132,7 +132,7 @@ export function Nav() {
               </span>
               <span
                 aria-hidden
-                className={`inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full border font-mono text-[11px] tracking-tracked uppercase transition-colors ${
+                className={`inline-flex items-center gap-1.5 h-9 px-3.5 rounded border font-mono text-[11px] tracking-tracked uppercase transition-colors ${
                   open
                     ? "border-cream-ink bg-cream-ink text-cream-bg"
                     : "border-cream-line2 text-cream-ink"
@@ -211,7 +211,7 @@ export function Nav() {
             <a
               href="#contact"
               onClick={(e) => handleAnchorClick(e, "#contact")}
-              className="inline-flex items-center gap-1.5 px-4 py-3 rounded-full text-[14px] font-medium bg-cream-ink text-cream-bg min-h-[44px]"
+              className="inline-flex items-center gap-1.5 px-4 py-3 rounded text-[14px] font-medium bg-accent text-white min-h-[44px]"
             >
               Solicitar demo
               <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>

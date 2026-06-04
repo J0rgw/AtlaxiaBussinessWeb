@@ -64,7 +64,7 @@ export function RequestDemoForm() {
         e.preventDefault();
         void submit(e.currentTarget);
       }}
-      className="text-left rounded-card ring-1 ring-cream-line bg-cream-elevated shadow-cream p-6 sm:p-8"
+      className="text-left rounded-card ring-1 ring-cream-line bg-cream-elevated p-6 sm:p-8"
       aria-label="Formulario de solicitud de demo"
       noValidate
     >
@@ -124,7 +124,7 @@ export function RequestDemoForm() {
         <button
           type="submit"
           disabled={status === "loading"}
-          className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded-full text-[14px] font-medium bg-cream-ink text-cream-bg hover:bg-cream-ink2 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded text-[14px] font-medium bg-accent text-white hover:bg-accent-ink disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
           {status === "loading" ? (
             <>
@@ -195,7 +195,7 @@ function Field({
 function Success() {
   return (
     <div
-      className="rounded-card ring-1 ring-cream-line bg-cream-elevated shadow-cream p-8 text-center"
+      className="rounded-card ring-1 ring-cream-line bg-cream-elevated p-8 text-center"
       role="status"
       aria-live="polite"
     >

@@ -5,19 +5,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Marketing surfaces (from official design)
+        // Marketing surfaces — single source of truth lives in app/globals.css :root
         cream: {
-          bg: "#F7F6F2",
-          inset: "#EFEEE8",
-          elevated: "#FFFFFF",
-          line: "#E4E3DC",
-          line2: "#DEDDD6",
-          line3: "#D6D5CC",
-          ink: "#0F100E",
-          ink2: "#1F201D",
-          mute: "#5F605A",
-          mute2: "#5A5B55",
-          mute3: "#8E8F88",
+          bg: "var(--bg)",
+          inset: "var(--bg-inset)",
+          elevated: "var(--bg-elevated)",
+          line: "var(--line)",
+          line2: "var(--line2)",
+          line3: "var(--line3)",
+          ink: "var(--ink)",
+          ink2: "var(--ink2)",
+          mute: "var(--mute)",
+          mute2: "var(--mute2)",
+          mute3: "var(--mute3)",
         },
         accent: {
           DEFAULT: "var(--accent)",
@@ -78,13 +78,12 @@ const config: Config = {
         tracked: "0.18em",
       },
       borderRadius: {
-        DEFAULT: "6px",
-        card: "10px",
-        xl2: "14px",
+        sm: "var(--r-sm)",
+        DEFAULT: "var(--r-md)",
+        card: "var(--r-lg)",
       },
       boxShadow: {
-        glow: "0 0 0 1px rgba(88,166,255,0.18), 0 8px 32px -8px rgba(88,166,255,0.18)",
-        cream: "0 1px 0 rgba(15,16,14,0.04), 0 24px 48px -28px rgba(15,16,14,0.18)",
+        float: "var(--shadow-float)",
       },
       maxWidth: {
         container: "1280px",

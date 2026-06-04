@@ -79,7 +79,7 @@ export function ForecastChart() {
         </div>
 
         <div className="lg:col-span-7">
-          <div className="rounded-card ring-1 ring-cream-line bg-cream-elevated shadow-cream overflow-hidden">
+          <div className="rounded-card ring-1 ring-cream-line bg-cream-elevated overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3 border-b border-cream-line text-[11px] font-mono">
               <div className="flex items-center gap-3 text-cream-ink2">
                 <span className="text-cream-ink font-semibold">tank-2.pressure</span>

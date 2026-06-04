@@ -7,38 +7,99 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Marketing tokens (from AtlaXia Landing standalone) */
-  --bg: #F7F6F2;
-  --bg-inset: #EFEEE8;
-  --bg-elevated: #FFFFFF;
-  --line: #E4E3DC;
-  --line2: #DEDDD6;
-  --ink: #0F100E;
-  --ink2: #1F201D;
-  --mute: #5F605A;
-  --mute2: #5A5B55;
+/* =====================================================================
+   AtlaXia — design tokens & shape spec   (FUENTE ÚNICA DE VERDAD)
+   Selección: A1 cobalto · S2 papel tintado · B1 botón rect · P1 plano
+              · R1 radios 4/6/8 · C2 frame con dots
+   ---------------------------------------------------------------------
+   SHAPE DIRECTIVES — implementación (Claude Code):
 
-  --accent-h: 165;
-  --accent: oklch(0.62 0.10 var(--accent-h));
-  --accent-ink: oklch(0.42 0.10 var(--accent-h));
+   1. FUENTE ÚNICA. Este :root manda. En tailwind.config.ts haz que cream.*,
+      accent.*, borderRadius y boxShadow REFERENCIEN estas variables (no hex
+      duros), para que todo siga a este archivo:
+        cream: { bg:'var(--bg)', inset:'var(--bg-inset)', elevated:'var(--bg-elevated)',
+                 line:'var(--line)', line2:'var(--line2)', line3:'var(--line3)',
+                 ink:'var(--ink)', ink2:'var(--ink2)',
+                 mute:'var(--mute)', mute2:'var(--mute2)', mute3:'var(--mute3)' }
+        accent: { DEFAULT:'var(--accent)', ink:'var(--accent-ink)', soft:'var(--accent-soft)' }
+        borderRadius: { sm:'var(--r-sm)', DEFAULT:'var(--r-md)', card:'var(--r-lg)' }  // ELIMINA xl2:14px
+        boxShadow:    { float:'var(--shadow-float)' }                                  // ELIMINA 'cream' y 'glow'
+      Mantén la paleta DARK del producto (bg.* / border.* / text.* / status.*) tal cual.
+
+   2. BOTONES (B1 — rectángulo, NO píldora). Sustituye todo `rounded-full` de
+      botón/enlace-CTA (Nav, Hero, CTA, RequestDemoForm) por `rounded` (= --r-md,
+      6px). Usa el primitive Button de atlaxia-ui.tsx:
+        primary  : bg-accent text-white hover:bg-accent-ink active:scale-[.99]
+        secondary: border border-cream-line hover:border-accent hover:text-accent-ink
+        ghost    : text-cream-mute hover:text-cream-ink
+      focus-visible: ring-2 ring-accent ring-offset-2. (Toggle a píldora: --r-btn: 999px.)
+
+   3. PROFUNDIDAD (P1 — plano + hairline). Estandariza en `border` real de 1px
+      (no `ring-1`). Quita `shadow-cream`/`glow` de cards, tabla, formulario y
+      contenedores de mini-visuales (--shadow-card: none). Deja UNA sombra fría
+      (--shadow-float) SOLO en el ProductFrame flotante del hero.
+
+   4. RADIOS (R1 — 4/6/8). inputs/chips → rounded-sm (4) · botones → rounded (6)
+      · cards/paneles → rounded-card (8). No uses 10–14px en ningún sitio.
+
+   5. PRODUCT FRAME (C2 — se MANTIENEN los 3 dots tipo macOS). Conserva la
+      cabecera de 3 puntos del ProductFrame original; NO uses la variante
+      CornerTicks de atlaxia-ui.tsx. Recolorea los dots a `bg-cream-line2` y la
+      barra a `bg-cream-inset` para que no queden cálidos sobre el papel frío.
+
+   6. TABLA COMPARATIVA. Columna AtlaXia: fondo `bg-accent-soft/60` + borde
+      izquierdo 2px `border-accent` con `rounded-none` (borde de un solo lado).
+      Columna legacy: texto `cream-mute2`, viñeta `—`/`•` en `cream-mute3`,
+      check de AtlaXia en `accent-ink`. (Ver CompareRow en atlaxia-ui.tsx.)
+
+   7. TEXTURA. La rejilla `.cream-grid` se tiñe hacia el cobalto (ya aplicado).
+   ===================================================================== */
+
+:root {
+  /* --- Superficie clara: S2 · papel tintado a cobalto -------------- */
+  --bg:           #F2F4F8;
+  --bg-inset:     #EAEDF2;
+  --bg-elevated:  #FFFFFF;
+  --line:         #DFE3EA;
+  --line2:        #D6DBE3;
+  --line3:        #CDD3DC;
+  --ink:          #0E1116;
+  --ink2:         #1B2026;
+  --mute:         #5B6169;
+  --mute2:        #6B7178;
+  --mute3:        #8A9099;
+
+  /* --- Acento: A1 · cobalto (unifica con el #58a6ff del producto) -- */
+  --accent-h:    255;
+  --accent:      oklch(0.58 0.14 var(--accent-h));
+  --accent-ink:  oklch(0.46 0.15 var(--accent-h));
   --accent-soft: oklch(0.94 0.04 var(--accent-h));
 
+  /* --- Radios: R1 · 4 / 6 / 8 ------------------------------------- */
+  --r-sm: 4px;   /* inputs, chips, status pills */
+  --r-md: 6px;   /* botones */
+  --r-lg: 8px;   /* cards, paneles */
+  --r-btn: var(--r-md);  /* 999px para volver a píldora (B2) */
+
+  /* --- Profundidad: P1 · plano; sombra fría solo en hero frame ---- */
+  --shadow-card:  none;
+  --shadow-float: 0 16px 40px -24px rgba(14, 17, 22, 0.22);
+
   /* OT operational status — mirrors Tailwind status.* tokens for use in SVG attributes */
-  --status-normal: #3fb950;
-  --status-advisory: #58a6ff;
-  --status-warning: #d29922;
-  --status-critical: #f85149;
+  --status-normal:    #3fb950;
+  --status-advisory:  #58a6ff;
+  --status-warning:   #d29922;
+  --status-critical:  #f85149;
   --status-emergency: #da3633;
 
   /* Chart chrome (used inside ProductFrame dark interiors) */
-  --chart-grid: #21262d;
-  --chart-baseline: #484f58;
+  --chart-grid:        #21262d;
+  --chart-baseline:    #484f58;
   --chart-stroke-mute: #8b949e;
-  --chart-probe: #e6edf3;
+  --chart-probe:       #e6edf3;
 
   /* Form alert */
-  --error-bg: #fdecec;
+  --error-bg:  #fdecec;
   --error-ink: #8a1f1f;
 
   --container: 1280px;
@@ -69,6 +130,14 @@ html, body {
   padding-inline: var(--gutter);
 }
 
+.display {
+  font-family: "Open Runde", Nunito, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.96;
+  font-size: clamp(56px, 8vw, 112px);
+}
+
 .h-section {
   font-family: "Open Runde", Nunito, ui-sans-serif, system-ui, sans-serif;
   font-weight: 600;
@@ -89,11 +158,18 @@ html, body {
   border-color: var(--line);
 }
 
+/* Rejilla del hero — tintada hacia el cobalto (antes: negro cálido) */
 .cream-grid {
   background-image:
-    linear-gradient(to right, rgba(15, 16, 14, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 16, 14, 0.045) 1px, transparent 1px);
+    linear-gradient(to right,  rgba(40, 79, 181, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(40, 79, 181, 0.05) 1px, transparent 1px);
   background-size: 64px 64px;
+}
+
+.dark-product {
+  /* Chrome del producto embebido sobre el papel claro */
+  background: #0d1117;
+  color: #e6edf3;
 }
 
 @media (prefers-reduced-motion: reduce) {

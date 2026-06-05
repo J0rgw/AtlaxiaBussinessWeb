@@ -1,32 +1,71 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { MiniDetect } from "./mini/MiniDetect";
-import { MiniForecast } from "./mini/MiniForecast";
+import { MiniExpected } from "./mini/MiniExpected";
 import { MiniTokens } from "./mini/MiniTokens";
 
 const items = [
   {
     Visual: MiniDetect,
-    dot: "var(--status-normal)",
     eyebrow: "Detección",
-    title: "Bucle de 1 segundo, en tiempo real.",
-    body: "Telemetría WebSocket a 1 Hz, inferencia en línea. Sin polling, sin retraso de batch, sin esperar a pipelines nocturnos.",
+    title: "Anomalías al segundo.",
+    body: "Telemetría a 1 Hz, inferencia en línea.",
   },
   {
     Visual: MiniTokens,
-    dot: "var(--accent-ink)",
-    eyebrow: "Diseño de tokens",
-    title: "GNN sobre grafos de planta.",
-    body: "CoGNN y STGNN aprenden la variedad normal de cada sensor condicionada por sus vecinos. No una línea estática afinada a mano.",
+    eyebrow: "Modelo",
+    title: "GNN sobre el grafo de planta.",
+    body: "Cada sensor aprende junto a sus vecinos.",
   },
   {
-    Visual: MiniForecast,
-    dot: "var(--status-warning)",
-    eyebrow: "Predicción",
-    title: "Anticípate al fallo.",
-    body: "Banda de predicción de 30 minutos por sensor. La alerta es la divergencia, no el cruce del umbral.",
+    Visual: MiniExpected,
+    eyebrow: "Anomalía",
+    title: "Observado vs. esperado.",
+    body: "La alerta es la divergencia, no un umbral.",
   },
 ];
 
+const EASE_OUT_QUART = "cubic-bezier(0.25, 1, 0.5, 1)";
+
 export function Differentiators() {
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const [revealed, setRevealed] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setReducedMotion(true);
+      setRevealed(true);
+      return;
+    }
+    const el = rowRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setRevealed(true);
+      return;
+    }
+    let rafId = 0;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          rafId = requestAnimationFrame(() =>
+            requestAnimationFrame(() => setRevealed(true))
+          );
+          io.disconnect();
+        }
+      },
+      { threshold: 0.08 }
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <section id="platform" className="border-t border-cream-line">
       <div className="container-x py-24">
@@ -36,30 +75,38 @@ export function Differentiators() {
             tres cosas que no trae el stack OT habitual
           </p>
         </div>
-        <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-cream-line border-y border-cream-line">
-          {items.map((it) => {
+        <div
+          ref={rowRef}
+          className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-cream-line border-y border-cream-line"
+        >
+          {items.map((it, i) => {
             const Visual = it.Visual;
+            const transitionProps = reducedMotion
+              ? undefined
+              : {
+                  opacity: revealed ? 1 : 0,
+                  transform: revealed ? "translateY(0)" : "translateY(24px)",
+                  transition: `opacity 700ms ${EASE_OUT_QUART}, transform 700ms ${EASE_OUT_QUART}`,
+                  transitionDelay: `${i * 120}ms`,
+                  willChange: revealed ? undefined : "opacity, transform",
+                };
             return (
               <div
                 key={it.title}
                 className="px-7 pt-6 pb-10 first:pl-0 last:pr-0 md:first:pl-7 md:last:pr-7"
+                style={transitionProps}
               >
                 <div className="rounded ring-1 ring-cream-line bg-cream-elevated overflow-hidden">
                   <Visual />
                 </div>
 
-                <div className="mt-6 flex items-center gap-2.5">
-                  <span
-                    className="size-1.5 rounded-full"
-                    style={{ background: it.dot }}
-                    aria-hidden
-                  />
+                <div className="mt-6">
                   <span className="eyebrow">{it.eyebrow}</span>
                 </div>
-                <div className="mt-4 font-display text-[28px] leading-[1.05] tracking-tighter2 text-cream-ink">
+                <div className="mt-4 font-display text-[24px] leading-[1.1] tracking-tighter2 text-cream-ink">
                   {it.title}
                 </div>
-                <p className="mt-4 text-[15px] leading-relaxed text-cream-ink2">{it.body}</p>
+                <p className="mt-3 text-[14px] leading-relaxed text-cream-ink2">{it.body}</p>
               </div>
             );
           })}

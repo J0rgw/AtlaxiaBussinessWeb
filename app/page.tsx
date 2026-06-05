@@ -2,8 +2,8 @@ import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { Differentiators } from "@/components/Differentiators";
 import { TokenVsRules } from "@/components/TokenVsRules";
-import { ForecastChart } from "@/components/ForecastChart";
-import { StackComparison } from "@/components/StackComparison";
+import { PlantContext } from "@/components/PlantContext";
+import { Deployment } from "@/components/Deployment";
 import { PlantSurvey } from "@/components/PlantSurvey";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
@@ -16,8 +16,8 @@ export default function Page() {
         <Hero />
         <Differentiators />
         <TokenVsRules />
-        <ForecastChart />
-        <StackComparison />
+        <PlantContext />
+        <Deployment />
         <PlantSurvey />
         <CTA />
       </main>

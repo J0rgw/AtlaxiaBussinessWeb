@@ -8,8 +8,8 @@ import logoMark from "./imgs/logosinfondo.png";
 const ITEMS = [
   { href: "#platform", label: "Plataforma" },
   { href: "#detection", label: "Detección" },
-  { href: "#forecasting", label: "Predicción" },
-  { href: "#compare", label: "vs SCADA" },
+  { href: "#context", label: "Contexto" },
+  { href: "#deployment", label: "Despliegue" },
   { href: "#onboarding", label: "Primeros pasos" },
 ];
 

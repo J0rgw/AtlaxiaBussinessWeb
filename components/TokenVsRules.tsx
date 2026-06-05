@@ -1,34 +1,132 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "@/lib/use-in-view";
 
-const W = 360;
-const H = 200;
+const W = 760;
+const H = 260;
+const PAD = { left: 52, right: 24, top: 18, bottom: 30 };
+const PLOT_W = W - PAD.left - PAD.right;
+const PLOT_H = H - PAD.top - PAD.bottom;
 
-function trace() {
-  const pts: { x: number; y: number }[] = [];
-  for (let i = 0; i <= 60; i++) {
-    const x = (i / 60) * W;
-    const base = 110 + Math.sin(i * 0.32) * 14 + Math.sin(i * 0.11) * 8;
+const Y_MIN = 70;
+const Y_MAX = 170;
+const yTicks = [170, 150, 130, 110, 90, 70];
+
+const xLabels = [
+  { label: "00:00", x: 0.05 },
+  { label: "01:00", x: 0.32 },
+  { label: "02:00", x: 0.58 },
+  { label: "03:00", x: 0.84 },
+];
+
+function buildTrace() {
+  const N = 60;
+  const out: { x: number; v: number; expected: number }[] = [];
+  for (let i = 0; i <= N; i++) {
+    const x = i / N;
+    const expected = 110 + Math.sin(i * 0.32) * 14 + Math.sin(i * 0.11) * 8;
     const drift = i > 28 ? Math.pow((i - 28) / 32, 1.7) * 28 : 0;
     const noise = Math.sin(i * 1.7) * 1.6;
-    pts.push({ x, y: base + drift + noise });
+    out.push({ x, v: expected + drift + noise, expected });
   }
-  return pts;
+  return out;
 }
 
-const data = trace();
-const linePath = data.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
-const areaPath = `${linePath} L ${W} ${H} L 0 ${H} Z`;
+const samples = buildTrace();
+
+function project(x: number, v: number) {
+  const px = PAD.left + x * PLOT_W;
+  const py = PAD.top + ((Y_MAX - v) / (Y_MAX - Y_MIN)) * PLOT_H;
+  return { px, py };
+}
+
+const linePath = samples
+  .map((s, i) => {
+    const { px, py } = project(s.x, s.v);
+    return `${i === 0 ? "M" : "L"} ${px.toFixed(2)} ${py.toFixed(2)}`;
+  })
+  .join(" ");
+
+const areaPath = (() => {
+  const top = linePath;
+  const lastPx = project(samples[samples.length - 1].x, Y_MIN).px.toFixed(2);
+  const firstPx = project(samples[0].x, Y_MIN).px.toFixed(2);
+  const bottomY = (PAD.top + PLOT_H).toFixed(2);
+  return `${top} L ${lastPx} ${bottomY} L ${firstPx} ${bottomY} Z`;
+})();
 
 const THRESHOLD = 150;
-const ruleAlertIdx = data.findIndex((p) => p.y > THRESHOLD);
-const tokenAlertIdx = 30;
+const ruleAlertIdx = samples.findIndex((s) => s.v > THRESHOLD);
+
+const tokenAlertIdx = 45;
+const tokenActual = samples[tokenAlertIdx];
+const tokenActualPos = project(tokenActual.x, tokenActual.v);
+const tokenExpectedPos = project(tokenActual.x, tokenActual.expected);
+
+const thresholdY = project(0, THRESHOLD).py;
+
+const EASE_OUT_QUART = "cubic-bezier(0.25, 1, 0.5, 1)";
+
+const panels = [
+  {
+    label: "SCADA por reglas",
+    sub: "Umbral fijo.",
+    statusLabel: ruleAlertIdx > 0 ? `t+${ruleAlertIdx}s` : "—",
+    footnote: "Solo dispara cuando el valor cruza la línea.",
+    variant: "rules" as const,
+    frameLabel: "atlaxia.local · regla.001",
+  },
+  {
+    label: "AtlaXia",
+    sub: "Esperado por contexto.",
+    statusLabel: `t+${tokenAlertIdx}s`,
+    footnote: "Detecta la divergencia frente al valor esperado.",
+    variant: "tokens" as const,
+    frameLabel: "atlaxia.local · modelo.gnn",
+  },
+];
 
 export function TokenVsRules() {
   const [tick, setTick] = useState(0);
   const { ref: sectionRef, inView } = useInView<HTMLElement>();
+
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const [revealed, setRevealed] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setReducedMotion(true);
+      setRevealed(true);
+      return;
+    }
+    const el = rowRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setRevealed(true);
+      return;
+    }
+    let rafId = 0;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          rafId = requestAnimationFrame(() =>
+            requestAnimationFrame(() => setRevealed(true))
+          );
+          io.disconnect();
+        }
+      },
+      { threshold: 0.08 }
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -44,46 +142,46 @@ export function TokenVsRules() {
       <div className="container-x py-24">
         <div className="grid lg:grid-cols-12 gap-10 items-end mb-12">
           <div className="lg:col-span-7">
-            <p className="eyebrow">01 · Diseño de tokens</p>
+            <p className="eyebrow">01 · Detección</p>
             <h2 className="h-section text-cream-ink mt-4">
-              Los umbrales atrapan incidentes.
+              El umbral espera al cruce.
               <br />
-              <span className="font-normal">
-                Los tokens detectan la deriva antes del incidente.
-              </span>
+              <span className="font-normal">El modelo ve la divergencia.</span>
             </h2>
           </div>
           <div className="lg:col-span-5">
             <p className="text-[16px] leading-relaxed text-cream-ink2">
-              SCADA típica + Fortinet OT alerta en cuanto un valor cruza una línea afinada a mano.
-              Para entonces el evento ya ha ocurrido. La red neuronal de grafos de AtlaXia aprende
-              un <em className="not-italic font-semibold">token</em>, un embedding de alta
-              dimensión, de la variedad normal de cada sensor, condicionado por el resto de
-              la planta. La deriva aparece en cuanto el token se desvía.
+              El SCADA dispara cuando un valor cruza una línea fija. AtlaXia compara
+              cada lectura con el valor esperado por su contexto en planta.
             </p>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          <Panel
-            label="SCADA por reglas"
-            sub="Umbral estático · una señal a la vez"
-            tone="muted"
-            alertLabel={ruleAlertIdx > 0 ? `Alerta en t+${ruleAlertIdx}s` : "—"}
-            footnote="Se pierde los 30 segundos de deriva previos al cruce."
-          >
-            <ChartPanel tick={tick} alertIdx={ruleAlertIdx} alertColor="var(--status-critical)" showThreshold variant="rules" />
-          </Panel>
-
-          <Panel
-            label="AtlaXia · tokens GNN"
-            sub="Variedad aprendida · contexto entre sensores"
-            tone="accent"
-            alertLabel={`Deriva detectada en t+${tokenAlertIdx}s`}
-            footnote={`${ruleAlertIdx - tokenAlertIdx}s antes que el enfoque por umbral.`}
-          >
-            <ChartPanel tick={tick} alertIdx={tokenAlertIdx} alertColor="var(--status-advisory)" variant="tokens" />
-          </Panel>
+        <div ref={rowRef} className="grid lg:grid-cols-2 gap-6">
+          {panels.map((p, i) => {
+            const transitionProps = reducedMotion
+              ? undefined
+              : {
+                  opacity: revealed ? 1 : 0,
+                  transform: revealed ? "translateY(0)" : "translateY(24px)",
+                  transition: `opacity 700ms ${EASE_OUT_QUART}, transform 700ms ${EASE_OUT_QUART}`,
+                  transitionDelay: `${i * 120}ms`,
+                  willChange: revealed ? undefined : "opacity, transform",
+                };
+            return (
+              <div key={p.label} style={transitionProps}>
+                <Panel
+                  label={p.label}
+                  sub={p.sub}
+                  statusLabel={p.statusLabel}
+                  footnote={p.footnote}
+                  frameLabel={p.frameLabel}
+                >
+                  <ChartPanel tick={tick} variant={p.variant} />
+                </Panel>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -93,129 +191,248 @@ export function TokenVsRules() {
 function Panel({
   label,
   sub,
-  tone,
-  alertLabel,
+  statusLabel,
   footnote,
+  frameLabel,
   children,
 }: {
   label: string;
   sub: string;
-  tone: "muted" | "accent";
-  alertLabel: string;
+  statusLabel: string;
   footnote: string;
+  frameLabel: string;
   children: React.ReactNode;
 }) {
-  const accentStyle = tone === "accent" ? { color: "var(--accent-ink)" } : undefined;
   return (
     <div className="rounded-card bg-cream-elevated ring-1 ring-cream-line overflow-hidden">
       <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-cream-line">
         <div>
-          <div className="font-display text-[18px] font-semibold tracking-tighter2 text-cream-ink" style={accentStyle}>
+          <div className="font-display text-[18px] font-semibold tracking-tighter2 text-cream-ink">
             {label}
           </div>
           <div className="text-[11px] font-mono text-cream-mute2 mt-1">{sub}</div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] uppercase tracking-tracked text-cream-mute font-mono">Detectado</div>
-          <div className="text-[12px] font-mono tabular text-cream-ink mt-1" style={accentStyle}>
-            {alertLabel}
+          <div className="text-[10px] uppercase tracking-tracked text-cream-mute font-mono">
+            Detectado
+          </div>
+          <div className="text-[12px] font-mono tabular text-cream-ink mt-1">
+            {statusLabel}
           </div>
         </div>
       </div>
-      <div className="bg-bg-base">{children}</div>
-      <p className="px-5 py-4 text-[13px] text-cream-ink2 leading-relaxed">{footnote}</p>
+      <div className="flex items-center justify-between px-4 py-2 border-b border-cream-line bg-cream-inset">
+        <div className="flex items-center gap-1.5">
+          <span className="size-2 rounded-full bg-cream-line2" aria-hidden />
+          <span className="size-2 rounded-full bg-cream-line2" aria-hidden />
+          <span className="size-2 rounded-full bg-cream-line2" aria-hidden />
+        </div>
+        <span className="text-[11px] font-mono text-cream-mute2 tabular">{frameLabel}</span>
+        <span className="w-10" aria-hidden />
+      </div>
+      <div className="bg-cream-elevated">{children}</div>
+      <p className="px-5 py-4 text-[13px] text-cream-ink2 leading-relaxed border-t border-cream-line">
+        {footnote}
+      </p>
     </div>
   );
 }
 
 function ChartPanel({
   tick,
-  alertIdx,
-  alertColor,
-  showThreshold = false,
   variant,
 }: {
   tick: number;
-  alertIdx: number;
-  alertColor: string;
-  showThreshold?: boolean;
   variant: "rules" | "tokens";
 }) {
-  const probeIdx = Math.min(data.length - 1, Math.floor((tick / 60) * data.length));
-  const probe = data[probeIdx];
-  const passedAlert = probeIdx >= alertIdx && alertIdx > 0;
+  const probeIdx = Math.min(
+    samples.length - 1,
+    Math.floor((tick / 60) * samples.length)
+  );
+  const probe = samples[probeIdx];
+  const probePos = project(probe.x, probe.v);
+
   const ariaLabel =
     variant === "rules"
-      ? "Gráfico: una línea cruza un umbral estático y dispara la alerta tarde, treinta segundos después de iniciarse la deriva."
-      : "Gráfico: la misma línea entra en una banda aprendida y se marca como deriva treinta segundos antes del cruce del umbral.";
+      ? "Gráfico: la señal evoluciona bajo un umbral fijo a 150. La regla solo dispararía al cruzarlo."
+      : "Gráfico: la misma señal, con el valor esperado por el modelo en cada instante. El marcador rojo señala el valor esperado en el momento de la divergencia.";
 
   return (
-    <div className="relative overflow-hidden" role="img" aria-label={ariaLabel}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[220px] block" preserveAspectRatio="none" aria-hidden>
-        <defs>
-          <pattern id={`grid-${variant}`} width="36" height="28" patternUnits="userSpaceOnUse">
-            <path d="M 36 0 L 0 0 0 28" fill="none" stroke="var(--chart-grid)" strokeWidth="1" />
-          </pattern>
-          <linearGradient id={`fill-${variant}`} x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor={alertColor} stopOpacity={passedAlert ? 0.22 : 0.08} />
-            <stop offset="100%" stopColor={alertColor} stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <rect width={W} height={H} fill={`url(#grid-${variant})`} />
+    <div className="relative bg-cream-elevated" role="img" aria-label={ariaLabel}>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="w-full h-[260px] block"
+        preserveAspectRatio="none"
+      >
+        {yTicks.map((y) => {
+          const py = project(0, y).py;
+          return (
+            <line
+              key={`grid-${y}`}
+              x1={PAD.left}
+              x2={W - PAD.right}
+              y1={py}
+              y2={py}
+              stroke="var(--line2)"
+              strokeWidth="1"
+              strokeDasharray="4 5"
+            />
+          );
+        })}
 
-        {variant === "tokens" && (
-          <path
-            d={`M 0 ${data[0].y - 14} ${data
-              .map((p) => `L ${p.x} ${p.y - 14}`)
-              .join(" ")} ${[...data].reverse().map((p) => `L ${p.x} ${p.y + 14}`).join(" ")} Z`}
-            fill="var(--status-advisory)"
-            fillOpacity="0.08"
-            stroke="var(--status-advisory)"
-            strokeOpacity="0.3"
-            strokeDasharray="2 3"
-            strokeWidth="1"
+        {variant === "rules" && (
+          <line
+            x1={PAD.left}
+            x2={W - PAD.right}
+            y1={thresholdY}
+            y2={thresholdY}
+            stroke="var(--status-critical)"
+            strokeOpacity="0.65"
+            strokeDasharray="3 4"
+            strokeWidth="1.2"
           />
         )}
 
-        {showThreshold && (
-          <line x1="0" x2={W} y1={150} y2={150} stroke="var(--status-critical)" strokeOpacity="0.55" strokeDasharray="3 4" strokeWidth="1" />
+        <path d={areaPath} fill="var(--accent-soft)" fillOpacity="0.7" />
+        <path
+          d={linePath}
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+
+        {samples
+          .filter((_, i) => i % 3 === 0 || i === samples.length - 1)
+          .map((s, i) => {
+            const { px, py } = project(s.x, s.v);
+            const isLast = i === Math.floor(samples.length / 3);
+            return (
+              <circle
+                key={`dot-${i}`}
+                cx={px}
+                cy={py}
+                r={isLast ? 3 : 2.4}
+                fill="var(--bg-elevated)"
+                stroke="var(--accent)"
+                strokeWidth="1.5"
+              />
+            );
+          })}
+
+        {variant === "tokens" && (
+          <>
+            <line
+              x1={tokenActualPos.px}
+              x2={tokenExpectedPos.px}
+              y1={tokenActualPos.py}
+              y2={tokenExpectedPos.py}
+              stroke="var(--status-critical)"
+              strokeWidth="1"
+              strokeDasharray="3 3"
+              opacity="0.75"
+            />
+            <circle
+              cx={tokenExpectedPos.px}
+              cy={tokenExpectedPos.py}
+              r="9"
+              fill="var(--status-critical)"
+              fillOpacity="0.18"
+            >
+              <animate
+                attributeName="r"
+                values="8;14;8"
+                dur="1.8s"
+                repeatCount="indefinite"
+              />
+              <animate
+                attributeName="fill-opacity"
+                values="0.22;0;0.22"
+                dur="1.8s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <circle
+              cx={tokenExpectedPos.px}
+              cy={tokenExpectedPos.py}
+              r="3.6"
+              fill="var(--status-critical)"
+              stroke="var(--bg-elevated)"
+              strokeWidth="1.4"
+            />
+          </>
         )}
 
-        <path d={areaPath} fill={`url(#fill-${variant})`} />
-        <path d={linePath} fill="none" stroke={passedAlert ? alertColor : "var(--chart-stroke-mute)"} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        <circle
+          cx={probePos.px}
+          cy={probePos.py}
+          r="3.2"
+          fill="var(--accent-ink)"
+          stroke="var(--bg-elevated)"
+          strokeWidth="1.2"
+        />
 
-        {alertIdx > 0 && (
-          <g>
-            <line x1={data[alertIdx].x} x2={data[alertIdx].x} y1={0} y2={H} stroke={alertColor} strokeOpacity="0.35" strokeDasharray="2 3" />
-            <circle cx={data[alertIdx].x} cy={data[alertIdx].y} r="4" fill={alertColor} />
-          </g>
-        )}
+        {yTicks.map((y) => {
+          const py = project(0, y).py;
+          return (
+            <text
+              key={`yl-${y}`}
+              x={PAD.left - 10}
+              y={py + 3.5}
+              textAnchor="end"
+              fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+              fontSize="10"
+              fill="var(--mute2)"
+            >
+              {y}
+            </text>
+          );
+        })}
 
-        <circle cx={probe.x} cy={probe.y} r="3" fill="var(--chart-probe)" />
+        {xLabels.map((l) => (
+          <text
+            key={`xl-${l.label}`}
+            x={PAD.left + l.x * PLOT_W}
+            y={H - 10}
+            textAnchor="middle"
+            fontFamily="var(--font-jetbrains-mono), ui-monospace, monospace"
+            fontSize="10"
+            fill="var(--mute2)"
+          >
+            {l.label}
+          </text>
+        ))}
       </svg>
 
-      {showThreshold && (
+      {variant === "rules" && (
         <span
           aria-hidden
-          className="absolute font-mono text-[10px] pointer-events-none opacity-70"
-          style={{ left: "1.7%", top: `${((150 - 14) / H) * 100}%`, color: "var(--status-critical)" }}
+          className="absolute font-mono text-[10px] pointer-events-none"
+          style={{
+            left: `${((PAD.left + 8) / W) * 100}%`,
+            top: `${((thresholdY - 14) / H) * 100}%`,
+            color: "var(--status-critical)",
+          }}
         >
-          umbral = 150
+          umbral · 150
         </span>
       )}
 
-      {alertIdx > 0 && (
-        <span
+      {variant === "tokens" && (
+        <div
           aria-hidden
-          className="absolute font-mono text-[10px] pointer-events-none whitespace-nowrap"
+          className="absolute font-mono text-[10px] leading-tight pointer-events-none"
           style={{
-            left: `${((data[alertIdx].x + 6) / W) * 100}%`,
-            top: `${((data[alertIdx].y - 18) / H) * 100}%`,
-            color: alertColor,
+            left: `${((tokenExpectedPos.px + 10) / W) * 100}%`,
+            top: `${((tokenExpectedPos.py + 8) / H) * 100}%`,
           }}
         >
-          {variant === "tokens" ? "deriva" : "alerta"}
-        </span>
+          <div style={{ color: "var(--status-critical)" }} className="font-semibold">
+            modelo · {tokenActual.expected.toFixed(1)}
+          </div>
+          <div className="text-cream-mute2">esperado en ese instante</div>
+        </div>
       )}
     </div>
   );

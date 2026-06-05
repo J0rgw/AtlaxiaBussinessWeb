@@ -27,10 +27,10 @@ export function Hero() {
                 de vigilancia
               </span>
               <br />
-              en senores OT.
+              en sensores OT.
             </h1>
 
-            <p className="mt-6 text-[16px] leading-[1.55] text-cream-ink2 max-w-md">
+            <p className="mt-6 text-[16px] leading-[1.55] tesxt-cream-ink2 max-w-md">
               Cada anomalía al instante en que ocurre. Sin tocar tu SCADA.
             </p>
 

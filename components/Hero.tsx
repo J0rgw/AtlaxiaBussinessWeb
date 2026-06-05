@@ -11,10 +11,12 @@ export function Hero() {
       />
 
       <div className="container-x relative pt-10 pb-14 lg:pt-14 lg:pb-16">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-8">
-          <span className="size-1.5 rounded-full bg-status-normal shrink-0" aria-hidden />
-          <span className="eyebrow">ICS · SCADA · Infraestructura hidráulica</span>
-        </div>
+        <p className="eyebrow mb-8 flex items-baseline gap-x-3">
+          <span className="size-1.5 rounded-full bg-status-normal shrink-0 translate-y-[-1px]" aria-hidden />
+          <span className="min-w-0 flex-1 break-words">
+            ICS · SCADA<wbr /> · Infraestructura<wbr /> hidráulica
+          </span>
+        </p>
 
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-6">

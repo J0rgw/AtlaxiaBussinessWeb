@@ -93,7 +93,7 @@ export function Differentiators() {
             return (
               <div
                 key={it.title}
-                className="px-7 pt-6 pb-10 first:pl-0 last:pr-0 md:first:pl-7 md:last:pr-7"
+                className="px-7 pt-6 pb-10 md:first:pl-0 md:last:pr-0"
                 style={transitionProps}
               >
                 <div className="rounded ring-1 ring-cream-line bg-cream-elevated overflow-hidden">

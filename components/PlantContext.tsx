@@ -186,8 +186,7 @@ function PlantGraph({
     >
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full h-[380px] block"
-        preserveAspectRatio="none"
+        className="w-full aspect-[720/380] block"
       >
         <defs>
           <pattern id="pg-grid" width="32" height="32" patternUnits="userSpaceOnUse">

@@ -71,8 +71,7 @@ export function MiniExpected() {
     <svg
       ref={svgRef}
       viewBox={`0 0 ${W} ${H}`}
-      className="w-full h-[80px] block"
-      preserveAspectRatio="none"
+      className="w-full aspect-[3/1] block"
       aria-hidden
     >
       <defs>

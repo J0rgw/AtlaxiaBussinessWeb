@@ -261,8 +261,7 @@ function ChartPanel({
     <div className="relative bg-cream-elevated" role="img" aria-label={ariaLabel}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full h-[260px] block"
-        preserveAspectRatio="none"
+        className="w-full aspect-[760/260] block"
       >
         {yTicks.map((y) => {
           const py = project(0, y).py;

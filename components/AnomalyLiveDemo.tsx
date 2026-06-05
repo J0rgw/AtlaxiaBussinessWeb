@@ -119,7 +119,7 @@ export function AnomalyLiveDemo() {
       </div>
 
       <div className="relative">
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[220px] block" preserveAspectRatio="none">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full aspect-[520/220] block">
           <defs>
             <linearGradient id="series-fill" x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor={statusColor} stopOpacity="0.25" />

@@ -2,16 +2,25 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import logoMark from "./imgs/logosinfondo.png";
 
 const ITEMS = [
-  { href: "#platform", label: "Plataforma" },
-  { href: "#detection", label: "Detección" },
-  { href: "#context", label: "Contexto" },
-  { href: "#deployment", label: "Despliegue" },
-  { href: "#onboarding", label: "Primeros pasos" },
+  { href: "#platform", id: "platform", label: "Plataforma" },
+  { href: "#detection", id: "detection", label: "Detección" },
+  { href: "#context", id: "context", label: "Contexto" },
+  { href: "#deployment", id: "deployment", label: "Despliegue" },
+  { href: "#onboarding", id: "onboarding", label: "Primeros pasos" },
 ];
+
+const HEADER_OFFSET = 80;
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -19,10 +28,19 @@ export function Nav() {
   const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
 
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
+  const anchorRefs = useRef<Map<string, HTMLAnchorElement | null>>(new Map());
+  const [indicator, setIndicator] = useState<{ x: number; w: number } | null>(
+    null
+  );
+
   const close = useCallback((returnFocus: boolean) => {
     setOpen(false);
     if (returnFocus) {
-      requestAnimationFrame(() => triggerRef.current?.focus({ preventScroll: true }));
+      requestAnimationFrame(() =>
+        triggerRef.current?.focus({ preventScroll: true })
+      );
     }
   }, []);
 
@@ -46,6 +64,69 @@ export function Nav() {
       cancelAnimationFrame(focusTimer);
     };
   }, [open, close]);
+
+  useEffect(() => {
+    const sections = ITEMS.map((item) => ({
+      id: item.id,
+      el: document.getElementById(item.id),
+    })).filter((s): s is { id: string; el: HTMLElement } => s.el !== null);
+
+    if (sections.length === 0) return;
+
+    let rafId = 0;
+    const updateActive = () => {
+      rafId = 0;
+      let current: string | null = null;
+      for (const s of sections) {
+        const rect = s.el.getBoundingClientRect();
+        if (
+          rect.top - HEADER_OFFSET <= 0 &&
+          rect.bottom - HEADER_OFFSET > 0
+        ) {
+          current = s.id;
+          break;
+        }
+      }
+      setActiveId((prev) => (prev === current ? prev : current));
+    };
+
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(updateActive);
+    };
+
+    updateActive();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      if (!activeId || !navRef.current) {
+        setIndicator(null);
+        return;
+      }
+      const anchor = anchorRefs.current.get(activeId);
+      if (!anchor) {
+        setIndicator(null);
+        return;
+      }
+      const navRect = navRef.current.getBoundingClientRect();
+      const anchorRect = anchor.getBoundingClientRect();
+      setIndicator({
+        x: anchorRect.left - navRect.left,
+        w: anchorRect.width,
+      });
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [activeId]);
 
   const handleAnchorClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -82,30 +163,52 @@ export function Nav() {
           </Link>
 
           <nav
+            ref={navRef}
             aria-label="Secciones"
-            className="hidden md:flex items-center gap-7 text-[14px] text-cream-mute"
+            className="hidden lg:flex relative items-center gap-7 h-full text-[14px]"
           >
-            {ITEMS.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="py-2 -my-2 hover:text-cream-ink transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
+            {ITEMS.map((item) => {
+              const isActive = activeId === item.id;
+              return (
+                <a
+                  key={item.href}
+                  ref={(el) => {
+                    anchorRefs.current.set(item.id, el);
+                  }}
+                  href={item.href}
+                  aria-current={isActive ? "location" : undefined}
+                  className={`py-2 -my-2 transition-colors duration-200 ${
+                    isActive
+                      ? "text-cream-ink"
+                      : "text-cream-mute hover:text-cream-ink"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+            <span
+              aria-hidden
+              className="pointer-events-none absolute bottom-0 left-0 h-[1.5px] w-px bg-cream-ink origin-left will-change-transform transition-[transform,opacity] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
+              style={{
+                opacity: indicator ? 1 : 0,
+                transform: indicator
+                  ? `translate3d(${indicator.x}px, 0, 0) scaleX(${indicator.w})`
+                  : "translate3d(0, 0, 0) scaleX(0)",
+              }}
+            />
           </nav>
 
           <div className="flex items-center gap-2">
             <a
               href="#contact"
-              className="hidden md:inline-flex text-[14px] text-cream-mute hover:text-cream-ink px-3 py-1.5 transition-colors"
+              className="hidden lg:inline-flex text-[14px] text-cream-mute hover:text-cream-ink px-3 py-1.5 transition-colors"
             >
               Contacto
             </a>
             <a
               href="#contact"
-              className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded text-[13px] font-medium bg-accent text-white hover:bg-accent-ink transition-colors"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded text-[13px] font-medium bg-accent text-white hover:bg-accent-ink transition-colors"
             >
               Solicitar demo
               <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>
@@ -126,7 +229,7 @@ export function Nav() {
               onClick={() => (open ? close(false) : setOpen(true))}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              className="md:hidden inline-flex items-center justify-center h-11 px-1 -mr-1 text-cream-ink"
+              className="lg:hidden inline-flex items-center justify-center h-11 px-1 -mr-1 text-cream-ink"
             >
               <span className="sr-only">
                 {open ? "Cerrar menú" : "Abrir menú"}
@@ -170,7 +273,7 @@ export function Nav() {
         aria-modal="true"
         aria-labelledby={titleId}
         aria-hidden={!open}
-        className={`md:hidden fixed inset-x-0 top-[60px] bottom-0 z-30 bg-cream-bg/95 backdrop-blur-xl border-b border-cream-line transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`lg:hidden fixed inset-x-0 top-[60px] bottom-0 z-30 bg-cream-bg/95 backdrop-blur-xl border-b border-cream-line transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           open
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 -translate-y-2 pointer-events-none"
@@ -182,23 +285,35 @@ export function Nav() {
           </h2>
           <p className="eyebrow mb-7">Secciones</p>
           <ul className="flex flex-col">
-            {ITEMS.map((item, i) => (
-              <li key={item.href}>
-                <a
-                  ref={i === 0 ? firstLinkRef : undefined}
-                  href={item.href}
-                  onClick={(e) => handleAnchorClick(e, item.href)}
-                  className="flex items-baseline gap-5 py-3 -mx-1 px-1 rounded-sm"
-                >
-                  <span className="font-mono text-[12px] tabular tracking-tracked text-cream-mute w-9 shrink-0">
-                    {String(i + 1).padStart(2, "0")}/
-                  </span>
-                  <span className="font-display font-semibold text-cream-ink leading-[1.02] tracking-tightest text-[clamp(30px,8vw,44px)]">
-                    {item.label}
-                  </span>
-                </a>
-              </li>
-            ))}
+            {ITEMS.map((item, i) => {
+              const isActive = activeId === item.id;
+              return (
+                <li key={item.href}>
+                  <a
+                    ref={i === 0 ? firstLinkRef : undefined}
+                    href={item.href}
+                    aria-current={isActive ? "location" : undefined}
+                    onClick={(e) => handleAnchorClick(e, item.href)}
+                    className="group flex items-baseline gap-5 py-3 -mx-1 px-1 rounded-sm"
+                  >
+                    <span className="relative font-mono text-[12px] tabular tracking-tracked text-cream-mute w-9 shrink-0">
+                      {String(i + 1).padStart(2, "0")}/
+                      <span
+                        aria-hidden
+                        className={`absolute -left-3 top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-accent-ink transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                          isActive
+                            ? "opacity-100 scale-100"
+                            : "opacity-0 scale-50"
+                        }`}
+                      />
+                    </span>
+                    <span className="font-display font-semibold leading-[1.02] tracking-tightest text-[clamp(30px,8vw,44px)] text-cream-ink">
+                      {item.label}
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
 
           <div className="mt-auto pt-10 flex items-center justify-between gap-4 border-t border-cream-line">

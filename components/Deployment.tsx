@@ -114,7 +114,7 @@ function ArchitectureDiagram({ active }: { active: boolean }) {
       role="img"
       aria-label="Diagrama de arquitectura. Los sensores envían telemetría al SCADA. El SCADA escribe en el historian. AtlaXia lee del historian de forma pasiva. La SCADA sigue siendo el sistema de control."
     >
-      <svg viewBox="0 0 720 380" className="w-full h-[380px] block">
+      <svg viewBox="0 0 720 380" className="w-full aspect-[720/380] block">
         <defs>
           <pattern id="dep-grid" width="32" height="32" patternUnits="userSpaceOnUse">
             <circle cx="16" cy="16" r="0.7" fill="var(--mute2)" fillOpacity="0.22" />

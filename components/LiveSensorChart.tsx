@@ -160,7 +160,7 @@ export function LiveSensorChart() {
         role="img"
         aria-label="Conductividad AIT203 a 5 horas. La señal real sube hasta el pico; el marcador rojo señala el valor que el modelo esperaba en ese mismo instante."
       >
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[280px] block" preserveAspectRatio="none">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full aspect-[760/280] block">
           {yTicks.map((y) => {
             const py = project(0, y).py;
             return (

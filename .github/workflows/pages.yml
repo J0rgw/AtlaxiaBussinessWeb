@@ -27,12 +27,23 @@ jobs:
 
       - run: npm ci
 
+      - name: Determine base path
+        id: basepath
+        run: |
+          if [ -f public/CNAME ]; then
+            echo "value=" >> "$GITHUB_OUTPUT"
+          elif [ -n "${{ vars.BASE_PATH }}" ]; then
+            echo "value=${{ vars.BASE_PATH }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=/${{ github.event.repository.name }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build static site
         run: npm run build
         env:
           NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
-          NEXT_PUBLIC_BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.basepath.outputs.value }}
           NEXT_PUBLIC_FORMSPREE_ID: ${{ vars.FORMSPREE_ID }}
 
       - name: Ensure .nojekyll

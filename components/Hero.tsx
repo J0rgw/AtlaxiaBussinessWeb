@@ -21,13 +21,13 @@ export function Hero() {
         <div className="grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-6">
             <h1 className="font-display font-semibold text-display-hero text-cream-ink">
-              Software
+              Software Edge
               <br />
               <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
-                de vigilancia
+                de supervisión inteligente
               </span>
               <br />
-              en sensores OT.
+              en activos OT.
             </h1>
 
             <p className="mt-6 text-[16px] leading-[1.55] tesxt-cream-ink2 max-w-md">
@@ -39,7 +39,7 @@ export function Hero() {
                 href="#contact"
                 className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded text-[14px] font-medium bg-accent text-white hover:bg-accent-ink transition-colors"
               >
-                Solicitar demo
+                Probar demo
                 <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
                   <path d="M2 7h9M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -48,7 +48,7 @@ export function Hero() {
                 href="#detection"
                 className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded text-[14px] font-medium bg-transparent text-cream-ink border border-cream-line hover:border-accent hover:text-accent-ink transition-colors"
               >
-                Ver detección en directo
+                Contacto
               </a>
             </div>
 

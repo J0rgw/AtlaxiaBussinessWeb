@@ -210,7 +210,7 @@ export function Nav() {
               href="#contact"
               className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded text-[13px] font-medium bg-accent text-white hover:bg-accent-ink transition-colors"
             >
-              Solicitar demo
+              Probar demo
               <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>
                 <path
                   d="M2 6h7M6 3l3 3-3 3"
@@ -329,7 +329,7 @@ export function Nav() {
               onClick={(e) => handleAnchorClick(e, "#contact")}
               className="inline-flex items-center gap-1.5 px-4 py-3 rounded text-[14px] font-medium bg-accent text-white min-h-[44px]"
             >
-              Solicitar demo
+              Probar demo
               <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden>
                 <path
                   d="M2 6h7M6 3l3 3-3 3"

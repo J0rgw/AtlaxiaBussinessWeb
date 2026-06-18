@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   useCallback,
   useEffect,
@@ -21,6 +20,12 @@ const ITEMS = [
 ];
 
 const HEADER_OFFSET = 80;
+
+const scrollBehavior = (): ScrollBehavior =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? "auto"
+    : "smooth";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -137,17 +142,28 @@ export function Nav() {
     setTimeout(() => {
       const target = document.querySelector(href);
       if (target instanceof HTMLElement) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        target.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
         history.replaceState(null, "", href);
       }
     }, 60);
+  };
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    setOpen(false);
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
+    history.replaceState(null, "", "/");
   };
 
   return (
     <>
       <header className="sticky top-0 z-40 backdrop-blur bg-cream-bg/85 border-b border-cream-line">
         <div className="container-x h-[60px] flex items-center justify-between gap-3">
-          <Link href="/" className="flex items-center gap-2.5">
+          <a
+            href="/"
+            onClick={handleLogoClick}
+            className="flex items-center gap-2.5"
+          >
             <Image
               src={logoMark}
               alt=""
@@ -160,7 +176,7 @@ export function Nav() {
             <span className="font-display font-semibold text-[18px] tracking-tighter2 text-cream-ink">
               AtlaXia
             </span>
-          </Link>
+          </a>
 
           <nav
             ref={navRef}

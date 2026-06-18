@@ -108,6 +108,13 @@
   color-scheme: light;
 }
 
+html {
+  /* Scroll suave para todos los enlaces de ancla (web y móvil) */
+  scroll-behavior: smooth;
+  /* Compensa la cabecera fija (60px) para que las secciones no queden ocultas */
+  scroll-padding-top: 80px;
+}
+
 html, body {
   background: var(--bg);
   color: var(--ink);
@@ -173,6 +180,9 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   * {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;

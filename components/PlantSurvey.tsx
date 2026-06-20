@@ -8,10 +8,10 @@ import {
 } from "lucide-react";
 
 const taxonomy = [
-  { label: "Planta", fields: "plant_name · location · diagram (P&ID)" },
-  { label: "Sistema SCADA", fields: "vendor · protocol · historian · export" },
-  { label: "Procesos", fields: "process_name · description · sensors[]" },
-  { label: "Sensores", fields: "tag · unit · variable_type · causality · range" },
+  { label: "Planta", fields: "plant_name, location, diagram (P&ID)" },
+  { label: "Sistema SCADA", fields: "vendor, protocol, historian, export" },
+  { label: "Procesos", fields: "process_name, description, sensors[]" },
+  { label: "Sensores", fields: "tag, unit, variable_type, causality, range" },
 ];
 
 export function PlantSurvey() {
@@ -20,7 +20,7 @@ export function PlantSurvey() {
       <div className="container-x py-24">
         <div className="grid lg:grid-cols-12 gap-10 items-end mb-10">
           <div className="lg:col-span-7">
-            <p className="eyebrow">04 · Primeros pasos</p>
+            <p className="eyebrow">04 Primeros pasos</p>
             <h2 className="h-section text-cream-ink mt-4">
               De la visita a planta a datos listos para el modelo
               <br />
@@ -44,7 +44,7 @@ export function PlantSurvey() {
 
         <SurveyMock />
         <p className="mt-3 text-[12px] font-mono text-cream-mute2">
-          Captura de la app de campo · datos ficticios · serializa a JSON-Schema 2020-12.
+          Captura de la app de campo, datos ficticios, serializa a JSON-Schema 2020-12.
         </p>
 
         <div className="mt-10 rounded-card ring-1 ring-cream-line bg-cream-elevated overflow-hidden">
@@ -232,21 +232,21 @@ function SurveyMock() {
                 required
                 value="continuous"
                 kind="select"
-                helper="continuous · discrete · qualitative · binary"
+                helper="continuous, discrete, qualitative, binary"
               />
               <Field
                 label="Rol del Instrumento"
                 required
                 value="sensor"
                 kind="select"
-                helper="sensor · actuator · setpoint · alarm"
+                helper="sensor, actuator, setpoint, alarm"
               />
               <Field
                 label="Causalidad"
                 required
                 value="interna"
                 kind="select"
-                helper="interna (controlable) · externa (no controlable, ej: temperatura ambiente)"
+                helper="interna (controlable), externa (no controlable, ej: temperatura ambiente)"
               />
               <Field
                 label="Rango operativo (min / max)"

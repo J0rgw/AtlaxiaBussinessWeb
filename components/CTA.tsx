@@ -14,7 +14,7 @@ export function CTA() {
           <h2 className="mt-5 mx-auto max-w-[18ch] font-display font-semibold text-display-cta text-cream-ink">
             Conecta tu historian.
             <br />
-            <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
+            <span className="font-normal" style={{ color: "var(--accent-ink)" }}>
               Te mostramos la deriva.
             </span>
           </h2>
@@ -30,7 +30,7 @@ export function CTA() {
         </div>
 
         <div className="mt-10 text-center text-[12px] font-mono text-cream-mute2 tabular">
-          on-prem &middot; compatible airgap &middot; ISA-101 &middot; respuesta en 24 h
+          on-prem, compatible airgap, ISA-101, respuesta en 24 h
         </div>
       </div>
     </section>

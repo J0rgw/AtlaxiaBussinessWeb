@@ -223,7 +223,9 @@ export function Nav() {
               Contacto
             </a>
             <a
-              href="#contact"
+              href="https://demo.atlaxia.es"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded text-[13px] font-medium bg-accent text-white hover:bg-accent-ink transition-colors"
             >
               Probar demo
@@ -341,8 +343,10 @@ export function Nav() {
               Contacto
             </a>
             <a
-              href="#contact"
-              onClick={(e) => handleAnchorClick(e, "#contact")}
+              href="https://demo.atlaxia.es"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
               className="inline-flex items-center gap-1.5 px-4 py-3 rounded text-[14px] font-medium bg-accent text-white min-h-[44px]"
             >
               Probar demo

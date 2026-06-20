@@ -12,9 +12,9 @@ export function Hero() {
 
       <div className="container-x relative pt-10 pb-14 lg:pt-14 lg:pb-16">
         <p className="eyebrow mb-8 flex items-baseline gap-x-3">
-          <span className="size-1.5 rounded-full bg-status-normal shrink-0 translate-y-[-1px]" aria-hidden />
+          <span className="font-mono text-cream-mute shrink-0 tabular">00</span>
           <span className="min-w-0 flex-1 break-words">
-            ICS · SCADA<wbr /> · Infraestructura<wbr /> hidráulica
+            Detección de anomalías en ICS, SCADA e infraestructura hidráulica
           </span>
         </p>
 
@@ -23,7 +23,7 @@ export function Hero() {
             <h1 className="font-display font-semibold text-display-hero text-cream-ink">
               Software Edge
               <br />
-              <span className="italic font-normal" style={{ color: "var(--accent-ink)" }}>
+              <span className="font-normal" style={{ color: "var(--accent-ink)" }}>
                 de supervisión inteligente
               </span>
               <br />
@@ -36,7 +36,9 @@ export function Hero() {
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a
-                href="#contact"
+                href="https://demo.atlaxia.es"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 min-h-[44px] sm:min-h-0 rounded text-[14px] font-medium bg-accent text-white hover:bg-accent-ink transition-colors"
               >
                 Probar demo
@@ -55,7 +57,7 @@ export function Hero() {
             <dl className="mt-8 grid grid-cols-3 items-start gap-6 max-w-md border-t border-cream-line pt-5">
               <Metric value="1s" label="Latencia" />
               <Metric value="GNN" label="Modelo de anomalías" />
-              <Metric value="OT" label="on-premise"  />
+              <Metric value="OT" label="On-premise" />
             </dl>
           </div>
 
@@ -66,11 +68,11 @@ export function Hero() {
                 style={{ background: "radial-gradient(closest-side, var(--accent-soft), transparent 70%)" }}
                 aria-hidden
               />
-              <ProductFrame label="atlaxia.local · AIT203">
+              <ProductFrame label="atlaxia.local/AIT203">
                 <LiveSensorChart />
               </ProductFrame>
               <p className="mt-3 text-[12px] font-mono text-cream-mute2">
-                AIT203 · el rojo es el valor esperado que el modelo predice.
+                AIT203: el rojo es el valor esperado que el modelo predice.
               </p>
             </div>
           </div>
@@ -83,7 +85,7 @@ export function Hero() {
 function Metric({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col-reverse">
-      <dt className="mt-1.5 text-[10px] font-mono uppercase tracking-tracked text-cream-mute">
+      <dt className="mt-1.5 text-[13px] text-cream-mute">
         {label}
       </dt>
       <dd className="font-display tabular text-[28px] leading-none text-cream-ink tracking-tighter2">

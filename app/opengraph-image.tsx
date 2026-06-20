@@ -92,7 +92,7 @@ export default async function OpenGraphImage() {
           >
             <span>ATLAXIA</span>
             <span style={{ width: 1, height: 18, background: "#E4E3DC", display: "flex" }} />
-            <span>ICS · SCADA · AGUA</span>
+            <span>ICS, SCADA, AGUA</span>
           </div>
         </div>
 
@@ -129,7 +129,7 @@ export default async function OpenGraphImage() {
             fontWeight: 400,
           }}
         >
-          <span>Detección de anomalías con GNN · predicción antes del fallo</span>
+          <span>Detección de anomalías con GNN, predicción antes del fallo</span>
           <div
             style={{
               display: "flex",

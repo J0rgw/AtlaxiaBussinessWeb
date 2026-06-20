@@ -75,7 +75,7 @@ const panels = [
     statusLabel: ruleAlertIdx > 0 ? `t+${ruleAlertIdx}s` : "—",
     footnote: "Solo dispara cuando el valor cruza la línea.",
     variant: "rules" as const,
-    frameLabel: "atlaxia.local · regla.001",
+    frameLabel: "atlaxia.local/regla.001",
   },
   {
     label: "AtlaXia",
@@ -83,7 +83,7 @@ const panels = [
     statusLabel: `t+${tokenAlertIdx}s`,
     footnote: "Detecta la divergencia frente al valor esperado.",
     variant: "tokens" as const,
-    frameLabel: "atlaxia.local · modelo.gnn",
+    frameLabel: "atlaxia.local/modelo.gnn",
   },
 ];
 
@@ -142,7 +142,7 @@ export function TokenVsRules() {
       <div className="container-x py-24">
         <div className="grid lg:grid-cols-12 gap-10 items-end mb-12">
           <div className="lg:col-span-7">
-            <p className="eyebrow">01 · Detección</p>
+            <p className="eyebrow">01 Detección</p>
             <h2 className="h-section text-cream-ink mt-4">
               El umbral espera al cruce.
               <br />
@@ -414,7 +414,7 @@ function ChartPanel({
             color: "var(--status-critical)",
           }}
         >
-          umbral · 150
+          umbral 150
         </span>
       )}
 
@@ -428,7 +428,7 @@ function ChartPanel({
           }}
         >
           <div style={{ color: "var(--status-critical)" }} className="font-semibold">
-            modelo · {tokenActual.expected.toFixed(1)}
+            modelo {tokenActual.expected.toFixed(1)}
           </div>
           <div className="text-cream-mute2">esperado en ese instante</div>
         </div>

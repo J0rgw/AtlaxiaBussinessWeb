@@ -98,7 +98,7 @@ export function PlantContext() {
     >
       <div className="container-x py-24 grid lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-5">
-          <p className="eyebrow">02 · Contexto</p>
+          <p className="eyebrow">02 Contexto</p>
           <h2 className="h-section text-cream-ink mt-4">
             El sensor no se evalúa solo.
             <br />
@@ -136,7 +136,7 @@ export function PlantContext() {
                 <span className="size-2 rounded-full bg-cream-line2" aria-hidden />
               </div>
               <span className="text-[11px] font-mono text-cream-mute2 tabular">
-                atlaxia.local · grafo · {FOCUS}
+                atlaxia.local/grafo/{FOCUS}
               </span>
               <span className="w-10" aria-hidden />
             </div>
@@ -359,15 +359,15 @@ function PlantGraph({
         style={{ left: "3.5%", top: "6%" }}
       >
         <div className="text-cream-ink font-semibold tracking-wide">
-          AIT203 · conductividad
+          AIT203 conductividad
         </div>
-        <div className="text-cream-mute2 mt-1">observado · 253.96 uS/cm</div>
-        <div className="text-cream-mute2">esperado · 245.20 uS/cm</div>
+        <div className="text-cream-mute2 mt-1">observado 253.96 uS/cm</div>
+        <div className="text-cream-mute2">esperado 245.20 uS/cm</div>
         <div
           className="font-semibold mt-0.5"
           style={{ color: "var(--status-critical)" }}
         >
-          divergencia · +8.76
+          divergencia +8.76
         </div>
       </div>
 
@@ -378,7 +378,7 @@ function PlantGraph({
       >
         <div className="text-cream-mute2">condicionado por</div>
         <div className="text-cream-ink font-semibold mt-0.5">
-          3 vecinos · 1 hop
+          3 vecinos, 1 hop
         </div>
       </div>
     </div>

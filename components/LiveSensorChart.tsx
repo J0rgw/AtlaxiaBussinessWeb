@@ -273,7 +273,7 @@ export function LiveSensorChart() {
           }}
         >
           <div style={{ color: "var(--status-critical)" }} className="font-semibold">
-            modelo · {EXPECTED_AT_PEAK.toFixed(1)}
+            modelo {EXPECTED_AT_PEAK.toFixed(1)}
           </div>
           <div className="text-cream-mute2">esperado en el pico</div>
         </div>

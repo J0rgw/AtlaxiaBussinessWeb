@@ -92,10 +92,8 @@ export function Footer() {
           </div>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-mono uppercase tracking-tracked text-cream-mute2">
             <span>UX ISA-101</span>
-            <span aria-hidden className="text-cream-line3">·</span>
             <span>WebSocket 1 Hz</span>
-            <span aria-hidden className="text-cream-line3">·</span>
-            <span>On-prem · airgap</span>
+            <span>On-prem airgap</span>
           </div>
         </div>
       </div>

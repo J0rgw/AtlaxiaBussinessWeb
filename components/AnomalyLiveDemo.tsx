@@ -39,7 +39,7 @@ const cycleStages: { at: number; status: Status; label: string; anomaly: number 
   { at: 0, status: "normal", label: "Nominal", anomaly: 0 },
   { at: 2.2, status: "advisory", label: "Deriva detectada", anomaly: 0.35 },
   { at: 3.6, status: "warning", label: "Cruce previsto en 11m", anomaly: 0.7 },
-  { at: 5.0, status: "critical", label: "Anomalía · pump-3", anomaly: 1 },
+  { at: 5.0, status: "critical", label: "Anomalía pump-3", anomaly: 1 },
 ];
 
 export function AnomalyLiveDemo() {

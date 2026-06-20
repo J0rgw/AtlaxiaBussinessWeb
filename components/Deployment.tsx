@@ -62,7 +62,7 @@ export function Deployment() {
     >
       <div className="container-x py-24 grid lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-5">
-          <p className="eyebrow">03 · Despliegue</p>
+          <p className="eyebrow">03 Despliegue</p>
           <h2 className="h-section text-cream-ink mt-4">
             AtlaXia se conecta.
             <br />
@@ -95,13 +95,13 @@ function ArchitectureFrame({ active }: { active: boolean }) {
           <span className="size-2 rounded-full bg-cream-line2" aria-hidden />
         </div>
         <span className="text-[11px] font-mono text-cream-mute2 tabular">
-          atlaxia.local · arquitectura
+          atlaxia.local/arquitectura
         </span>
         <span className="w-10" aria-hidden />
       </div>
       <ArchitectureDiagram active={active} />
       <p className="px-5 py-3 text-[12px] font-mono text-cream-mute2 border-t border-cream-line">
-        Tap pasivo · sin write-back · la SCADA sigue al mando.
+        Tap pasivo, sin write-back, el SCADA sigue al mando.
       </p>
     </div>
   );
@@ -112,7 +112,7 @@ function ArchitectureDiagram({ active }: { active: boolean }) {
     <div
       className="relative bg-cream-elevated"
       role="img"
-      aria-label="Diagrama de arquitectura. Los sensores envían telemetría al SCADA. El SCADA escribe en el historian. AtlaXia lee del historian de forma pasiva. La SCADA sigue siendo el sistema de control."
+      aria-label="Diagrama de arquitectura. Los sensores envían telemetría al SCADA. El SCADA escribe en el historian. AtlaXia lee del historian de forma pasiva. El SCADA sigue siendo el sistema de control."
     >
       <svg viewBox="0 0 720 380" className="w-full aspect-[720/380] block">
         <defs>
@@ -192,7 +192,7 @@ function ArchitectureDiagram({ active }: { active: boolean }) {
           </circle>
         )}
 
-        <Box x={80} y={100} w={130} h={70} title="SENSORES" sub="OPC-UA · MQTT" />
+        <Box x={80} y={100} w={130} h={70} title="SENSORES" sub="OPC-UA, MQTT" />
         <Box x={300} y={100} w={130} h={70} title="SCADA" sub="control" />
         <Box x={520} y={100} w={140} h={70} title="HISTORIAN" sub="1 Hz" />
 
@@ -220,7 +220,7 @@ function ArchitectureDiagram({ active }: { active: boolean }) {
           w={200}
           h={90}
           title="ATLAXIA"
-          sub="GNN · anomalía + contexto"
+          sub="GNN, anomalía + contexto"
           focus
         />
 
@@ -232,7 +232,7 @@ function ArchitectureDiagram({ active }: { active: boolean }) {
           fill="var(--accent-ink)"
           fontWeight="600"
         >
-          lectura · 1 Hz
+          lectura 1 Hz
         </text>
       </svg>
     </div>

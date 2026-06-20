@@ -83,7 +83,7 @@ export function RequestDemoForm() {
           label="Cargo"
           name="role"
           autoComplete="organization-title"
-          placeholder="Jefe de planta · SCADA · Ingeniería"
+          placeholder="Jefe de planta, SCADA, Ingeniería"
         />
       </div>
 

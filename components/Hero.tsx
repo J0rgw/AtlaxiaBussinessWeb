@@ -14,7 +14,7 @@ export function Hero() {
         <p className="eyebrow mb-8 flex items-baseline gap-x-3">
           <span className="font-mono text-cream-mute shrink-0 tabular">00</span>
           <span className="min-w-0 flex-1 break-words">
-            Detección de anomalías en ICS, SCADA e infraestructura hidráulica
+            Detección de anomalías en ICS, SCADA e infraestructura crítica
           </span>
         </p>
 

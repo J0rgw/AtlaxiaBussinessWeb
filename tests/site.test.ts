@@ -10,7 +10,7 @@ describe("lib/site", () => {
   it("falls back to the placeholder domain when env is unset", async () => {
     const { SITE_URL, CONTACT_EMAIL, SITE_HOST } = await import("@/lib/site");
     expect(SITE_URL).toBe("https://atlaxia.example");
-    expect(CONTACT_EMAIL).toBe("hola@atlaxia.example");
+    expect(CONTACT_EMAIL).toBe("helloatlaxia@gmail.com");
     expect(SITE_HOST).toBe("atlaxia.example");
   });
 

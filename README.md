@@ -78,7 +78,7 @@ public/
 | Variable                       | Por defecto                | Uso                                                |
 |--------------------------------|----------------------------|----------------------------------------------------|
 | `NEXT_PUBLIC_SITE_URL`         | `https://atlaxia.example`  | metadataBase, OG image, sitemap, robots            |
-| `NEXT_PUBLIC_CONTACT_EMAIL`    | `hola@atlaxia.example`     | mailto en CTA y form                               |
+| `NEXT_PUBLIC_CONTACT_EMAIL`    | `helloatlaxia@gmail.com`   | mailto en CTA y form                               |
 | `NEXT_PUBLIC_BASE_PATH`        | (vacío)                    | `/<repo>` para subpath de GitHub Pages             |
 | `NEXT_PUBLIC_FORMSPREE_ID`     | (vacío)                    | ID del form de Formspree (sin él el form falla)   |
 

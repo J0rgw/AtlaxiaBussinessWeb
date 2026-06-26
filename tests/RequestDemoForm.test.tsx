@@ -30,7 +30,7 @@ describe("RequestDemoForm", () => {
   it("renders the submit button and the email fallback link", () => {
     render(<RequestDemoForm />);
     expect(screen.getByRole("button", { name: /solicitar demo/i })).toBeInTheDocument();
-    const link = screen.getByRole("link", { name: /atlaxia\.example/i });
+    const link = screen.getByRole("link", { name: /helloatlaxia@gmail\.com/i });
     expect(link).toHaveAttribute("href", expect.stringMatching(/^mailto:/));
   });
 

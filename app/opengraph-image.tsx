@@ -4,7 +4,7 @@ import path from "node:path";
 import { SITE_HOST } from "@/lib/site";
 
 export const dynamic = "force-static";
-export const alt = "AtlaXia. Software Edge de supervisión inteligente en activos OT";
+export const alt = "AtlaXia: Software Edge de supervisión inteligente en activos OT";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -179,7 +179,7 @@ export default async function OpenGraphImage() {
           >
             <span>ATLAXIA</span>
             <span style={{ width: 1, height: 18, background: LINE, display: "flex" }} />
-            <span>ICS · SCADA · OT</span>
+            <span>ICS, SCADA y OT</span>
           </div>
         </div>
 
@@ -208,7 +208,7 @@ export default async function OpenGraphImage() {
               }}
             >
               <span style={{ color: MUTE2 }}>00</span>
-              <span>Detección de anomalías · ICS / SCADA</span>
+              <span>Detección de anomalías en ICS y SCADA</span>
             </div>
 
             <div

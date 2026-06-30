@@ -25,12 +25,12 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "AtlaXia — Software Edge de supervisión inteligente en activos OT",
+  title: "AtlaXia: Software Edge de supervisión inteligente en activos OT",
   description:
     "Software Edge de supervisión inteligente en activos OT. Detección de anomalías con GNN en ICS, SCADA e infraestructura crítica: cada anomalía al instante en que ocurre, sin tocar tu SCADA.",
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "AtlaXia. Software Edge de supervisión inteligente en activos OT",
+    title: "AtlaXia: Software Edge de supervisión inteligente en activos OT",
     description:
       "Detección de anomalías con GNN en ICS, SCADA e infraestructura crítica. Cada anomalía al instante en que ocurre, sin tocar tu SCADA.",
     type: "website",

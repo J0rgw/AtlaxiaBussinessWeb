@@ -18,7 +18,7 @@ export function RequestDemoForm() {
   async function submit(form: HTMLFormElement) {
     const data = new FormData(form);
 
-    // Honeypot — silent success on bot fill
+    // Honeypot: silent success on bot fill
     if (data.get("website")) {
       setStatus("ok");
       return;

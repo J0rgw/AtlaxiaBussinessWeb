@@ -72,7 +72,7 @@ const panels = [
   {
     label: "SCADA por reglas",
     sub: "Umbral fijo.",
-    statusLabel: ruleAlertIdx > 0 ? `t+${ruleAlertIdx}s` : "—",
+    statusLabel: ruleAlertIdx > 0 ? `t+${ruleAlertIdx}s` : "Sin alerta",
     footnote: "Solo dispara cuando el valor cruza la línea.",
     variant: "rules" as const,
     frameLabel: "atlaxia.local/regla.001",

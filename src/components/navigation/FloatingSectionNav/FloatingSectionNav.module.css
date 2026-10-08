@@ -1,0 +1,354 @@
+/*
+  One floating bar at every width.
+  - Narrow (< 60rem): items with an icon show only the icon (label kept for
+    assistive technology). Brand hides below 25rem.
+  - Wide (>= 60rem): items show their label.
+  Section links reuse the SegmentedControl look; the active pill is a single
+  element that slides, and parks outside the track (clipped) when no section is
+  active, so it visibly leaves in the direction the reader is going.
+*/
+
+.bar {
+  /* Scale of everything inside the bar (selectors, actions, brand) */
+  --seg-height: 38px;
+  --seg-height-touch: 44px;
+  --seg-pad: 16px;
+  --seg-font: var(--text-sm);
+  --seg-track-pad: 5px;
+  --seg-track-radius: 11px;
+  --seg-radius: 7px;
+  --bar-pad: 12px;
+  --bar-icon: 20px;
+  /* Deeper track on the white bar so the grey reads clearly */
+  --seg-track-bg: var(--color-border-subtle);
+  --seg-track-shadow: none;
+  position: fixed;
+  /* Centered with auto margins, not left: 50% + translate: that would cap the
+     shrink-to-fit width at half the viewport and squeeze the track. */
+  inset-inline: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: max-content;
+  max-width: calc(100vw - var(--space-4));
+  margin-inline: auto;
+  padding: var(--bar-pad);
+  border: 1px solid var(--color-border-subtle);
+  /* Concentric with the inner track: track radius + bar padding */
+  border-radius: calc(var(--seg-track-radius) + var(--bar-pad));
+  background: var(--color-bg-raised);
+  box-shadow: var(--shadow-float);
+}
+
+.bottom {
+  bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+}
+
+.top {
+  top: var(--space-3);
+}
+
+.dockBrand {
+  display: none;
+}
+
+/* Strip across the whole gap between the sheet frame edges, as tall as the
+   frame bar. The brand cell sits flush at the start; everything else at the end. */
+.topFrame {
+  top: var(--frame-inset);
+  inset-inline: var(--frame-inset);
+  box-sizing: border-box;
+  width: auto;
+  max-width: none;
+  height: var(--frame-bar);
+  margin-inline: 0;
+  padding: 0;
+  border-color: var(--color-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Opaque paper band behind the strip, from the viewport top and edges down to
+   the strip's lower edge: content scrolls under it instead of showing around
+   the strip. The line under it appears once the page has moved. */
+.topFrame::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(-1 * var(--frame-inset) - 1px);
+  right: calc(-1 * var(--frame-inset) - 1px);
+  bottom: -1px;
+  left: calc(-1 * var(--frame-inset) - 1px);
+  background: var(--color-bg);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.topFrame[data-scrolled]::before {
+  border-bottom-color: var(--color-border);
+}
+
+/* Registration crosses on the lower corners of the strip, same as the sheet's */
+.mark {
+  position: absolute;
+  z-index: 1;
+  width: 15px;
+  height: 15px;
+  pointer-events: none;
+}
+
+.mark::before,
+.mark::after {
+  content: "";
+  position: absolute;
+  background: var(--color-accent);
+}
+
+.mark::before {
+  top: 7px;
+  left: 0;
+  width: 15px;
+  height: 1px;
+}
+
+.mark::after {
+  top: 0;
+  left: 7px;
+  width: 1px;
+  height: 15px;
+}
+
+.mark[data-corner="bl"] {
+  bottom: -8px;
+  left: -8px;
+}
+
+.mark[data-corner="br"] {
+  right: -8px;
+  bottom: -8px;
+}
+
+.topFrame .brand {
+  align-self: stretch;
+  margin-inline-end: auto;
+  padding: 0;
+}
+
+.topFrame .track {
+  margin-inline-start: var(--space-3);
+}
+
+.topFrame .actions {
+  padding-inline: var(--space-3) var(--space-2);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-inline: var(--space-1);
+}
+
+/*
+  Narrow screens: square items sized to the viewport so the bar always fits
+  (34px at 320px wide, 44px from about 420px). Below 480px the brand hides.
+  The top-frame strip is different: it becomes a bottom dock (see the end).
+*/
+@media (max-width: 59.99rem) {
+  .bar {
+    --nav-item: clamp(34px, 10.5vw, 44px);
+    --seg-height: var(--nav-item);
+    --seg-height-touch: var(--nav-item);
+    --seg-pad: 10px;
+    --seg-track-pad: 4px;
+    --seg-track-radius: 10px;
+    --seg-radius: 6px;
+    --bar-pad: 8px;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 29.99rem) {
+  .bar:not(.topFrame) .brand {
+    display: none;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+@media (min-width: 60rem) {
+  .bottom {
+    bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .top {
+    top: var(--space-4);
+  }
+
+  .brand {
+    padding-inline: var(--space-2) var(--space-1);
+  }
+
+  /* Breathing room between the sections and the action buttons */
+  .actions {
+    gap: var(--space-3);
+    margin-inline-start: var(--space-6);
+  }
+}
+
+/* ------------------------------------------------------------------------ */
+/* Track, links and sliding indicator                                        */
+/* ------------------------------------------------------------------------ */
+
+.track {
+  composes: track from "../../primitives/SegmentedControl/SegmentedControl.module.css";
+  position: relative;
+  min-width: 0;
+  /* The parked indicator sits outside the track and must not show */
+  overflow: clip;
+}
+
+.list {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+}
+
+.link {
+  composes: option from "../../primitives/SegmentedControl/SegmentedControl.module.css";
+  z-index: 1;
+}
+
+.linkActive {
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+.icon {
+  display: none;
+}
+
+.icon svg {
+  width: var(--bar-icon);
+  height: var(--bar-icon);
+  stroke-width: 1.9;
+}
+
+/* Narrow screens: icon-only items (square), label kept for screen readers */
+@media (max-width: 59.99rem) {
+  .linkWithIcon {
+    padding-inline: 0;
+    aspect-ratio: 1;
+  }
+
+  .linkWithIcon .icon {
+    display: inline-flex;
+  }
+
+  .linkWithIcon .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.thumb {
+  position: absolute;
+  top: var(--seg-track-pad);
+  bottom: var(--seg-track-pad);
+  left: 0;
+  border-radius: var(--seg-radius);
+  background: var(--color-bg-raised);
+  box-shadow: var(--shadow-raise);
+  pointer-events: none;
+}
+
+.thumbAnimated {
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    width var(--duration-base) var(--ease-out);
+}
+
+/* ------------------------------------------------------------------------ */
+/* Narrow screens: floating bar at the bottom, within thumb reach            */
+/* The original floating pill: raised surface, soft shadow, inset track with */
+/* a sliding pill, rounded contact button. The brand stays alone in a strip  */
+/* at the top.                                                               */
+/* ------------------------------------------------------------------------ */
+
+@media (max-width: 59.99rem) {
+  .topFrame {
+    top: auto;
+    bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    inset-inline: 0;
+    width: max-content;
+    max-width: calc(100vw - var(--space-4));
+    height: auto;
+    margin-inline: auto;
+    padding: var(--bar-pad);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: calc(var(--seg-track-radius) + var(--bar-pad));
+    box-shadow: var(--shadow-float);
+  }
+
+  .topFrame::before,
+  .topFrame .mark,
+  .topFrame .brand {
+    display: none;
+  }
+
+  .topFrame .track {
+    margin-inline-start: 0;
+  }
+
+  .topFrame .actions {
+    gap: var(--space-2);
+    padding-inline: 0;
+  }
+
+  /* Brand strip: same frame language as the desktop strip, logo only */
+  .dockBrand {
+    position: fixed;
+    z-index: var(--z-nav);
+    top: var(--frame-inset);
+    inset-inline: var(--frame-inset);
+    display: flex;
+    box-sizing: border-box;
+    height: var(--frame-bar);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-raised);
+  }
+
+  .dockBrand::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: calc(-1 * var(--frame-inset) - 1px);
+    right: calc(-1 * var(--frame-inset) - 1px);
+    bottom: -1px;
+    left: calc(-1 * var(--frame-inset) - 1px);
+    background: var(--color-bg);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .dockBrand[data-scrolled]::before {
+    border-bottom-color: var(--color-border);
+  }
+}

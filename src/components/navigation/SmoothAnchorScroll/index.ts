@@ -1,0 +1,1 @@
+export { SmoothAnchorScroll } from "./SmoothAnchorScroll";

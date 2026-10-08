@@ -1,0 +1,53 @@
+.footer {
+  border-top: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-inset);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4) var(--space-8);
+  padding-block: var(--space-10);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.brand {
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+}
+
+.year {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.email {
+  color: var(--color-accent-text);
+  text-underline-offset: 0.2em;
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+/* Leave room for the floating navigation bar (present at every width) */
+.inner {
+  padding-bottom: calc(var(--space-10) + 6rem);
+}
+
+/* Keeps the last line clear of the bottom dock on narrow screens */
+@media (max-width: 59.99rem) {
+  .footer {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}

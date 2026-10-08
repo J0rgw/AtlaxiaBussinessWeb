@@ -1,0 +1,66 @@
+/* Geometry mirrors the product badge: 25px tall, 10px padding, 11px label, 13px icon. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  /* Do not stretch when the parent is a grid or a column flexbox */
+  width: fit-content;
+  max-width: 100%;
+  height: 25px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-chip);
+  color: var(--color-tag-fg);
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.03em;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Works with any icon library (lucide, inline SVG...) */
+.icon svg {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2;
+}
+
+.tone-neutral {
+  background: var(--color-tag-neutral-bg);
+}
+.tone-neutral-faint {
+  background: var(--color-tag-neutral-faint-bg);
+}
+.tone-neutral-strong {
+  background: var(--color-tag-neutral-strong-bg);
+}
+.tone-neutral-muted {
+  background: var(--color-tag-neutral-muted-bg);
+}
+.tone-cobalt {
+  background: var(--color-tag-cobalt-bg);
+}
+.tone-critical {
+  background: var(--color-tag-critical-bg);
+}
+.tone-high {
+  background: var(--color-tag-high-bg);
+}
+.tone-medium {
+  background: var(--color-tag-medium-bg);
+}
+.tone-low {
+  background: var(--color-tag-low-bg);
+}
+.tone-normal {
+  background: var(--color-tag-normal-bg);
+}

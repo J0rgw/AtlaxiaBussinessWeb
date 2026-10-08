@@ -1,0 +1,86 @@
+/* Space of the first-screen sheet top row (the fixed bar covers it); keeps the frame lines */
+.top {
+  display: flex;
+  height: var(--frame-bar);
+  margin: var(--frame-inset) var(--frame-inset) 0;
+}
+
+/* Logo in a dark cell, as on a drawing's title strip */
+.lockup {
+  display: inline-flex;
+  height: 100%;
+  align-items: center;
+  gap: var(--space-3);
+  padding-inline: clamp(var(--space-4), 2vw, var(--space-6));
+  background: var(--color-action);
+  color: var(--color-action-text);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.lockup:hover {
+  background: var(--color-action-hover);
+}
+
+.lockup:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.symbol {
+  width: auto;
+  height: 1.5rem;
+}
+
+.wordmark {
+  width: auto;
+  height: 0.8125rem;
+}
+
+/* Call to action: compact button at the height of the selector tracks, so it
+   ranks below the logo cell. `a.cta` outranks the Button module rules
+   regardless of stylesheet order. */
+a.cta {
+  min-height: calc(var(--seg-height) + 2 * var(--seg-track-pad));
+  padding-block: 0;
+  padding-inline: var(--space-5);
+  border-radius: var(--seg-track-radius);
+  font-size: var(--seg-font);
+}
+
+a.cta span svg {
+  display: none;
+}
+
+/* Narrow screens: icon-only square cell, label kept for screen readers */
+@media (max-width: 59.99rem) {
+  a.cta {
+    align-self: auto;
+    /* The hidden label is still a flex item: a gap would push the icon off centre */
+    gap: 0;
+    width: calc(var(--seg-height) + 2 * var(--seg-track-pad));
+    height: calc(var(--seg-height) + 2 * var(--seg-track-pad));
+    padding-inline: 0;
+    border-radius: var(--seg-track-radius);
+  }
+
+  a.cta:hover span {
+    transform: none;
+  }
+
+  a.cta span svg {
+    display: block;
+    width: var(--bar-icon);
+    height: var(--bar-icon);
+  }
+
+  .ctaLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,147 @@
+/*
+  Diagram convention (tokens.css): cobalt = the model's view (focus, relations),
+  neutral = the rest of the system. Works on light and dark surfaces.
+  Motion serves "story": information travels along the relations that matter.
+*/
+
+/* Text in an SVG scales with it: labels grow in small containers to stay
+   around 11px on screen. Sizes are tuned for a viewBox about 640 units wide. */
+.frame {
+  container-type: inline-size;
+}
+
+.graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.edgeWeak {
+  stroke: var(--color-border-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+  opacity: 0.7;
+}
+
+.edgeStrong {
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+/* Flowing dashes over strong edges, only when animated */
+.edgeFlow {
+  stroke: var(--color-accent-text);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 2 14;
+  opacity: 0;
+}
+
+.node {
+  stroke-width: 1.5;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  fill: var(--color-text-muted);
+}
+
+.context .node {
+  fill: var(--color-bg-raised);
+  stroke: var(--color-border-strong);
+  stroke-width: 1;
+}
+
+.related .node {
+  fill: var(--color-bg-raised);
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.related .label {
+  fill: var(--color-text);
+}
+
+.focus .node {
+  fill: var(--color-accent);
+  stroke: var(--color-accent-text);
+  stroke-width: 2;
+}
+
+.focus .label {
+  fill: var(--color-text);
+  font-weight: 600;
+}
+
+.pulse {
+  fill: var(--color-accent-soft);
+  stroke: none;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.animated .edgeFlow {
+  opacity: 1;
+  animation: flow 1.6s linear infinite;
+}
+
+.animated .pulse {
+  animation: pulse 2.8s var(--ease-out) infinite;
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated .edgeFlow,
+  .animated .pulse {
+    animation: none;
+  }
+  .animated .edgeFlow {
+    opacity: 0;
+  }
+}
+
+:global(:root[data-motion="reduce"]) .animated .edgeFlow,
+:global(:root[data-motion="reduce"]) .animated .pulse {
+  animation: none;
+  opacity: 0;
+}
+
+/* After the base .label rule so they win (same specificity). */
+@container (max-width: 520px) {
+  .label {
+    font-size: 17px;
+  }
+}
+
+@container (max-width: 380px) {
+  .label {
+    font-size: 21px;
+  }
+}
+
+/* Phones (the graph is under 300px wide): about 10px on screen */
+@container (max-width: 300px) {
+  .label {
+    font-size: 26px;
+  }
+}

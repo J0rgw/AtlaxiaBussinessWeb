@@ -1,0 +1,184 @@
+/*
+  Nodes (numbered) joined by connectors. Vertical: nodes in a column with the
+  connector running down the left. Horizontal: nodes in a row, connector
+  running right, text below.
+  "auto" switches at 44rem of container width (container query).
+  Motion (transitions on state change) serves "story": progress through the flow.
+*/
+
+.container {
+  container-type: inline-size;
+  --node: 2.25rem;
+  --line: 2px;
+}
+
+.flow {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--node) minmax(0, 1fr);
+  column-gap: var(--space-4);
+  align-items: start;
+  /* Steps are stretched to the tallest one: keep rows at their size instead of
+     spreading the spare height (it pushed short steps' text down). */
+  align-content: start;
+  padding-bottom: var(--space-6);
+}
+
+.step:last-child {
+  padding-bottom: 0;
+}
+
+.node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--node);
+  height: var(--node);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-bg-raised);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+/*
+  Connector: a dashed track (not reached yet, like the construction lines of
+  the drawings) plus a solid fill that grows toward the next step.
+*/
+.connector {
+  --dash: color-mix(in srgb, var(--color-border-strong) 70%, transparent);
+  position: absolute;
+  top: var(--node);
+  bottom: 0;
+  left: calc(var(--node) / 2 - var(--line) / 2);
+  width: var(--line);
+  background: repeating-linear-gradient(to bottom, var(--dash) 0 3px, transparent 3px 8px);
+}
+
+.connector::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-text);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.connector[data-filled]::after {
+  transform: scaleY(1);
+}
+
+.text {
+  display: grid;
+  gap: var(--space-1);
+  padding-top: calc((var(--node) - 1.5em) / 2);
+}
+
+/* One line as tall as the label line, so the tag stays centered on the node */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  line-height: 1.5rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.label {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  transition: color var(--duration-base) var(--ease-out);
+}
+
+.description {
+  max-width: 34ch;
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+}
+
+/* States */
+
+.step[data-state="reached"] .node {
+  border-color: var(--color-text);
+  background: var(--color-text);
+  color: var(--color-text-inverse);
+}
+
+.step[data-state="current"] .node {
+  border-color: var(--color-accent-text);
+  background: var(--color-accent-text);
+  color: var(--color-text-inverse);
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+
+.step[data-state="reached"] .label,
+.step[data-state="current"] .label {
+  color: var(--color-text);
+}
+
+/* Horizontal layout */
+
+@container (min-width: 44rem) {
+  .flow[data-orientation="auto"],
+  .flow[data-orientation="horizontal"] {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    column-gap: var(--space-4);
+  }
+
+  .flow[data-orientation="auto"] .step,
+  .flow[data-orientation="horizontal"] .step {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-4);
+    padding-bottom: 0;
+  }
+
+  .flow[data-orientation="auto"] .connector,
+  .flow[data-orientation="horizontal"] .connector {
+    top: calc(var(--node) / 2 - var(--line) / 2);
+    bottom: auto;
+    left: calc(var(--node) + var(--space-2));
+    right: calc(var(--space-2) - var(--space-4));
+    width: auto;
+    height: var(--line);
+    background: repeating-linear-gradient(to right, var(--dash) 0 3px, transparent 3px 8px);
+  }
+
+  .flow[data-orientation="auto"] .connector::after,
+  .flow[data-orientation="horizontal"] .connector::after {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .flow[data-orientation="auto"] .connector[data-filled]::after,
+  .flow[data-orientation="horizontal"] .connector[data-filled]::after {
+    transform: scaleX(1);
+  }
+
+  .flow[data-orientation="auto"] .text,
+  .flow[data-orientation="horizontal"] .text {
+    padding-top: 0;
+  }
+}

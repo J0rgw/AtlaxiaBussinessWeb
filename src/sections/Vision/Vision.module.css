@@ -1,0 +1,17 @@
+/* Each visual sits on a blueprint sheet (Matta reference: technical drawings) */
+.panel {
+  padding: clamp(var(--space-4), 3vw, var(--space-8));
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-raised);
+  background-image:
+    linear-gradient(var(--color-signal-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-signal-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+}
+
+/* The scroll scenes, right after the index of reasons */
+.scenes {
+  margin-top: var(--space-section-compact);
+}

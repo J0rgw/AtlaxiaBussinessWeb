@@ -1,0 +1,177 @@
+.section {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Wireframe surface along the bottom, fading towards the horizon */
+.mesh {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: -1;
+  width: 100%;
+  height: clamp(12rem, 40vw, 30rem);
+  fill: none;
+  stroke-width: 1;
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 12%, #000 60%);
+}
+
+.mesh path {
+  vector-effect: non-scaling-stroke;
+}
+
+.meshRows {
+  stroke: color-mix(in srgb, var(--color-accent) 42%, transparent);
+}
+
+.meshColumns {
+  stroke: color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+
+.content {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-6);
+  padding-block: var(--space-8) clamp(var(--space-16), 14vw, 12rem);
+  text-align: center;
+}
+
+.symbol {
+  width: 2.5rem;
+  height: auto;
+  color: var(--color-accent);
+}
+
+.title {
+  font-size: clamp(2.75rem, 1.5rem + 5vw, 5.5rem);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.lead {
+  max-width: 34rem;
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+}
+
+/* Wide chamfered action. The shape is painted by ::before so the focus ring is not clipped. */
+.cta {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  width: min(100%, 26rem);
+  min-height: 3.5rem;
+  margin-top: var(--space-4);
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-action-text);
+  text-decoration: none;
+}
+
+.cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-action);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.cta:hover::before {
+  background: var(--color-action-hover);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+.ctaIcon {
+  width: 1.1em;
+  height: 1.1em;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* Feedback: the return key "presses" */
+.cta:hover .ctaIcon {
+  transform: translate(-2px, 1px);
+}
+
+.intents {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.intentsLabel,
+.emailLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.intentList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.intent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--target-compact);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.intent svg {
+  width: 1em;
+  height: 1em;
+  color: var(--color-text-muted);
+}
+
+.intent:hover {
+  border-color: var(--color-accent);
+}
+
+.email {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.email a {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-accent-text);
+  text-underline-offset: 3px;
+}

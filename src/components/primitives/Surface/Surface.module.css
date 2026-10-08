@@ -1,0 +1,30 @@
+.surface {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  color: var(--color-text);
+}
+
+.raised {
+  background: var(--color-bg-raised);
+}
+
+.inset {
+  background: var(--color-bg-inset);
+}
+
+/* Tokens are already flipped by data-surface="dark"; this just paints them. */
+.dark {
+  background: var(--color-bg);
+}
+
+.padding-none {
+  padding: 0;
+}
+
+.padding-md {
+  padding: var(--space-5);
+}
+
+.padding-lg {
+  padding: clamp(var(--space-6), 4vw, var(--space-10));
+}

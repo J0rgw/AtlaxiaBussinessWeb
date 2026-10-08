@@ -1,0 +1,82 @@
+/* Stacks below 48rem of container width; columns from there. */
+
+/*
+  container-type makes this box a query container. Side effect (layout
+  containment): it becomes the containing block of position: fixed descendants,
+  so do not nest fixed UI (like the navigation bar) inside it.
+*/
+.container {
+  container-type: inline-size;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Ratio always refers to start and end, whatever their visual order. */
+.grid[data-ratio="1:1"] {
+  --start: 1fr;
+  --end: 1fr;
+}
+.grid[data-ratio="5:7"] {
+  --start: 5fr;
+  --end: 7fr;
+}
+.grid[data-ratio="7:5"] {
+  --start: 7fr;
+  --end: 5fr;
+}
+.grid[data-ratio="4:8"] {
+  --start: 4fr;
+  --end: 8fr;
+}
+.grid[data-ratio="8:4"] {
+  --start: 8fr;
+  --end: 4fr;
+}
+
+.gap-md {
+  gap: var(--space-6);
+}
+
+.gap-lg {
+  gap: clamp(var(--space-8), 5cqi, var(--space-16));
+}
+
+.start,
+.end {
+  min-width: 0;
+}
+
+@container (min-width: 48rem) {
+  .grid {
+    grid-template-columns: minmax(0, var(--start)) minmax(0, var(--end));
+  }
+
+  .align-start {
+    align-items: start;
+  }
+  .align-center {
+    align-items: center;
+  }
+  .align-end {
+    align-items: end;
+  }
+  .align-stretch {
+    align-items: stretch;
+  }
+
+  /* Visual swap only: DOM and reading order stay start, end. */
+  .grid[data-order="end-first"] {
+    grid-template-columns: minmax(0, var(--end)) minmax(0, var(--start));
+  }
+  .grid[data-order="end-first"] .start {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .grid[data-order="end-first"] .end {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}

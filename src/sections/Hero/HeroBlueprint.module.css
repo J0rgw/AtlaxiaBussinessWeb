@@ -1,0 +1,340 @@
+/*
+  Hero drawing. Every layer is positioned from the same center (--cx, --cy) in
+  container units of the canvas, so the grid, the axes and the mark line up.
+  Stroke widths are in drawing units (1120 wide): about 0.55 px per unit on a
+  laptop, 0.85 on a large screen.
+*/
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  pointer-events: none;
+}
+
+.canvas > * {
+  --cx: 50cqw;
+  --cy: 44cqh;
+  --size: min(94cqh, 86cqw);
+}
+
+/*
+  Phones and tablets: the canvas is no longer a backdrop but the top block of
+  the hero column (Hero.module.css), and the drawing is centered in it.
+*/
+@media (max-width: 59.99rem) {
+  .canvas {
+    position: relative;
+    inset: auto;
+    flex: 1 1 0;
+    min-height: 8rem;
+  }
+
+  .canvas > * {
+    --cy: 50cqh;
+    --size: min(88cqw, 88cqh);
+  }
+
+  .veil {
+    display: none;
+  }
+}
+
+@media (max-width: 47.99rem) and (max-height: 640px) {
+  .canvas {
+    min-height: 5rem;
+  }
+}
+
+/* Soft light behind the mark: depth without a gradient look */
+.glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--cx) var(--cy),
+    var(--color-bg-raised) 0,
+    color-mix(in srgb, var(--color-bg-raised) 40%, transparent) calc(var(--size) * 0.32),
+    transparent calc(var(--size) * 0.62)
+  );
+}
+
+/* Registration crosses, one on the center; they fade out towards the frame */
+.field {
+  position: absolute;
+  inset: 0;
+  mask-image: radial-gradient(
+    circle at var(--cx) var(--cy),
+    #000 calc(var(--size) * 0.3),
+    transparent calc(var(--size) * 0.95)
+  );
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background: var(--color-border-strong);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24.5 21v7M21 24.5h7' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E");
+  mask-size: 48px 48px;
+  mask-position: calc(var(--cx) - 24px) calc(var(--cy) - 24px);
+  opacity: 0.55;
+  animation: fade 1.2s var(--ease-out) both;
+}
+
+.drawing {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  width: var(--size);
+  height: var(--size);
+  translate: -50% -50%;
+  overflow: visible;
+  fill: none;
+}
+
+/* Construction lines */
+
+.axes line {
+  stroke: var(--color-border-strong);
+  stroke-width: 1.6;
+  stroke-dasharray: 3 9;
+}
+
+.ring {
+  stroke: var(--color-border-strong);
+  stroke-width: 1.6;
+}
+
+.ticks {
+  stroke: var(--color-border-strong);
+  stroke-width: 1.6;
+  animation: fade 1s var(--ease-out) both 0.9s;
+}
+
+.ticksMajor {
+  stroke: var(--color-text-subtle);
+  stroke-width: 2;
+}
+
+/* Dark copy of the dial, shown only under the pointer spot (HeroDial) */
+.dialFocus .ring {
+  stroke: var(--color-text-muted);
+  stroke-width: 2.4;
+}
+
+.dialFocus .ticks {
+  stroke: var(--color-text-muted);
+  stroke-width: 2.2;
+}
+
+.dialFocus .ticksMajor {
+  stroke: var(--color-text-secondary);
+  stroke-width: 2.8;
+}
+
+.circumcircle {
+  stroke: var(--color-accent);
+  stroke-width: 1.8;
+  stroke-dasharray: 4 10;
+  opacity: 0.6;
+}
+
+.incircle {
+  stroke: var(--color-accent);
+  stroke-width: 1.6;
+  stroke-dasharray: 2 8;
+  opacity: 0.5;
+}
+
+.side {
+  stroke: var(--color-text-subtle);
+  stroke-width: 1.4;
+  stroke-dasharray: 8 9;
+  opacity: 0.55;
+}
+
+/* The mark (inside a 0.5 scale: local widths are doubled) */
+
+.hatchLine {
+  stroke: var(--color-accent);
+  stroke-width: 1.6;
+}
+
+.hatch {
+  opacity: 0.32;
+  animation: fade 1.2s var(--ease-out) both 1.7s;
+}
+
+.outline {
+  stroke: var(--color-accent);
+  stroke-width: 4.4;
+  stroke-linejoin: round;
+}
+
+.halo {
+  stroke: var(--color-accent);
+  stroke-width: 1.6;
+  opacity: 0.3;
+}
+
+.dot {
+  fill: var(--color-bg);
+  stroke: var(--color-accent);
+  stroke-width: 3;
+}
+
+/* Signals */
+
+.signals {
+  animation: fade 0.8s var(--ease-out) both 2.6s;
+}
+
+/*
+  Each signal is a faint tail with a crisp head at its front. Both run the
+  same loop; the head starts slightly ahead (negative delay = its length in
+  time) so it always leads the tail.
+*/
+.signal {
+  --loop: 11s;
+  --lead: calc(var(--loop) * -0.07);
+  --start: 0s;
+}
+
+.signal[data-signal="b"] {
+  --start: calc(var(--loop) * -0.5);
+}
+
+.tail,
+.head {
+  stroke-linecap: round;
+  animation: travel var(--loop) linear infinite;
+}
+
+.tail {
+  stroke: var(--color-accent);
+  stroke-width: 9;
+  stroke-dasharray: 0.08 0.92;
+  opacity: 0.22;
+  animation-delay: var(--start);
+}
+
+.head {
+  stroke: var(--color-accent-text);
+  stroke-width: 4.5;
+  stroke-dasharray: 0.012 0.988;
+  animation-delay: calc(var(--start) + var(--lead));
+}
+
+/* The orbit lives in drawing units, outside the 0.5 scale: half the widths */
+.orbit {
+  --loop: 26s;
+}
+
+.orbit .tail {
+  stroke-width: 4.5;
+}
+
+.orbit .head {
+  stroke-width: 2.2;
+}
+
+/* Bottom veil: keeps the headline area calm */
+.veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    var(--color-bg) 0,
+    color-mix(in srgb, var(--color-bg) 72%, transparent) 20%,
+    transparent 46%
+  );
+}
+
+/* Reveal: dashed construction expands from the center, solid lines are drawn */
+
+.expand {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: expand 1.4s var(--ease-out) both 0.15s;
+}
+
+.draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 2.2s var(--ease-out) forwards 0.6s;
+}
+
+.dial .draw {
+  animation-duration: 1.8s;
+  animation-delay: 0.3s;
+}
+
+.node {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 0.5s var(--ease-out) both;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes expand {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes travel {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+/* Off screen: loops stop */
+.canvas[data-paused] * {
+  animation-play-state: paused;
+}
+
+/* Reduced motion: final drawing, no signals (HeroDial does not follow the pointer) */
+@media (prefers-reduced-motion: reduce) {
+  .canvas * {
+    animation: none !important;
+  }
+
+  .draw {
+    stroke-dashoffset: 0;
+  }
+
+  .signals {
+    display: none;
+  }
+}
+
+:global(:root[data-motion="reduce"]) .canvas * {
+  animation: none !important;
+}
+
+:global(:root[data-motion="reduce"]) .draw {
+  stroke-dashoffset: 0;
+}
+
+:global(:root[data-motion="reduce"]) .signals {
+  display: none;
+}

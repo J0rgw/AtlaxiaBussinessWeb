@@ -1,0 +1,109 @@
+/* Color roles are fixed across every chart and diagram (tokens.css). */
+
+.chart {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.grid {
+  stroke: var(--color-signal-grid);
+  stroke-width: 1;
+}
+
+.band {
+  fill: var(--color-accent-soft);
+  stroke: none;
+  opacity: 0.8;
+}
+
+.observed,
+.expected,
+.context {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.observed {
+  stroke: var(--color-signal-observed);
+  stroke-width: 1.75;
+}
+
+.expected {
+  stroke: var(--color-signal-expected);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+
+.context {
+  stroke: var(--color-border-strong);
+  stroke-width: 1.25;
+}
+
+.deviation {
+  fill: var(--color-signal-deviation);
+}
+
+.deviationHalo {
+  fill: var(--color-signal-deviation);
+  opacity: 0.18;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 0;
+  border-top: 2px solid currentColor;
+}
+
+.swatch-observed {
+  border-color: var(--color-signal-observed);
+}
+
+.swatch-expected {
+  border-top-style: dashed;
+  border-color: var(--color-signal-expected);
+}
+
+.swatch-context {
+  border-color: var(--color-border-strong);
+}
+
+.swatch-band {
+  height: 8px;
+  border: 0;
+  background: var(--color-accent-soft);
+}
+
+.swatch-deviation {
+  width: 8px;
+  height: 8px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-signal-deviation);
+}

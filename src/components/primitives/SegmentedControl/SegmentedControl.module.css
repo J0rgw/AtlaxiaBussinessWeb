@@ -1,0 +1,78 @@
+/*
+  Segmented selector, mirror of the product filter (atlaxia-demo Segmented.tsx):
+  inset track (8px radius, 4px padding, 2px gap), 28px options (36px on touch),
+  6px radius, 12px label; selected = raised surface, semibold, soft shadow.
+  Other selectors (LanguageSwitcher, FloatingSectionNav) compose these classes to stay identical.
+  Sizes are variables whose defaults are the product values; a container can
+  scale every selector inside it at once (the floating navigation bar does).
+*/
+
+.track {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  padding: var(--seg-track-pad, 4px);
+  border-radius: var(--seg-track-radius, var(--radius-lg));
+  background: var(--seg-track-bg, var(--color-bg-inset));
+  box-shadow: var(--seg-track-shadow, none);
+}
+
+.option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--seg-height, 28px);
+  padding: 0 var(--seg-pad, 12px);
+  border-radius: var(--seg-radius, var(--radius-md));
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--seg-font, var(--text-xs));
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+@media (pointer: coarse) {
+  .option {
+    height: var(--seg-height-touch, 36px);
+  }
+}
+
+.option:hover {
+  color: var(--color-text);
+}
+
+.selected {
+  background: var(--color-bg-raised);
+  box-shadow: var(--shadow-raise);
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+.option:has(.input:focus-visible),
+.option:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  opacity: 0;
+}

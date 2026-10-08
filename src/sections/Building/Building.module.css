@@ -1,0 +1,72 @@
+.layout {
+  display: grid;
+  gap: clamp(var(--space-10), 6vw, var(--space-16));
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  height: 100%;
+}
+
+.eyebrow,
+.capabilitiesLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.nameRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.name {
+  font-size: var(--text-title);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+.description {
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+}
+
+.capabilities {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.capabilityList {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.capabilityList li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-weight: var(--weight-medium);
+}
+
+.capabilityIndex {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--color-accent-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pinned to the bottom of the column when it is taller than its content */
+.demo {
+  align-self: flex-start;
+  margin-top: auto;
+}

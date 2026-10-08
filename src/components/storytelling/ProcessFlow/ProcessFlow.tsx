@@ -1,0 +1,84 @@
+import type { ReactNode } from "react";
+import { cx } from "@/lib/cx";
+import styles from "./ProcessFlow.module.css";
+
+export type ProcessStep = {
+  id: string;
+  label: string;
+  /** Short mono tag above the label, such as a stage name ("Hoy", "Siguiente"). */
+  meta?: string;
+  description?: ReactNode;
+};
+
+export type ProcessFlowProps = {
+  steps: ProcessStep[];
+  /** Accessible name of the sequence, e.g. "De los datos a la acción". */
+  label: string;
+  /**
+   * Progress through the flow. Steps before it read as reached, this one as
+   * current, later ones as pending; connectors fill as each step is reached.
+   * Leave undefined for a static, fully reached flow.
+   */
+  activeIndex?: number | null;
+  /** "auto": horizontal on wide containers, vertical on narrow ones. */
+  orientation?: "auto" | "horizontal" | "vertical";
+  className?: string;
+};
+
+type StepState = "reached" | "current" | "pending";
+
+function stateFor(index: number, activeIndex: number | null | undefined): StepState {
+  if (activeIndex === undefined) return "reached";
+  if (activeIndex === null || index > activeIndex) return "pending";
+  return index === activeIndex ? "current" : "reached";
+}
+
+/**
+ * An ordered sequence of stages joined by connectors, such as
+ * data, context, behavior, understanding, action.
+ * Presentational: whoever owns the scroll or the state drives `activeIndex`.
+ */
+export function ProcessFlow({
+  steps,
+  label,
+  activeIndex,
+  orientation = "auto",
+  className,
+}: ProcessFlowProps) {
+  return (
+    <div className={cx(styles.container, className)}>
+      <ol role="list" aria-label={label} className={styles.flow} data-orientation={orientation}>
+        {steps.map((step, index) => {
+          const state = stateFor(index, activeIndex);
+          const nextState = index < steps.length - 1 ? stateFor(index + 1, activeIndex) : null;
+          return (
+            <li
+              key={step.id}
+              className={styles.step}
+              data-state={state}
+              aria-current={state === "current" ? "step" : undefined}
+            >
+              <span className={styles.node} aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              {nextState ? (
+                <span
+                  className={styles.connector}
+                  data-filled={nextState !== "pending" ? "" : undefined}
+                  aria-hidden="true"
+                />
+              ) : null}
+              <span className={styles.text}>
+                {step.meta ? <span className={styles.meta}>{step.meta}</span> : null}
+                <span className={styles.label}>{step.label}</span>
+                {step.description ? (
+                  <span className={styles.description}>{step.description}</span>
+                ) : null}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}

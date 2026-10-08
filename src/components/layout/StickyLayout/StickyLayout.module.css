@@ -1,0 +1,63 @@
+/* Stacks (no pinning) below 48rem of container width; pinned columns from there. */
+
+/*
+  container-type makes this box a query container. Side effect (layout
+  containment): it becomes the containing block of position: fixed descendants,
+  so do not nest fixed UI (like the navigation bar) inside it.
+*/
+.container {
+  --sticky-offset: var(--space-8);
+  container-type: inline-size;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(var(--space-8), 5cqi, var(--space-16));
+}
+
+.grid[data-ratio="1:1"] {
+  --start: 1fr;
+  --end: 1fr;
+}
+.grid[data-ratio="5:7"] {
+  --start: 5fr;
+  --end: 7fr;
+}
+.grid[data-ratio="7:5"] {
+  --start: 7fr;
+  --end: 5fr;
+}
+.grid[data-ratio="4:8"] {
+  --start: 4fr;
+  --end: 8fr;
+}
+.grid[data-ratio="8:4"] {
+  --start: 8fr;
+  --end: 4fr;
+}
+
+.sticky,
+.scroll {
+  min-width: 0;
+}
+
+@container (min-width: 48rem) {
+  .grid {
+    grid-template-columns: minmax(0, var(--start)) minmax(0, var(--end));
+    /* Columns must not stretch: the sticky one needs room to travel */
+    align-items: start;
+  }
+
+  .sticky {
+    position: sticky;
+    top: var(--sticky-offset);
+  }
+
+  /* Fill the visible height and center the content inside it */
+  .align-center {
+    display: grid;
+    align-content: center;
+    min-height: calc(100dvh - 2 * var(--sticky-offset));
+  }
+}

@@ -1,0 +1,30 @@
+/*
+  The scene is as tall as its scroll length; the stage inside sticks to the
+  top for one viewport. --scene-progress (0 to 1) is written by the component.
+*/
+
+.scene {
+  --scene-progress: 0;
+  position: relative;
+  height: calc(var(--scene-length, 3) * 100svh);
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* Reduced motion: final state, in the normal flow */
+.scene[data-static] {
+  --scene-progress: 1;
+  height: auto;
+}
+
+.scene[data-static] .stage {
+  position: relative;
+  height: auto;
+  /* Clip, not hidden: no scroll container, but decoration never widens the page */
+  overflow: clip;
+}

@@ -1,0 +1,30 @@
+.section {
+  position: relative;
+  scroll-margin-top: var(--nav-offset);
+}
+
+.section + .section {
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.tone-default {
+  background: var(--color-bg);
+}
+
+.tone-inset {
+  background: var(--color-bg-inset);
+}
+
+/* Tokens are flipped by data-surface="dark"; this paints them */
+.tone-dark {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.spacing-default {
+  padding-block: var(--space-section);
+}
+
+.spacing-compact {
+  padding-block: var(--space-section-compact);
+}

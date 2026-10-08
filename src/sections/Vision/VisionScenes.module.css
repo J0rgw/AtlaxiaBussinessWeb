@@ -1,0 +1,299 @@
+/*
+  Shared layout of the two Vision scroll scenes (WhereScene, SectorsScene).
+  The stage is one viewport tall and pinned by ScrollScene; everything reads
+  --scene-progress (0 to 1). [data-static] is set by ScrollScene with reduced
+  motion: the scene then lays out in the normal flow, in its final state.
+*/
+
+/*
+  Room for the fixed navigation. The brand strip stays at the top at every size
+  (--frame-inset + --frame-bar); below 60rem the sections bar becomes a dock
+  at the bottom (FloatingSectionNav), so the bottom needs room too.
+*/
+.stage {
+  --pad-top: calc(var(--frame-inset) + var(--frame-bar) + var(--space-8));
+  --pad-bottom: var(--space-12);
+  isolation: isolate;
+}
+
+@media (max-width: 59.99rem) {
+  .stage {
+    --pad-bottom: var(--space-24);
+  }
+}
+
+/* Blueprint field behind the scene: registration crosses, as in the hero */
+.grid {
+  position: absolute;
+  inset: -12%;
+  z-index: -1;
+  background: var(--color-border-strong);
+  mask-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24.5 21v7M21 24.5h7' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E"),
+    radial-gradient(circle at 62% 50%, #000 0, #000 18vmax, transparent 46vmax);
+  mask-size:
+    48px 48px,
+    100% 100%;
+  mask-repeat: repeat, no-repeat;
+  mask-composite: intersect;
+  pointer-events: none;
+}
+
+/* The protagonist: the heading of each scene */
+.title {
+  font-size: clamp(2.75rem, 1rem + 6vw, 7rem);
+  font-weight: var(--weight-medium);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+/* Scene A shares its column with the stage words: a step smaller */
+.titleWhere {
+  font-size: clamp(2.5rem, 1rem + 4.4vw, 5.5rem);
+}
+
+.cueIndex {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+/*
+  The SVG keeps its square (meet) inside whatever box the layout gives it.
+  Its edges dissolve into the page, so lines that leave the frame fade out
+  instead of being cut.
+*/
+.lottie {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  mask-image:
+    linear-gradient(to right, transparent, #000 10%, #000 90%, transparent),
+    linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+  mask-composite: intersect;
+}
+
+/* ------------------------------------------------------------------------ */
+/* Scene A: Hacia dónde vamos                                                */
+/* ------------------------------------------------------------------------ */
+
+.whereLayout {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "heading" "drawing" "cues";
+  gap: var(--space-6);
+  height: 100%;
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding: var(--pad-top) var(--gutter) var(--pad-bottom);
+}
+
+.whereLayout .heading {
+  grid-area: heading;
+}
+
+.whereDrawing {
+  grid-area: drawing;
+  min-height: 0;
+}
+
+/* Stage words: stacked in one cell, each visible within its part of the scene */
+.cues {
+  grid-area: cues;
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cue {
+  --in: clamp(0, (var(--scene-progress) - var(--from)) / 0.04, 1);
+  --out: clamp(0, (var(--to) - var(--scene-progress)) / 0.04, 1);
+  grid-area: 1 / 1;
+  display: grid;
+  gap: var(--space-2);
+  align-content: end;
+  opacity: min(var(--in), var(--out));
+  translate: 0 calc((1 - min(var(--in), var(--out))) * 1.25rem);
+}
+
+.cueWord {
+  font-size: clamp(2.25rem, 1rem + 3.4vw, 4.5rem);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.cueDetail {
+  max-width: 30ch;
+  font-size: var(--text-lead);
+  line-height: var(--leading-snug);
+  color: var(--color-text-muted);
+}
+
+/* The goal carries the short statement */
+.cueDetail[data-long] {
+  max-width: 26ch;
+  font-size: clamp(1.125rem, 0.9rem + 0.8vw, 1.5rem);
+  color: var(--color-text);
+}
+
+@media (min-width: 60rem) {
+  .whereLayout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      "heading drawing"
+      "cues drawing";
+    column-gap: var(--space-12);
+  }
+}
+
+/* ------------------------------------------------------------------------ */
+/* Scene B: Dónde empezamos                                                  */
+/* ------------------------------------------------------------------------ */
+
+.sectorsLayout {
+  display: grid;
+  /* One viewport-wide column: the track overflows it instead of widening it */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  /* Clear air between the heading and the sector names: two levels, not one block */
+  gap: clamp(var(--space-8), 7svh, var(--space-16));
+  height: 100%;
+  padding: var(--pad-top) 0 var(--pad-bottom);
+}
+
+.sectorsLayout .heading {
+  padding-inline: max(var(--gutter), calc((100vw - var(--container-max)) / 2));
+}
+
+/*
+  Panels side by side, each at its own width, with a gap much larger than the
+  space inside a panel so every name clearly belongs to its own drawing.
+  ScrollTrack measures them and slides the track so each one is centered in
+  its turn.
+*/
+.track {
+  display: flex;
+  gap: calc(3 * var(--gutter));
+  width: max-content;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  will-change: translate;
+}
+
+.panel {
+  display: grid;
+  flex: none;
+  width: calc(100vw - 2 * var(--gutter));
+  min-height: 0;
+}
+
+/* The fading wrappers fill the panel; the body lays out name over drawing */
+.panelFocus {
+  display: grid;
+  min-height: 0;
+}
+
+.panelBody {
+  display: grid;
+  /* One column as wide as the panel: the SVG's own 1000 px must not widen it */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  row-gap: var(--space-4);
+  align-content: center;
+  justify-items: start;
+  min-height: 0;
+}
+
+.sectorName {
+  font-size: clamp(2rem, 9vw, 3.25rem);
+  font-weight: var(--weight-medium);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+/*
+  Same 5:4 frame as the sector animations. Phones: as wide as the panel (and
+  never taller than the row). Desktop: as tall as the row, width from the ratio.
+*/
+.panelDrawing {
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 5 / 4;
+  min-height: 0;
+}
+
+@media (min-width: 60rem) {
+  .track {
+    gap: 16vw;
+  }
+
+  .panel {
+    width: max-content;
+  }
+
+  .panelDrawing {
+    width: auto;
+    height: 100%;
+    max-height: none;
+  }
+
+  .sectorName {
+    font-size: clamp(2.5rem, 0.5rem + 3.4vw, 4.5rem);
+  }
+}
+
+/* ------------------------------------------------------------------------ */
+/* Reduced motion: final state in the flow                                   */
+/* ------------------------------------------------------------------------ */
+
+[data-static] .whereLayout,
+[data-static] .sectorsLayout {
+  height: auto;
+}
+
+[data-static] .lottie {
+  height: auto;
+  max-height: 70svh;
+  aspect-ratio: 1;
+}
+
+[data-static] .cues {
+  gap: var(--space-8);
+}
+
+[data-static] .cue {
+  grid-area: auto;
+  opacity: 1;
+  translate: none;
+}
+
+[data-static] .track {
+  flex-direction: column;
+  gap: var(--space-12);
+  width: auto;
+  padding-inline: max(var(--gutter), calc((100vw - var(--container-max)) / 2));
+  translate: none;
+}
+
+[data-static] .panel {
+  width: auto;
+}
+
+[data-static] .panelFocus,
+[data-static] .panelBody {
+  opacity: 1;
+}
+
+[data-static] .panelDrawing {
+  height: auto;
+  width: min(100%, 70svh);
+}

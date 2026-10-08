@@ -1,0 +1,9 @@
+/* Square by default (the scene animations are 1000 x 1000); the SVG fills it. */
+.frame {
+  aspect-ratio: 1;
+  width: 100%;
+}
+
+.frame :global(svg) {
+  display: block;
+}

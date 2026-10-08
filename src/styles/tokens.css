@@ -1,0 +1,282 @@
+/*
+  ATLAXIA v2 design tokens.
+
+  Two tiers:
+  1. --palette-*  raw values. Only this file should read them.
+  2. --color-*, --font-*, --space-*, ...  semantic tokens. Components read only these.
+
+  Semantic color tokens are redefined in full inside [data-surface="dark"] so any
+  component works on the light "paper" and on the dark control-room panels.
+  They reference palette tokens only (never other semantic tokens), because a
+  custom property resolves where it is declared and would not follow the flip.
+
+  Base values come from the legacy globals.css (cool paper + cobalt), with the
+  contrast fixes listed in docs/DECISIONES.md.
+*/
+
+:root {
+  /* Paper (light surfaces) */
+  --palette-paper-0: #ffffff;
+  --palette-paper-50: #f2f4f8;
+  --palette-paper-100: #eaedf2;
+  --palette-paper-200: #dfe3ea;
+  --palette-paper-300: #cdd3dc;
+
+  /* Slate (ink on paper) */
+  --palette-slate-400: #8a9099;
+  --palette-slate-500: #7a8089;
+  --palette-slate-600: #5b6169;
+  --palette-slate-900: #1b2026;
+  --palette-slate-950: #0e1116;
+
+  /* Cobalt accent (hue 255, same family as the product advisory blue) */
+  --palette-cobalt-100: oklch(0.94 0.04 255);
+  --palette-cobalt-300: oklch(0.72 0.13 255);
+  --palette-cobalt-500: oklch(0.58 0.14 255);
+  --palette-cobalt-600: oklch(0.46 0.15 255);
+  --palette-cobalt-700: oklch(0.38 0.14 255);
+
+  /* Night (control-room panels, shared with the product UI) */
+  --palette-night-950: #0a0e14;
+  --palette-night-900: #0d1117;
+  --palette-night-850: #151b23;
+  --palette-night-800: #1c2330;
+  --palette-night-700: #21262d;
+  --palette-night-600: #30363d;
+  --palette-night-500: #6e7681;
+  --palette-night-300: #8b949e;
+  --palette-night-50: #e6edf3;
+
+  /* Operational status (product palette) */
+  --palette-status-normal: #3fb950;
+  --palette-status-advisory: #58a6ff;
+  --palette-status-warning: #d29922;
+  --palette-status-critical: #f85149;
+  --palette-status-critical-ink: oklch(0.55 0.19 27);
+
+  /* ---------------------------------------------------------------------- */
+  /* Semantic: light surface (default)                                       */
+  /* ---------------------------------------------------------------------- */
+
+  --color-bg: var(--palette-paper-50);
+  --color-bg-inset: var(--palette-paper-100);
+  --color-bg-raised: var(--palette-paper-0);
+
+  --color-text: var(--palette-slate-950);
+  --color-text-secondary: var(--palette-slate-900);
+  /* AA for body-size text (5.7:1 on bg) */
+  --color-text-muted: var(--palette-slate-600);
+  /* Large text or decorative only (2.9:1 on bg) */
+  --color-text-subtle: var(--palette-slate-400);
+  --color-text-inverse: var(--palette-paper-50);
+
+  /* Hairlines are decorative. Control borders need 3:1 (border-strong). */
+  --color-border-subtle: var(--palette-paper-200);
+  --color-border: var(--palette-paper-300);
+  --color-border-strong: var(--palette-slate-500);
+
+  /* Accent: strokes and large text use --color-accent (3.9:1),
+     body text and links use --color-accent-text (6.6:1). */
+  --color-accent: var(--palette-cobalt-500);
+  --color-accent-text: var(--palette-cobalt-600);
+  --color-accent-soft: var(--palette-cobalt-100);
+
+  --color-action: var(--palette-slate-950);
+  --color-action-hover: var(--palette-slate-900);
+  --color-action-text: var(--palette-paper-50);
+
+  --color-focus: var(--palette-cobalt-600);
+  --color-selection: var(--palette-cobalt-100);
+
+  /* Signals: one fixed meaning per color in every chart and diagram */
+  --color-signal-observed: var(--palette-slate-950);
+  --color-signal-expected: var(--palette-cobalt-500);
+  --color-signal-deviation: var(--palette-status-critical-ink);
+  --color-signal-grid: oklch(0.46 0.15 255 / 0.07);
+
+  --color-status-normal: var(--palette-status-normal);
+  --color-status-advisory: var(--palette-status-advisory);
+  --color-status-warning: var(--palette-status-warning);
+  --color-status-critical: var(--palette-status-critical);
+
+  /*
+    Tag tones: exact mirror of the product badge tokens
+    (atlaxia-demo src/index.css, "prototype v4, do not recalculate").
+    Product invariant, also for the web: saturated fill + white text means
+    ISA-18.2 criticality and nothing else. Every other concept (placeholders,
+    categories, sectors...) is neutral slate, told apart by icon, never by color.
+    Five light tones are below 4.5:1 with white 11px text; see docs/DECISIONES.md.
+  */
+  --color-tag-cobalt-bg: #2f54c9;
+  --color-tag-neutral-bg: #5d6a85;
+  --color-tag-neutral-faint-bg: #828ca0;
+  --color-tag-neutral-strong-bg: #2b313c;
+  --color-tag-neutral-muted-bg: #6f7686;
+  --color-tag-critical-bg: #c5392b;
+  --color-tag-high-bg: #b56a1c;
+  --color-tag-medium-bg: #a87a1a;
+  --color-tag-low-bg: #1f87b0;
+  --color-tag-normal-bg: #707b91;
+  --color-tag-fg: #ffffff;
+
+  color-scheme: light;
+
+  /* ---------------------------------------------------------------------- */
+  /* Typography                                                              */
+  /* ---------------------------------------------------------------------- */
+
+  --font-sans: "Overused Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-label: 0.6875rem; /* 11px, mono uppercase */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --text-title: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-heading: clamp(2rem, 1.35rem + 2.6vw, 3.5rem);
+  /* Capped so the hero fits a small laptop (about 1440 x 760) above the floating bar */
+  --text-display: clamp(2.5rem, 1.5rem + 3.4vw, 4.25rem);
+
+  --leading-display: 0.98;
+  --leading-heading: 1.06;
+  --leading-snug: 1.3;
+  --leading-body: 1.6;
+
+  --tracking-display: -0.03em;
+  --tracking-heading: -0.025em;
+  --tracking-label: 0.16em;
+
+  /* Both typefaces are variable: any weight from 400 to 600 is available. */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  --measure-text: 62ch;
+
+  /* ---------------------------------------------------------------------- */
+  /* Space, layout, shape                                                    */
+  /* ---------------------------------------------------------------------- */
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-section: clamp(4rem, 2.4rem + 6.5vw, 9rem);
+  --space-section-compact: clamp(2.5rem, 1.8rem + 3vw, 5rem);
+
+  --container-max: 80rem;
+  --container-narrow: 46rem;
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  /* First-screen sheet (brand bar + hero): distance to the viewport edge and bar height */
+  --frame-inset: clamp(0.5rem, 1vw, 0.875rem);
+  --frame-bar: 4rem;
+  /* Anchor offset so section titles are not hidden under the navigation */
+  --nav-offset: 5rem;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  /* Product chip radius (badges) */
+  --radius-chip: 7px;
+  --radius-pill: 999px;
+
+  --shadow-float: 0 16px 40px -24px rgb(14 17 22 / 0.22);
+  /* Selected option in segmented controls (product: shadow-sm) */
+  --shadow-raise: 0 1px 2px 0 rgb(14 17 22 / 0.08);
+
+  --target-min: 44px;
+  --target-compact: 36px;
+
+  --z-nav: 50;
+  --z-skip-link: 100;
+
+  /* ---------------------------------------------------------------------- */
+  /* Motion                                                                  */
+  /* ---------------------------------------------------------------------- */
+
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Phones: a slimmer brand bar leaves more of the first screen to the hero */
+@media (max-width: 47.99rem) {
+  :root {
+    --frame-bar: 3.5rem;
+  }
+}
+
+/* Control-room surface: same semantic names, night values. */
+[data-surface="dark"] {
+  --color-bg: var(--palette-night-900);
+  --color-bg-inset: var(--palette-night-950);
+  --color-bg-raised: var(--palette-night-850);
+
+  --color-text: var(--palette-night-50);
+  --color-text-secondary: var(--palette-night-50);
+  --color-text-muted: var(--palette-night-300);
+  --color-text-subtle: var(--palette-night-500);
+  --color-text-inverse: var(--palette-night-900);
+
+  --color-border-subtle: var(--palette-night-700);
+  --color-border: var(--palette-night-600);
+  --color-border-strong: var(--palette-night-500);
+
+  --color-accent: var(--palette-cobalt-300);
+  --color-accent-text: var(--palette-cobalt-300);
+  --color-accent-soft: oklch(0.72 0.13 255 / 0.16);
+
+  --color-action: var(--palette-night-50);
+  --color-action-hover: var(--palette-paper-200);
+  --color-action-text: var(--palette-night-900);
+
+  --color-focus: var(--palette-cobalt-300);
+  --color-selection: oklch(0.72 0.13 255 / 0.3);
+
+  --color-signal-observed: var(--palette-night-50);
+  --color-signal-expected: var(--palette-cobalt-300);
+  --color-signal-deviation: var(--palette-status-critical);
+  --color-signal-grid: oklch(0.72 0.13 255 / 0.08);
+
+  /* Tag tones, product dark set */
+  --color-tag-cobalt-bg: #4666d6;
+  --color-tag-neutral-bg: #454e63;
+  --color-tag-neutral-faint-bg: #262c37;
+  --color-tag-neutral-strong-bg: #59647c;
+  --color-tag-neutral-muted-bg: #20242c;
+  --color-tag-critical-bg: #c5392b;
+  --color-tag-high-bg: #ad631a;
+  --color-tag-medium-bg: #94701a;
+  --color-tag-low-bg: #1c7ba3;
+  --color-tag-normal-bg: #3a4150;
+  --color-tag-fg: #ffffff;
+
+  --shadow-raise: 0 1px 2px 0 rgb(0 0 0 / 0.45);
+
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}
+
+/* Manual override, used by the Storybook "Motion" toolbar. */
+:root[data-motion="reduce"] {
+  --duration-fast: 0ms;
+  --duration-base: 0ms;
+  --duration-slow: 0ms;
+}

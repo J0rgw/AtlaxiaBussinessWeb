@@ -1,0 +1,224 @@
+/*
+  Radiant product presentation pattern. Works on light and dark surfaces.
+  Wide containers (>= 56rem): layers left, cross-cutting column right.
+*/
+
+.container {
+  container-type: inline-size;
+}
+
+.frame {
+  position: relative;
+  display: grid;
+  border: 1px solid var(--color-border);
+}
+
+/* Registration marks at the frame corners */
+.mark {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+}
+
+.mark::before,
+.mark::after {
+  content: "";
+  position: absolute;
+  background: var(--color-accent);
+}
+
+.mark::before {
+  top: 6px;
+  left: 0;
+  width: 13px;
+  height: 1px;
+}
+
+.mark::after {
+  top: 0;
+  left: 6px;
+  width: 1px;
+  height: 13px;
+}
+
+.mark[data-corner="tl"] {
+  top: -7px;
+  left: -7px;
+}
+.mark[data-corner="tr"] {
+  top: -7px;
+  right: -7px;
+}
+.mark[data-corner="bl"] {
+  bottom: -7px;
+  left: -7px;
+}
+.mark[data-corner="br"] {
+  bottom: -7px;
+  right: -7px;
+}
+
+.layers {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.layer {
+  position: relative;
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.layer:first-child {
+  border-top: 0;
+}
+
+.head {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.index {
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  margin-top: var(--space-2);
+  font-size: var(--text-title);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  letter-spacing: -0.015em;
+}
+
+.tagline {
+  font-size: var(--text-sm);
+  color: var(--color-accent-text);
+}
+
+.description {
+  max-width: 38ch;
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--color-text-muted);
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  align-self: center;
+}
+
+.item {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  min-width: 5.5rem;
+  text-align: center;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: var(--space-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-raised);
+  color: var(--color-accent);
+}
+
+.icon svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.5;
+}
+
+.itemLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.itemSub {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.aside {
+  padding: var(--space-6);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-raised);
+}
+
+.connector {
+  display: none;
+}
+
+@container (min-width: 44rem) {
+  .layer {
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+    align-items: center;
+    padding: var(--space-8);
+  }
+
+  /* Shared columns, so icons line up from one layer to the next like a drawing */
+  .items {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 56rem) {
+  .withAside {
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 18rem);
+  }
+
+  .aside {
+    border-top: 0;
+    border-left: 1px solid var(--color-accent);
+  }
+
+  /* Each layer reports into the cross-cutting column */
+  .connector {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: var(--space-6);
+    height: 1px;
+    background: var(--color-accent);
+  }
+
+  .connector::after {
+    content: "";
+    position: absolute;
+    right: -3px;
+    top: -3px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+}

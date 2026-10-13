@@ -15,3 +15,6 @@ next-env.d.ts
 prompts/
 .claude/
 .vercel
+
+# Anatomy figure previews (scripts/anatomy/build.mjs), local review only
+scripts/anatomy/preview/

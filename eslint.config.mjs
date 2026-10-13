@@ -9,5 +9,14 @@ export default defineConfig([
   ...nextTs,
   ...storybook.configs["flat/recommended"],
   prettier,
-  globalIgnores([".next/**", "out/**", "storybook-static/**", "next-env.d.ts", "prompts/**"]),
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "storybook-static/**",
+    "next-env.d.ts",
+    "prompts/**",
+    // The anatomy skill's kit, vendored as published, and the local previews
+    "scripts/anatomy/kit/**",
+    "scripts/anatomy/preview/**",
+  ]),
 ]);

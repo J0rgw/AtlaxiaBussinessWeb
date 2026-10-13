@@ -1,3 +1,4 @@
+import { ScrubFigure } from "@/components/data-display/ScrubFigure";
 import { ScrubLottie } from "@/components/data-display/ScrubLottie";
 import { ParallaxLayer, ScrollScene, ScrollTrack } from "@/components/storytelling/ScrollScene";
 import type { Dictionary } from "@/content";
@@ -22,9 +23,20 @@ const rangeOf = (index: number): [number, number] => [
   centerOf(index),
 ];
 
+/**
+ * Which drawings play: the Lottie P&ID sketches (public/animations, the
+ * approved ones) or the isometric anatomy models of the same storyboards
+ * (public/animations/anatomy, scripts/anatomy).
+ */
+export type SceneDrawing = "lottie" | "anatomy";
+
 type SectorsSceneProps = {
   content: SectorsContent;
+  drawing?: SceneDrawing;
 };
+
+/** The anatomy sector models are drawn on a 600 x 400 sheet. */
+const ANATOMY_ASPECT = 3 / 2;
 
 /** Opacity of a sector that is not the one in the center: present, but not competing. */
 const DIM = 0.28;
@@ -38,7 +50,7 @@ const FIRST_IN: [number, number] = [0, 0.06];
  * strength; its neighbours are dimmed, so two names never compete. The name
  * rises into place (vertical parallax) and the drawing plays as it arrives.
  */
-export function SectorsScene({ content }: SectorsSceneProps) {
+export function SectorsScene({ content, drawing = "lottie" }: SectorsSceneProps) {
   const last = sectors.length - 1;
   return (
     <ScrollScene length={4} stageClassName={styles.stage}>
@@ -75,13 +87,23 @@ export function SectorsScene({ content }: SectorsSceneProps) {
                     <ParallaxLayer y={["1.5rem", "0rem"]} range={range}>
                       <h4 className={styles.sectorName}>{content.items[id].name}</h4>
                     </ParallaxLayer>
-                    <div className={styles.panelDrawing}>
-                      <ScrubLottie
-                        src={`/animations/sector-${id}.json`}
-                        range={range}
-                        align="start"
-                        className={styles.lottie}
-                      />
+                    <div className={styles.panelDrawing} data-drawing={drawing}>
+                      {drawing === "anatomy" ? (
+                        <ScrubFigure
+                          src={`/animations/anatomy/sector-${id}`}
+                          range={range}
+                          align="start"
+                          aspect={ANATOMY_ASPECT}
+                          className={styles.figure}
+                        />
+                      ) : (
+                        <ScrubLottie
+                          src={`/animations/sector-${id}.json`}
+                          range={range}
+                          align="start"
+                          className={styles.lottie}
+                        />
+                      )}
                     </div>
                   </ParallaxLayer>
                 </ParallaxLayer>

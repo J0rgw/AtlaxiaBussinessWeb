@@ -1,6 +1,7 @@
 import { act, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NodeGraph } from "@/components/data-display/NodeGraph";
+import { ScrubFigure } from "@/components/data-display/ScrubFigure";
 import { ScrubLottie } from "@/components/data-display/ScrubLottie";
 import { SignalChart } from "@/components/data-display/SignalChart";
 import { ProcessFlowReveal } from "@/components/storytelling/ProcessFlow";
@@ -181,6 +182,16 @@ describe("ScrubLottie", () => {
   it("is decorative and loads nothing until it nears the viewport", () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     const { container } = render(<ScrubLottie src="/animations/x.json" />);
+    expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true");
+    expect(fetchSpy).not.toHaveBeenCalled();
+    fetchSpy.mockRestore();
+  });
+});
+
+describe("ScrubFigure", () => {
+  it("is decorative and loads nothing until it nears the viewport", () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+    const { container } = render(<ScrubFigure src="/animations/anatomy/x" />);
     expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true");
     expect(fetchSpy).not.toHaveBeenCalled();
     fetchSpy.mockRestore();

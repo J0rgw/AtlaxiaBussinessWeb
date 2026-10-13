@@ -1,7 +1,9 @@
 import type { CSSProperties } from "react";
+import { ScrubFigure } from "@/components/data-display/ScrubFigure";
 import { ScrubLottie } from "@/components/data-display/ScrubLottie";
 import { ParallaxLayer, ScrollScene } from "@/components/storytelling/ScrollScene";
 import type { Dictionary } from "@/content";
+import type { SceneDrawing } from "./SectorsScene";
 import styles from "./VisionScenes.module.css";
 
 type WhereContent = Dictionary["vision"]["scenes"]["where"];
@@ -11,6 +13,8 @@ type StageId = keyof WhereContent["stages"];
   When each stage word shows, as scene progress (0 to 1). Tied to the frames of
   public/animations/vision-where.json (scripts/lottie/scene-where.mjs): the
   process is complete around 0.45, the plant at 0.73, the network at 0.97.
+  The anatomy version (scripts/anatomy/vision-where.mjs) keeps the same camera
+  keys, so the words land on the same moments.
 */
 const stages: Array<{ id: StageId; from: number; to: number }> = [
   { id: "today", from: 0.28, to: 0.62 },
@@ -21,6 +25,7 @@ const stages: Array<{ id: StageId; from: number; to: number }> = [
 
 type WhereSceneProps = {
   content: WhereContent;
+  drawing?: SceneDrawing;
 };
 
 /**
@@ -28,7 +33,7 @@ type WhereSceneProps = {
  * pulls back from one sensor to a whole network of plants. Three words mark
  * where we are (today), what comes next and the goal.
  */
-export function WhereScene({ content }: WhereSceneProps) {
+export function WhereScene({ content, drawing = "lottie" }: WhereSceneProps) {
   return (
     <ScrollScene length={4.5} stageClassName={styles.stage}>
       <ParallaxLayer className={styles.grid} scale={[1.35, 1]} opacity={[0.6, 0.35]} />
@@ -39,7 +44,15 @@ export function WhereScene({ content }: WhereSceneProps) {
         </ParallaxLayer>
 
         <div className={styles.whereDrawing}>
-          <ScrubLottie src="/animations/vision-where.json" className={styles.lottie} />
+          {drawing === "anatomy" ? (
+            <ScrubFigure
+              src="/animations/anatomy/vision-where"
+              aspect={1}
+              className={styles.lottie}
+            />
+          ) : (
+            <ScrubLottie src="/animations/vision-where.json" className={styles.lottie} />
+          )}
           <p className="visually-hidden">{content.description}</p>
         </div>
 

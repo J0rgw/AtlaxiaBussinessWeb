@@ -1,0 +1,342 @@
+/*
+  Anatomy figures (scripts/anatomy): the kit's drawing styles (iso-*, tb-*),
+  scoped to the frame and fed by the site tokens, so the figures sit on the
+  page's paper in its own inks. Light only, like the scenes they live in.
+  Every --anatomy-* token is derived from a semantic token.
+
+  The build reads this file for its preview pages (:global() unwrapped, .frame
+  renamed), so keep each rule on one selector list.
+*/
+
+.frame {
+  /* Paper is the page: fills hide what is behind without showing as patches */
+  --anatomy-paper: var(--color-bg);
+  --anatomy-face: var(--color-bg-raised);
+  --anatomy-top: var(--color-bg-raised);
+  /* Four side tones, darkest facing away from the light, about 3 % apart */
+  --anatomy-shade-0: color-mix(in oklab, var(--color-bg) 20%, var(--color-border));
+  --anatomy-shade-1: color-mix(in oklab, var(--color-bg) 42%, var(--color-border));
+  --anatomy-shade-2: color-mix(in oklab, var(--color-bg) 64%, var(--color-border));
+  --anatomy-shade-3: color-mix(in oklab, var(--color-bg) 84%, var(--color-border));
+  --anatomy-lit-top: var(--color-bg-raised);
+  --anatomy-lit-shade: var(--color-accent-soft);
+  --anatomy-hi: color-mix(in oklab, var(--color-text) 88%, var(--color-bg));
+  --anatomy-mid: var(--color-text-subtle);
+  --anatomy-lo: color-mix(in oklab, var(--color-text-subtle) 52%, var(--color-border));
+  --anatomy-faint: var(--color-border);
+  /* The one accent: what ATLAXIA reads (instruments, relations, flow) */
+  --anatomy-lit: var(--color-accent);
+  --anatomy-halo: var(--color-border-strong);
+  --anatomy-halo-opacity: 0.3;
+  --anatomy-dot: var(--color-text-secondary);
+  --anatomy-weight: 0.6px;
+  /* Liquids: a tint of the paper's own cobalt, multiplied so lines show through */
+  --anatomy-liquid: color-mix(in oklab, var(--color-accent-soft) 70%, var(--color-bg-raised));
+  --anatomy-liquid-top: color-mix(in oklab, var(--color-accent-soft) 60%, var(--color-bg-raised));
+  /* Cavities (a furnace mouth, a vessel seen through its cutaway): darker for a reason */
+  --anatomy-cavity: color-mix(in oklab, var(--color-bg) 70%, var(--color-border-strong));
+  /*
+    The scroll scene rewrites --scene-progress on every frame and custom
+    properties inherit, so each of the figure's thousands of paths would be
+    restyled every frame. The player drives the figure; nothing inside reads it.
+  */
+  --scene-progress: initial;
+
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--figure-aspect, 3 / 2);
+}
+
+.frame :global(svg) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.frame :global(.iso-svg path),
+.frame :global(.iso-svg circle) {
+  vector-effect: non-scaling-stroke;
+}
+
+.frame :global(.iso-fill) {
+  fill: var(--anatomy-paper);
+  stroke: none;
+}
+
+.frame :global(.iso-solid[data-lit] > .iso-fill) {
+  fill: var(--anatomy-face);
+}
+
+.frame :global(.iso-shade),
+.frame :global(.iso-top) {
+  stroke: none;
+}
+
+.frame :global(.iso-shade[data-shade="0"]) {
+  fill: var(--anatomy-shade-0);
+}
+
+.frame :global(.iso-shade[data-shade="1"]) {
+  fill: var(--anatomy-shade-1);
+}
+
+.frame :global(.iso-shade[data-shade="2"]) {
+  fill: var(--anatomy-shade-2);
+}
+
+.frame :global(.iso-shade[data-shade="3"]) {
+  fill: var(--anatomy-shade-3);
+}
+
+.frame :global(.iso-top) {
+  fill: var(--anatomy-top);
+}
+
+.frame :global(.iso-solid[data-lit] > .iso-top) {
+  fill: var(--anatomy-lit-top);
+}
+
+.frame :global(.iso-solid[data-lit] > .iso-shade) {
+  fill: var(--anatomy-lit-shade);
+}
+
+.frame :global(.iso-solid[data-seamless] > .iso-shade),
+.frame :global(.iso-solid[data-seamless] > .iso-top) {
+  stroke-width: 0.4;
+  stroke-linejoin: round;
+}
+
+.frame :global(.iso-solid[data-seamless] > .iso-shade[data-shade="0"]) {
+  stroke: var(--anatomy-shade-0);
+}
+
+.frame :global(.iso-solid[data-seamless] > .iso-shade[data-shade="1"]) {
+  stroke: var(--anatomy-shade-1);
+}
+
+.frame :global(.iso-solid[data-seamless] > .iso-shade[data-shade="2"]) {
+  stroke: var(--anatomy-shade-2);
+}
+
+.frame :global(.iso-solid[data-seamless] > .iso-shade[data-shade="3"]) {
+  stroke: var(--anatomy-shade-3);
+}
+
+.frame :global(.iso-solid[data-seamless] > .iso-top) {
+  stroke: var(--anatomy-top);
+}
+
+.frame :global(.iso-solid[data-seamless][data-lit] > .iso-top) {
+  stroke: var(--anatomy-lit-top);
+}
+
+.frame :global(.iso-solid[data-seamless][data-lit] > .iso-shade) {
+  stroke: var(--anatomy-lit-shade);
+}
+
+.frame :global(.iso-solid[data-lit] > .iso-edge) {
+  stroke: var(--anatomy-lit);
+}
+
+.frame :global(.iso-halo) {
+  fill: var(--anatomy-halo);
+  stroke: none;
+  filter: blur(9px);
+  opacity: var(--anatomy-halo-opacity);
+  transform: translateY(3px);
+}
+
+.frame :global(.iso-line) {
+  fill: none;
+  stroke: var(--anatomy-lo);
+  stroke-width: var(--anatomy-weight);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.frame :global(.iso-line[data-tone="hi"]) {
+  stroke: var(--anatomy-hi);
+}
+
+.frame :global(.iso-line[data-tone="mid"]) {
+  stroke: var(--anatomy-mid);
+}
+
+.frame :global(.iso-line[data-tone="lo"]) {
+  stroke: var(--anatomy-lo);
+}
+
+.frame :global(.iso-line[data-tone="faint"]) {
+  stroke: var(--anatomy-faint);
+}
+
+.frame :global(.iso-line[data-tone="lit"]) {
+  stroke: var(--anatomy-lit);
+}
+
+.frame :global(.iso-line[data-dotted]) {
+  stroke-dasharray: 0.01 3.5;
+  stroke-width: 1;
+}
+
+.frame :global(.iso-line[data-dashed]) {
+  stroke-dasharray: 3 3;
+}
+
+.frame :global(.iso-wire-end) {
+  fill: var(--anatomy-paper);
+  stroke: var(--anatomy-lo);
+  stroke-width: var(--anatomy-weight);
+}
+
+.frame :global(.iso-dots circle) {
+  fill: var(--anatomy-dot);
+  stroke: none;
+  opacity: 0.32;
+}
+
+.frame :global(.iso-dots[data-tone="hi"] circle) {
+  opacity: 0.85;
+}
+
+.frame :global(.iso-dots[data-tone="mid"] circle) {
+  opacity: 0.45;
+}
+
+.frame :global(.iso-dots[data-tone="lo"] circle) {
+  opacity: 0.22;
+}
+
+.frame :global(.iso-dots[data-tone="faint"] circle) {
+  opacity: 0.12;
+}
+
+.frame :global(.iso-dots[data-tone="lit"] circle) {
+  fill: var(--anatomy-lit);
+  opacity: 1;
+}
+
+.frame :global(.iso-face-text) {
+  fill: var(--anatomy-mid);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.frame :global(.tb-body) {
+  fill: var(--anatomy-shade-2);
+  stroke: none;
+}
+
+.frame :global(.tb-shine) {
+  fill: var(--anatomy-top);
+  stroke: none;
+}
+
+.frame :global(.tb-shade) {
+  fill: var(--anatomy-shade-0);
+  stroke: none;
+}
+
+.frame :global(.tb-ring) {
+  fill: none;
+  stroke: var(--anatomy-lo);
+  stroke-width: 0.45;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Figure parts                                                            */
+/* ---------------------------------------------------------------------- */
+
+/*
+  Flow along a pipe's centreline. Dash lengths are in viewBox units (no
+  non-scaling stroke), so the player can phase every chunk of one route from
+  its start (data-o) and the dashes run through the joints.
+*/
+.frame :global(.iso-svg .fx-flow) {
+  vector-effect: none;
+  fill: none;
+  stroke: var(--anatomy-lit);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-dasharray: 2.6 6.4;
+}
+
+/* A signal running along a network link: one short cobalt pulse (pathLength 1) */
+.frame :global(.iso-svg .fx-signal) {
+  vector-effect: none;
+  fill: none;
+  stroke: var(--anatomy-lit);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-dasharray: 0.05 1.4;
+  stroke-dashoffset: 0.08;
+}
+
+/* Heat rising from a stack: grey, faded out above it by a mask */
+.frame :global(.iso-svg .fx-heat) {
+  stroke: var(--anatomy-mid);
+  stroke-width: 0.9;
+  stroke-dasharray: 3.2 4.4;
+}
+
+/* Relations between instruments: cobalt dashes that run along as you scroll */
+.frame :global(.fx-relation) {
+  fill: none;
+  stroke: var(--anatomy-lit);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-dasharray: 3 3.4;
+}
+
+.frame :global(.fx-relation-end) {
+  fill: var(--anatomy-paper);
+  stroke: var(--anatomy-lit);
+  stroke-width: 1.1;
+}
+
+/* The draw-on mask path of a relation (pathLength 1) */
+.frame :global(.iso-svg .fx-draw) {
+  vector-effect: none;
+  fill: none;
+  stroke: #fff;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+}
+
+.frame :global(.fx-liquid) {
+  fill: var(--anatomy-liquid);
+  stroke: none;
+  mix-blend-mode: multiply;
+}
+
+.frame :global(.fx-liquid-top) {
+  fill: var(--anatomy-liquid-top);
+  stroke: none;
+}
+
+.frame :global(.fx-cavity) {
+  fill: var(--anatomy-cavity);
+  stroke: none;
+}
+
+/* A screen drawn in the plane of its face (the batch recorder) */
+.frame :global(.fx-screen) {
+  fill: var(--color-bg-raised);
+  stroke: none;
+}
+
+.frame :global(.fx-band) {
+  fill: var(--color-accent-soft);
+  stroke: none;
+}
+
+.frame :global(.fx-trace) {
+  fill: none;
+  stroke: var(--anatomy-hi);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

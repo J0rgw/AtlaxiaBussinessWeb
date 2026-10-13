@@ -12,11 +12,17 @@ import {
   graphSignals,
   graphSize,
 } from "./illustrations";
-import { SectorsScene } from "./SectorsScene";
+import { SectorsScene, type SceneDrawing } from "./SectorsScene";
 import { WhereScene } from "./WhereScene";
 import styles from "./Vision.module.css";
 
 type VisionContent = Dictionary["vision"];
+
+/**
+ * The drawings the two scroll scenes play on the home: the isometric anatomy
+ * models (scripts/anatomy). "lottie" brings back the P&ID sketches.
+ */
+const SCENE_DRAWING: SceneDrawing = "anatomy";
 type FlowStepId = keyof VisionContent["flow"]["steps"];
 
 const flowOrder: FlowStepId[] = ["data", "context", "behavior", "understanding", "action"];
@@ -119,8 +125,8 @@ export function Vision({ content }: VisionProps) {
 
       {/* Full width: each scene pins its own viewport-tall stage */}
       <div className={styles.scenes}>
-        <WhereScene content={content.scenes.where} />
-        <SectorsScene content={content.scenes.sectors} />
+        <WhereScene content={content.scenes.where} drawing={SCENE_DRAWING} />
+        <SectorsScene content={content.scenes.sectors} drawing={SCENE_DRAWING} />
       </div>
     </Section>
   );

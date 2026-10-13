@@ -44,15 +44,17 @@ type Measured = { measure: () => number; publish: (value: number) => void };
 const scenes = new Set<Measured>();
 let pending: Array<() => void> = [];
 let frame = 0;
+let publishing = false;
 
 function tick() {
   frame = 0;
   const measured = Array.from(scenes, (scene) => [scene, scene.measure()] as const);
+  publishing = true;
   measured.forEach(([scene, value]) => scene.publish(value));
+  publishing = false;
   const callbacks = pending;
   pending = [];
   callbacks.forEach((callback) => callback());
-  if (pending.length) schedule();
 }
 
 function schedule() {
@@ -93,7 +95,8 @@ function createProgress(): SceneProgress & { set: (value: number) => void } {
     },
     frame(callback) {
       pending.push(callback);
-      schedule();
+      // While the scenes publish, it runs later in this same frame
+      if (!publishing) schedule();
     },
   };
 }

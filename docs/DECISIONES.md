@@ -441,12 +441,65 @@ Las cuatro animaciones Lottie de las escenas A y B se han rehecho con la skill `
   - _Metalurgia_: horno de recalentar y desbaste de dos cajas. La pieza (12 → 9 → 7 de espesor, mismo ancho) se estira al pasar cada mordida, con conservación de volumen; rodillos y cilindros giran con la velocidad del metal en su sitio. Temperatura en la bóveda, vibración en la caja 1 y energía en la caja 2.
   - _Hacia dónde vamos_: zoom de potencias de diez sobre un mundo único. Transmisor de presión en su carrete (su pantalla muestra la señal), el skid de proceso con seis señales relacionadas (Hoy), la planta con el skid en cobalto y su límite dibujado alrededor (Siguiente) y varias plantas en red sobre un banco, con señales que salen de la nuestra (Objetivo).
 - **Cómo se construye:** `node scripts/anatomy/build.mjs [id] [--audit]`. El kit de la skill está copiado en `scripts/anatomy/kit` (sin formatear ni lintar). Cada figura registra la forma real de cada pieza: el orden de pintado sale de la geometría (`settle`) y `--audit` prueba que no hay tuberías atravesando nada, piezas flotando o hundidas, ni cruces mal ordenados. Las cuatro pasan el audit y la comprobación de finales de línea de la skill.
-- **Salida:** `public/animations/anatomy/<id>.svg` (dibujo estático, datos de trazado en pasos relativos) y `<id>.json` (línea de tiempo). Con gzip: agua 53 KB, agroalimentación 41 KB, metalurgia 29 KB, zoom 103 KB (las Lottie eran de 2 a 13 KB). Se cargan solo al acercarse a la pantalla.
+- **Salida:** `public/animations/anatomy/<id>.svg` (dibujo estático, datos de trazado en pasos relativos) y `<id>.json` (línea de tiempo). Con gzip: agua 53 KB, agroalimentación 41 KB, metalurgia 29 KB, zoom 103 KB (las Lottie eran de 2 a 13 KB). Se cargan fuera del scroll: ver «Rendimiento del scroll con las figuras anatomy».
 - **Zoom por niveles:** el zoom es de unas 200 veces. Cada nivel (transmisor, skid, planta, red) se dibuja a su propia escala y la cámara escala cada grupo, así cada pieza conserva su precisión. Los niveles fuera de cuadro no se dibujan (`display: none`), y el skid detallado cede el sitio a una versión pequeña en cobalto al pasar a la planta.
 - **Todo va con el scroll:** `ScrubFigure` (`data-display`) carga el SVG y la línea de tiempo y sigue el progreso de la escena con el mismo suavizado que `ScrubLottie`. También lo que se repite (ventilador, caudal, turbina, la señal en la pantalla, los trazos de las relaciones) avanza con el progreso: cada figura recorre `span` segundos de movimiento de 0 a 1 (8 en los sectores, 30 en el zoom). Si la página no se mueve, la figura tampoco: comprobado en la home con capturas repetidas idénticas. Movimiento reducido: estado final. `player.ts` no depende de React; el build lo inyecta en las vistas previas (`?play` recorre el progreso solo).
 - **Colores:** los tonos del kit salen de los tokens semánticos (papel, bordes, texto) y el único acento es el cobalto, con el mismo significado que en las Lottie: lo que lee ATLAXIA (instrumentos, relaciones, caudal). Sin colores de estado: la pieza caliente de metalurgia va en neutro para no chocar con el ámbar de desviación.
 - **Interruptor:** `WhereScene` y `SectorsScene` aceptan `drawing="lottie" | "anatomy"` (por defecto `lottie`); la home pasa `"anatomy"`. Storybook: "Sections/Vision scenes" (ambas versiones, ES, EN y móvil) y "Data display/ScrubFigure".
 - **Vistas previas:** `scripts/anatomy/preview/<id>.html` (fuera de git) con la lámina de la skill y un deslizador de progreso, para `capture`, `drive` y `lines` de la skill.
+
+**Rendimiento del scroll con las figuras anatomy (2026-10-13):**
+
+Con scroll rápido por Visión la página daba tirones cuando aparecían las figuras. Se midió antes de tocar nada y después de cada cambio, en Chrome real (no headless) controlado por CDP: rueda a unos 5.000 px/s con Lenis activo, desde cuatro pantallas antes de la escena A hasta el final de la B. Escritorio 1440 × 900 a 2x con la CPU normal (M1 Pro, 120 Hz) y 4 veces más lenta; móvil 390 × 844 a 3x con gestos táctiles y CPU 4×. Long Animation Frames, intervalos entre rAF y una traza de rendimiento por pasada. Mediana de 3 pasadas, antes y después seguidas en la misma sesión (entre sesiones hay hasta un 10 % de deriva).
+
+- **Causas confirmadas** (por traza y quitando una cosa cada vez):
+  - _Restilado de figuras enteras en cada frame._ `--scene-progress` cambia en cada frame y se hereda, así que se restilaban los 1.600 a 3.600 elementos de cada figura (3.275 por cambio en la escena A). En la B, además, el `--t` de las ParallaxLayer que envuelven cada sector, también heredado y dependiente del progreso: 3.552 elementos por frame.
+  - _Estilo y layout forzados a mitad de frame._ Cada escena leía `getBoundingClientRect` en su rAF después de que la figura escribiera en el suyo: 31 ms por frame a 4×.
+  - _Máscaras SVG._ Cada relación se dibuja a través de una máscara (un trazo ancho de su propia línea) que se compone fuera de pantalla en cada repintado, y las relaciones repintan en cada frame porque sus trazos corren. Sin máscaras, el tiempo de GPU bajaba a la mitad.
+  - _Carga en mitad de la escena._ Los sectores 2 y 3 están a los lados del carril horizontal y el IntersectionObserver (margen solo vertical) los cargaba en mitad de la escena B: frames de 104 a 127 ms a 4×.
+  - _Cientos de puntos de textura con `opacity`._ Cada uno es su propio efecto de composición y la página volvía a repartir capas (layerize) en cada frame.
+- **Descartado por medida:** el desenfoque del halo (−2 % de GPU una vez arregladas las máscaras), `vector-effect: non-scaling-stroke` (solo cuesta layout y el zoom lo necesita), el `mask-image` de borde de la escena A, el `mix-blend-mode` de los líquidos y la doble suavización con Lenis (el coste está en cada seek, no en el bucle).
+- **Cambios:**
+  1. `ScrubFigure.module.css`: `--scene-progress: initial` en el marco de la figura. Nada dentro lo lee.
+  2. `ParallaxLayer`: su progreso pasa a `--parallax-t`, registrado con `@property` como no heredado; solo lo lee la propia capa. Mismos valores calculados (comprobado en la escena B).
+  3. `ScrollScene`: un solo bucle para todas las escenas. En cada frame mide todas y después publica, y `SceneProgress.frame()` deja que quien suaviza (ScrubFigure) dé su paso en ese mismo frame, después de las lecturas. ScrubFigure ya no tiene rAF propio, y el player no hace nada si el progreso no cambia.
+  4. `player.ts`: en una pista de dibujo cuyo trazo es el de una máscara, la línea enmascarada se oculta hasta que empieza a dibujarse y la máscara se retira al completarse.
+  5. `ScrubFigure/loader.ts`: los archivos se piden cuando la página ha cargado y está ociosa (con Save-Data, solo al acercarse). Cada figura se parsea en un `<template>` (inerte) y entra en su propio intervalo ocioso, una cada vez y con un frame dibujado entre dos, ya posicionada: el seek va antes de insertarla, así lo que todavía no se ve nunca se estila. Una figura que se acerca a la pantalla pasa delante. A 4×, la del zoom cuesta una tarea de 38 ms y un primer frame de 51 ms poco después de cargar, con la página en el hero; no se ha troceado más.
+  6. Puntos de textura con `fill-opacity` en lugar de `opacity`: los mismos píxeles (un punto no tiene trazo), sin un efecto por punto.
+- **Resultado** (antes → después):
+
+  Mediana de 3 pasadas, código final, antes y después seguidos. "Ocupado" es el tiempo del hilo principal durante el recorrido; los frames lentos superan 1,5 veces el intervalo de refresco (120 Hz).
+
+  | | Escritorio, CPU normal | Escritorio, CPU 4× | Móvil, CPU 4× |
+  | --- | --- | --- | --- |
+  | Frames de más de 50 ms | 0 → 0 | 20 → 0 | 27 → 0 |
+  | Long Animation Frames | 0 → 0 | 13 → 0 | 26 → 0 |
+  | Tareas largas | 0 → 0 | 18 → 0 | 22 → 0 |
+  | Frame más largo | 42 → 17 ms | 142 → 41 ms | 125 → 42 ms |
+  | Frames lentos | 65 → 1 | | |
+  | Tiempo perdido en frames lentos | 701 → 8 ms | 1.852 → 1.087 ms | 2.940 → 2.118 ms |
+  | Hilo principal ocupado | 1.987 → 1.479 ms | 3.773 → 3.133 ms | 6.234 → 5.367 ms |
+  | Script | 725 → 281 ms | 1.432 → 687 ms | 1.836 → 1.017 ms |
+  | Recálculo de estilo | 735 → 181 ms | 1.120 → 425 ms | 1.426 → 588 ms |
+  | GPU (hilo principal) | 1.541 → 1.100 ms | | |
+
+  Paso a paso (escritorio; cada fila incluye las anteriores; entre filas hay deriva de sesión):
+
+  | Paso | CPU 4×: frames de más de 50 ms | CPU 4×: ocupado | CPU normal: frames lentos | CPU normal: GPU |
+  | --- | --- | --- | --- | --- |
+  | Antes | 20 | 3.807 ms | 63 | 1.482 ms |
+  | 1. Figura aislada de `--scene-progress` | 13 | 3.666 ms | 42 | 1.611 ms |
+  | 2. Bucle único de escenas | 11 | 3.343 ms | 41 | 1.630 ms |
+  | 3. `--parallax-t` no heredado | 4 | 3.302 ms | 39 | 1.643 ms |
+  | 4. Máscaras solo mientras dibujan | 4 | 3.177 ms | 5 | 1.088 ms |
+  | 5. Carga en tiempo ocioso | 0 | 3.291 ms | 1 | 1.099 ms |
+  | 6. Puntos con `fill-opacity` | 0 | 3.105 ms | 1 | 1.128 ms |
+
+  Empezando el scroll justo al cargar la página (CPU 4×), las cuatro figuras ya están dentro antes de llegar a la escena: 0 tareas largas (antes 18) y frame más largo de 34 ms (antes 124).
+
+- **Comprobación visual:** capturas de las dos escenas en 15 puntos de progreso, antes y después. Solo diferencias de antialiasing: bordes de algunos trazos de la línea de límite de la planta y de los extremos de las relaciones, y redondeo en el skid mientras se desvanece (como máximo 73 de 255 en píxeles sueltos). Ninguna forma cambia.
+- **Probado y descartado:** `contain: size layout style` en el marco de la figura (alrededor de un 3 % menos de hilo principal, pero desplaza la figura de la escena A una fracción de píxel) y una capa de composición propia para el SVG (más GPU, sin ganancia clara).
+- **Límite actual:** a 4× los frames de las escenas siguen en unos 33 ms (sin figuras, unos 17 ms). Lo que queda es layerize, pintado y layout de miles de trazados que cambian con el scroll. Bajar más pide figuras con menos elementos (el builder y `--audit`), con riesgo de cambiar el dibujo.
 
 ---
 

@@ -4,8 +4,8 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useSceneProgress } from "@/components/storytelling/ScrollScene";
 import { cx } from "@/lib/cx";
 import { prefersReducedMotion } from "@/lib/motion";
-import { withBasePath } from "@/lib/paths";
-import { createPlayer, type Player, type Timeline } from "./player";
+import { queueFigure } from "./loader";
+import { createPlayer, type Player } from "./player";
 import styles from "./ScrubFigure.module.css";
 
 export type ScrubFigureProps = {
@@ -28,13 +28,18 @@ export type ScrubFigureProps = {
 /** Easing towards the scroll position per frame: 1 follows exactly, lower is smoother. */
 const FOLLOW = 0.2;
 
+/** A scene progress mapped to the part of it that plays the figure, 0 to 1. */
+const within = (value: number, from: number, to: number) =>
+  Math.min(1, Math.max(0, (value - from) / (to - from || 1)));
+
 /**
  * An isometric "anatomy" figure (scripts/anatomy) whose state is the scroll
  * position: the scene's progress drives its whole timeline (parts appear,
  * pipes are laid, relations draw on, and the fan, the flow and the turbine
  * move with it), so the figure is still whenever the page is. The SVG and its
- * timeline load when it gets close to the viewport. Decorative: the scene
- * carries the text. Reduced motion: the final state.
+ * timeline load off the scroll path (./loader): at idle time once the page has
+ * loaded, one figure at a time, or right away when the box nears the viewport.
+ * Decorative: the scene carries the text. Reduced motion: the final state.
  */
 export function ScrubFigure({
   src,
@@ -49,22 +54,17 @@ export function ScrubFigure({
   const [player, setPlayer] = useState<Player | null>(null);
   const [from, to] = range;
 
-  // Load once the box is within a viewport of being seen
+  // Where the figure is when it arrives: the position the follower seeks first
+  const position = useRef<() => number>(() => 1);
+  useEffect(() => {
+    position.current = () => within(progress ?? (scene ? scene.get() : 1), from, to);
+  });
+
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    let cancelled = false;
 
-    async function load() {
-      const [markup, timeline] = await Promise.all([
-        fetch(withBasePath(`${src}.svg`)).then((response) => response.text()),
-        fetch(withBasePath(`${src}.json`)).then((response) => response.json() as Promise<Timeline>),
-      ]);
-      if (cancelled || !element) return;
-      // Static file built by scripts/anatomy from our own geometry
-      element.innerHTML = markup;
-      const svg = element.querySelector("svg");
-      if (!svg) return;
+    const figure = queueFigure(src, (svg, timeline) => {
       svg.removeAttribute("role");
       svg.removeAttribute("aria-label");
       svg.setAttribute("aria-hidden", "true");
@@ -73,8 +73,12 @@ export function ScrubFigure({
         "preserveAspectRatio",
         align === "start" ? "xMinYMin meet" : "xMidYMid meet",
       );
-      setPlayer(createPlayer(svg, timeline));
-    }
+      const next = createPlayer(svg, timeline);
+      // Seeked before it enters the page, so the parts not shown yet never render
+      next.seek(position.current());
+      element.replaceChildren(svg);
+      setPlayer(next);
+    });
 
     const observer =
       typeof IntersectionObserver === "undefined"
@@ -83,14 +87,14 @@ export function ScrubFigure({
             ([entry]) => {
               if (!entry?.isIntersecting) return;
               observer?.disconnect();
-              void load();
+              figure.near();
             },
-            { rootMargin: "100% 0px" },
+            { rootMargin: "100%" },
           );
     observer?.observe(element);
 
     return () => {
-      cancelled = true;
+      figure.cancel();
       observer?.disconnect();
       element.replaceChildren();
       setPlayer(null);
@@ -100,8 +104,7 @@ export function ScrubFigure({
   // Follow the scene (or the fixed progress)
   useEffect(() => {
     if (!player) return;
-    const toProgress = (value: number) =>
-      Math.min(1, Math.max(0, (value - from) / (to - from || 1)));
+    const toProgress = (value: number) => within(value, from, to);
 
     if (progress !== undefined || !scene) {
       player.seek(toProgress(progress ?? 1));

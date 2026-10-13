@@ -50,6 +50,39 @@ describe("anatomy player", () => {
     expect(last!.style.opacity).toBe("1");
   });
 
+  it("keeps a draw-on mask only while it draws: hidden before, lifted once complete", () => {
+    const svg = sheet(
+      `<defs><mask id="m"><path class="fx-draw" data-g="rel" pathLength="1" d="M0 0L10 0"/></mask></defs>` +
+        `<path class="fx-relation" mask="url(#m)" d="M0 0L10 0"/>`,
+    );
+    const player = createPlayer(svg, {
+      v: 1,
+      tracks: [
+        {
+          s: '.fx-draw[data-g~="rel"]',
+          dr: [
+            [0.2, 0],
+            [0.6, 1],
+          ],
+          e: "l",
+        },
+      ],
+    });
+    const draw = svg.querySelector<SVGPathElement>(".fx-draw")!;
+    const relation = svg.querySelector<SVGPathElement>(".fx-relation")!;
+
+    player.seek(0);
+    expect(relation.style.display).toBe("none");
+    player.seek(0.4);
+    expect(draw.style.strokeDashoffset).toBe("0.5");
+    expect(relation.style.display).toBe("");
+    expect(relation.getAttribute("mask")).toBe("url(#m)");
+    player.seek(1);
+    expect(relation.getAttribute("mask")).toBe("none");
+    player.seek(0.3);
+    expect(relation.getAttribute("mask")).toBe("url(#m)");
+  });
+
   it("morphs a path through a set of shapes by a fractional index", () => {
     const svg = sheet(`<g data-g="slab"><path d="M0 0L10 0"/></g>`);
     const timeline: Timeline = {

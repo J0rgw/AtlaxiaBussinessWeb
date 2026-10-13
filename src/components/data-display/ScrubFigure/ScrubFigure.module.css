@@ -190,31 +190,36 @@
   stroke-width: var(--anatomy-weight);
 }
 
+/*
+  The kit fades dots with opacity; fill-opacity draws the same pixels (a dot
+  has no stroke) without making each of the hundreds of dots its own
+  compositing effect, which the page would re-layerize on every frame.
+*/
 .frame :global(.iso-dots circle) {
   fill: var(--anatomy-dot);
   stroke: none;
-  opacity: 0.32;
+  fill-opacity: 0.32;
 }
 
 .frame :global(.iso-dots[data-tone="hi"] circle) {
-  opacity: 0.85;
+  fill-opacity: 0.85;
 }
 
 .frame :global(.iso-dots[data-tone="mid"] circle) {
-  opacity: 0.45;
+  fill-opacity: 0.45;
 }
 
 .frame :global(.iso-dots[data-tone="lo"] circle) {
-  opacity: 0.22;
+  fill-opacity: 0.22;
 }
 
 .frame :global(.iso-dots[data-tone="faint"] circle) {
-  opacity: 0.12;
+  fill-opacity: 0.12;
 }
 
 .frame :global(.iso-dots[data-tone="lit"] circle) {
   fill: var(--anatomy-lit);
-  opacity: 1;
+  fill-opacity: 1;
 }
 
 .frame :global(.iso-face-text) {

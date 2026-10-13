@@ -189,7 +189,8 @@ describe("ScrubLottie", () => {
 });
 
 describe("ScrubFigure", () => {
-  it("is decorative and loads nothing until it nears the viewport", () => {
+  // Loading itself (idle prefetch, near the viewport first) is covered in loader.test.ts
+  it("is decorative and loads nothing while it renders", () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
     const { container } = render(<ScrubFigure src="/animations/anatomy/x" />);
     expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true");

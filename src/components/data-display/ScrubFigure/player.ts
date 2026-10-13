@@ -25,7 +25,13 @@ export type Track =
   | { s: string; tr: Key<[number, number]>[]; e?: Ease }
   /** Reveal in order of each element's `data-at` (0 to 1) between two progress values. */
   | { s: string; rv: [from: number, to: number, soft: number] }
-  /** Draws a path on: its stroke has pathLength 1 and dasharray "1 1". */
+  /**
+   * Draws a path on: its stroke has pathLength 1 and dasharray "1 1". When the
+   * path is a mask's (a relation drawn through a wide stroke of its own line),
+   * the masked element is hidden until the draw starts and the mask is lifted
+   * once it is complete: a mask is drawn offscreen on every repaint, and the
+   * relations repaint on every frame of the scroll (their dashes run).
+   */
   | { s: string; dr: Key<number>[]; e?: Ease }
   /** Rotation in degrees of a group drawn in its own (face) plane. */
   | { s: string; rot: Key<number>[]; e?: Ease }
@@ -130,6 +136,8 @@ export function createPlayer(root: Element, timeline: Timeline): Player {
       element.style.display = Number(value) <= 0.001 ? "none" : "";
     } else if (name === "dashoffset") {
       element.style.strokeDashoffset = value;
+    } else if (name === "display") {
+      element.style.display = value;
     } else {
       element.setAttribute(name, value);
     }
@@ -145,6 +153,17 @@ export function createPlayer(root: Element, timeline: Timeline): Player {
   });
 
   const tracks = timeline.tracks.map((track) => ({ track, elements: all(track.s) }));
+  // For draw-on paths inside a <mask>: what the mask applies to, and how it refers to it
+  const masked = new Map<Element, { targets: SVGElement[]; ref: string }>();
+  for (const { track, elements } of tracks) {
+    if (!("dr" in track)) continue;
+    for (const element of elements) {
+      const mask = element.parentElement;
+      if (mask?.tagName !== "mask" || !mask.id) continue;
+      const ref = `url(#${mask.id})`;
+      masked.set(element, { targets: all(`[mask="${ref}"]`), ref });
+    }
+  }
   const logKeys = new Map<Track, Key<number>[]>();
   for (const track of timeline.tracks) {
     if ("cam" in track)
@@ -187,8 +206,15 @@ export function createPlayer(root: Element, timeline: Timeline): Player {
           write(element, "opacity", String(round(eased(clamp01((p - start) / soft), "io"))));
         });
       } else if ("dr" in track) {
-        const value = valueAt(track.dr, p, track.e);
-        elements.forEach((element) => write(element, "dashoffset", String(round(1 - value))));
+        const offset = round(1 - valueAt(track.dr, p, track.e));
+        elements.forEach((element) => {
+          write(element, "dashoffset", String(offset));
+          const mask = masked.get(element);
+          mask?.targets.forEach((target) => {
+            write(target, "display", offset >= 1 ? "none" : "");
+            write(target, "mask", offset <= 0 ? "none" : mask.ref);
+          });
+        });
       } else if ("rot" in track) {
         const transform = `rotate(${round(valueAt(track.rot, p, track.e))})`;
         elements.forEach((element) => write(element, "transform", transform));

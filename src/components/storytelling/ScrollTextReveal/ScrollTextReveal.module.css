@@ -1,0 +1,62 @@
+.stage {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-6);
+  max-width: 24em;
+  margin-inline: auto;
+  text-align: center;
+  font-size: var(--text-heading);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+}
+
+.statement {
+  font-size: 1em;
+  font-weight: var(--weight-semibold);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/*
+  Scroll-linked state. The track is taller than the viewport and the stage
+  stays pinned while the words light up. Each word has its own window inside
+  the track's timeline (--from / --to). Elsewhere: static text.
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-motion="reduce"]) .track {
+      height: 240svh;
+      view-timeline: --promise block;
+    }
+
+    :root:not([data-motion="reduce"]) .stage {
+      position: sticky;
+      top: 0;
+      min-height: 100svh;
+    }
+
+    :root:not([data-motion="reduce"]) .word {
+      animation: light linear both;
+      animation-timeline: --promise;
+      animation-range: cover var(--from) cover var(--to);
+    }
+  }
+}
+
+@keyframes light {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}

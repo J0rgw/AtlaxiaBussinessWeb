@@ -36,51 +36,9 @@ export const en = {
   },
 
   vision: {
-    indexLabel: "Vision",
-    reasons: {
-      context: {
-        label: "Data without context",
-        title: "A single reading says little",
-        body: "A plant produces thousands of readings every day. On its own, each one is just a number: it does not tell you whether it is normal or what caused it.",
-        chartDescription:
-          "Illustration: several industrial signals over time, with no context to help interpret them.",
-      },
-      relations: {
-        label: "How signals relate",
-        title: "Every signal depends on others",
-        body: "Pressure, flow or temperature do not change on their own. Understanding a system means understanding how its parts influence each other.",
-        graphDescription:
-          "Illustration of a network of industrial signals. Pressure sits at the center and relates directly to flow, temperature and level; the other signals complete the system.",
-        nodes: {
-          pressure: "Pressure",
-          flow: "Flow",
-          temperature: "Temperature",
-          level: "Level",
-          vibration: "Vibration",
-          energy: "Energy",
-          humidity: "Humidity",
-          speed: "Speed",
-        },
-      },
-      behavior: {
-        label: "Expected behavior",
-        title: "Normal changes with the process",
-        body: "What is normal in one phase of the process is not normal in another. That is why it matters to know what to expect at each moment, not only whether a fixed threshold is crossed.",
-        chartDescription:
-          "Illustration: an observed signal against its expected behavior. At the end, the signal leaves the expected range.",
-        legend: {
-          observed: "Observed",
-          expected: "Expected",
-          band: "Expected range",
-          deviation: "Deviation",
-        },
-      },
-      action: {
-        label: "From understanding to action",
-        title: "Understand in order to decide",
-        body: "People who run complex industrial systems do not need more data: they need to understand it in time. ATLAXIA exists to close that gap, from data to understanding and from understanding to decisions.",
-      },
-    },
+    // Promise that opens the section, revealed word by word as the page scrolls.
+    promise:
+      "We build software so the people who run a plant understand what is happening, and why, before it becomes a problem.",
     // Water case ("Where we start") and direction ("Where we are going"), storyboard v3.
     waterCase: {
       title: "Where we start",
@@ -176,6 +134,54 @@ export const en = {
               "Animation: a slab leaves the furnace and gets thinner through two roll stands; the temperature, vibration and energy sensors relate to each other.",
           },
         },
+      },
+    },
+  },
+
+  capabilities: {
+    indexLabel: "What we do",
+    reasons: {
+      context: {
+        label: "Data without context",
+        title: "A single reading says little",
+        body: "A plant produces thousands of readings every day. On its own, each one is just a number: it does not tell you whether it is normal or what caused it.",
+        chartDescription:
+          "Illustration: several industrial signals over time, with no context to help interpret them.",
+      },
+      relations: {
+        label: "How signals relate",
+        title: "Every signal depends on others",
+        body: "Pressure, flow or temperature do not change on their own. Understanding a system means understanding how its parts influence each other.",
+        graphDescription:
+          "Illustration of a network of industrial signals. Pressure sits at the center and relates directly to flow, temperature and level; the other signals complete the system.",
+        nodes: {
+          pressure: "Pressure",
+          flow: "Flow",
+          temperature: "Temperature",
+          level: "Level",
+          vibration: "Vibration",
+          energy: "Energy",
+          humidity: "Humidity",
+          speed: "Speed",
+        },
+      },
+      behavior: {
+        label: "Expected behavior",
+        title: "Normal changes with the process",
+        body: "What is normal in one phase of the process is not normal in another. That is why it matters to know what to expect at each moment, not only whether a fixed threshold is crossed.",
+        chartDescription:
+          "Illustration: an observed signal against its expected behavior. At the end, the signal leaves the expected range.",
+        legend: {
+          observed: "Observed",
+          expected: "Expected",
+          band: "Expected range",
+          deviation: "Deviation",
+        },
+      },
+      action: {
+        label: "From understanding to action",
+        title: "Understand in order to decide",
+        body: "People who run complex industrial systems do not need more data: they need to understand it in time. ATLAXIA exists to close that gap, from data to understanding and from understanding to decisions.",
       },
     },
     flow: {

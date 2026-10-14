@@ -9,6 +9,7 @@ import { ParallaxLayer, ScrollScene } from "@/components/storytelling/ScrollScen
 import { dictionaries } from "@/content";
 import { mockIntersectionObserver } from "@/test/intersectionObserver";
 import { Building } from "./Building/Building";
+import { Capabilities } from "./Capabilities/Capabilities";
 import { Contact } from "./Contact/Contact";
 import { Hero } from "./Hero/Hero";
 import { SectorsScene } from "./Vision/SectorsScene";
@@ -308,46 +309,22 @@ describe("Hero", () => {
 });
 
 describe("Vision", () => {
-  it("opens straight on the index of reasons, whose label names the section", () => {
-    render(<Vision content={dictionaries.es.vision} />);
+  const renderVision = () => render(<Vision content={dictionaries.es.vision} />);
 
-    expect(screen.getByRole("region", { name: "Visión" })).toHaveAttribute("id", "vision");
-    expect(screen.getByRole("heading", { level: 2, name: "Visión" })).toBeInTheDocument();
-    expect(screen.queryByText("Los datos industriales no se explican solos")).toBeNull();
-    const index = screen.getByRole("navigation", { name: "Visión" });
-    expect(
-      within(index)
-        .getAllByRole("link")
-        .map((l) => l.textContent),
-    ).toEqual([
-      "Datos sin contexto",
-      "Relaciones entre señales",
-      "Comportamiento esperado",
-      "De entender a actuar",
-    ]);
-    expect(screen.getByRole("heading", { name: "Hacia dónde vamos" })).toBeInTheDocument();
-  });
+  it("opens on the promise, which names the section, as plain readable text", () => {
+    renderVision();
 
-  it("gives every illustration a text alternative and keeps the five-step flow", () => {
-    const { vision } = dictionaries.es;
-    render(<Vision content={vision} />);
-
-    expect(
-      screen.getByRole("img", { name: vision.reasons.context.chartDescription }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: vision.reasons.relations.graphDescription }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: vision.reasons.behavior.chartDescription }),
-    ).toBeInTheDocument();
-    const flow = screen.getByRole("list", { name: "De los datos a la acción" });
-    expect(within(flow).getAllByRole("listitem")).toHaveLength(5);
+    expect(screen.getByRole("region", { name: dictionaries.es.vision.promise })).toHaveAttribute(
+      "id",
+      "vision",
+    );
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveTextContent(dictionaries.es.vision.promise);
   });
 
   it("closes with the two scroll scenes: where we are going, then where we start", () => {
     const { scenes } = dictionaries.es.vision;
-    render(<Vision content={dictionaries.es.vision} />);
+    renderVision();
 
     const headings = screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent);
     expect(headings).toContain(scenes.where.title);
@@ -361,6 +338,52 @@ describe("Vision", () => {
       scenes.sectors.items.food.name,
       scenes.sectors.items.metal.name,
     ]);
+  });
+});
+
+describe("Capabilities", () => {
+  it("opens straight on the index of steps, whose label names the section", () => {
+    render(<Capabilities content={dictionaries.es.capabilities} />);
+
+    expect(screen.getByRole("region", { name: "Qué hacemos" })).toHaveAttribute(
+      "id",
+      "capabilities",
+    );
+    expect(screen.getByRole("heading", { level: 2, name: "Qué hacemos" })).toBeInTheDocument();
+    const index = screen.getByRole("navigation", { name: "Qué hacemos" });
+    expect(
+      within(index)
+        .getAllByRole("link")
+        .map((l) => l.textContent),
+    ).toEqual([
+      "Datos sin contexto",
+      "Relaciones entre señales",
+      "Comportamiento esperado",
+      "De entender a actuar",
+    ]);
+  });
+
+  it("gives every illustration a text alternative and keeps the five-step flow", () => {
+    const { capabilities } = dictionaries.es;
+    render(<Capabilities content={capabilities} />);
+
+    expect(
+      screen.getByRole("img", { name: capabilities.reasons.context.chartDescription }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: capabilities.reasons.relations.graphDescription }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: capabilities.reasons.behavior.chartDescription }),
+    ).toBeInTheDocument();
+    const flow = screen.getByRole("list", { name: "De los datos a la acción" });
+    expect(within(flow).getAllByRole("listitem")).toHaveLength(5);
+  });
+
+  it("renders in English", () => {
+    render(<Capabilities content={dictionaries.en.capabilities} />);
+
+    expect(screen.getByRole("heading", { level: 2, name: "What we do" })).toBeInTheDocument();
   });
 });
 

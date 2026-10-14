@@ -40,51 +40,9 @@ export const es = {
   },
 
   vision: {
-    indexLabel: "Visión",
-    reasons: {
-      context: {
-        label: "Datos sin contexto",
-        title: "Una lectura aislada dice poco",
-        body: "Una planta genera miles de lecturas cada día. Cada una, por separado, es solo un número: no dice si es normal ni qué la provoca.",
-        chartDescription:
-          "Ilustración: varias señales industriales a lo largo del tiempo, sin ningún contexto que ayude a interpretarlas.",
-      },
-      relations: {
-        label: "Relaciones entre señales",
-        title: "Cada señal depende de otras",
-        body: "La presión, el caudal o la temperatura no cambian solos. Entender un sistema es entender cómo se influyen sus partes.",
-        graphDescription:
-          "Ilustración de una red de señales industriales. La presión ocupa el centro y se relaciona de forma directa con el caudal, la temperatura y el nivel; el resto de señales completa el sistema.",
-        nodes: {
-          pressure: "Presión",
-          flow: "Caudal",
-          temperature: "Temperatura",
-          level: "Nivel",
-          vibration: "Vibración",
-          energy: "Energía",
-          humidity: "Humedad",
-          speed: "Velocidad",
-        },
-      },
-      behavior: {
-        label: "Comportamiento esperado",
-        title: "Lo normal cambia con el proceso",
-        body: "Lo que es normal en una fase del proceso no lo es en otra. Por eso importa saber qué se espera en cada momento, y no solo si se cruza un umbral fijo.",
-        chartDescription:
-          "Ilustración: una señal observada frente a su comportamiento esperado. Al final, la señal se sale del rango esperado.",
-        legend: {
-          observed: "Observado",
-          expected: "Esperado",
-          band: "Rango esperado",
-          deviation: "Desviación",
-        },
-      },
-      action: {
-        label: "De entender a actuar",
-        title: "Comprender para decidir",
-        body: "Quien opera un sistema industrial complejo no necesita más datos: necesita entenderlos a tiempo. ATLAXIA nace para acortar esa distancia, de los datos a la comprensión y de la comprensión a la decisión.",
-      },
-    },
+    // Promise that opens the section, revealed word by word as the page scrolls.
+    promise:
+      "Construimos software para que quien opera una planta entienda qué ocurre y por qué, antes de que se convierta en un problema.",
     // Water case ("Dónde empezamos") and direction ("Hacia dónde vamos"), storyboard v3.
     waterCase: {
       title: "Dónde empezamos",
@@ -180,6 +138,54 @@ export const es = {
               "Animación: una pieza sale del horno y se adelgaza al pasar por dos cajas de laminación; los sensores de temperatura, vibración y energía se relacionan.",
           },
         },
+      },
+    },
+  },
+
+  capabilities: {
+    indexLabel: "Qué hacemos",
+    reasons: {
+      context: {
+        label: "Datos sin contexto",
+        title: "Una lectura aislada dice poco",
+        body: "Una planta genera miles de lecturas cada día. Cada una, por separado, es solo un número: no dice si es normal ni qué la provoca.",
+        chartDescription:
+          "Ilustración: varias señales industriales a lo largo del tiempo, sin ningún contexto que ayude a interpretarlas.",
+      },
+      relations: {
+        label: "Relaciones entre señales",
+        title: "Cada señal depende de otras",
+        body: "La presión, el caudal o la temperatura no cambian solos. Entender un sistema es entender cómo se influyen sus partes.",
+        graphDescription:
+          "Ilustración de una red de señales industriales. La presión ocupa el centro y se relaciona de forma directa con el caudal, la temperatura y el nivel; el resto de señales completa el sistema.",
+        nodes: {
+          pressure: "Presión",
+          flow: "Caudal",
+          temperature: "Temperatura",
+          level: "Nivel",
+          vibration: "Vibración",
+          energy: "Energía",
+          humidity: "Humedad",
+          speed: "Velocidad",
+        },
+      },
+      behavior: {
+        label: "Comportamiento esperado",
+        title: "Lo normal cambia con el proceso",
+        body: "Lo que es normal en una fase del proceso no lo es en otra. Por eso importa saber qué se espera en cada momento, y no solo si se cruza un umbral fijo.",
+        chartDescription:
+          "Ilustración: una señal observada frente a su comportamiento esperado. Al final, la señal se sale del rango esperado.",
+        legend: {
+          observed: "Observado",
+          expected: "Esperado",
+          band: "Rango esperado",
+          deviation: "Desviación",
+        },
+      },
+      action: {
+        label: "De entender a actuar",
+        title: "Comprender para decidir",
+        body: "Quien opera un sistema industrial complejo no necesita más datos: necesita entenderlos a tiempo. ATLAXIA nace para acortar esa distancia, de los datos a la comprensión y de la comprensión a la decisión.",
       },
     },
     flow: {

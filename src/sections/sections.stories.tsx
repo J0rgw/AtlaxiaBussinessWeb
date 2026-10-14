@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { dictionaries } from "@/content";
 import { Building } from "./Building/Building";
+import { Capabilities } from "./Capabilities/Capabilities";
 import { Contact } from "./Contact/Contact";
 import { Hero } from "./Hero/Hero";
 import { Vision } from "./Vision/Vision";
@@ -82,4 +83,20 @@ export const ContactMobile: Story = {
   name: "Contact (ES, narrow screen)",
   globals: { viewport: { value: "mobile2", isRotated: false } },
   render: () => <Contact content={dictionaries.es.contact} />,
+};
+
+export const CapabilitiesEs: Story = {
+  name: "Capabilities (ES)",
+  render: () => <Capabilities content={dictionaries.es.capabilities} />,
+};
+
+export const CapabilitiesEn: Story = {
+  name: "Capabilities (EN)",
+  render: () => <Capabilities content={dictionaries.en.capabilities} />,
+};
+
+export const CapabilitiesMobile: Story = {
+  name: "Capabilities (ES, narrow screen)",
+  globals: { viewport: { value: "mobile2", isRotated: false } },
+  render: () => <Capabilities content={dictionaries.es.capabilities} />,
 };

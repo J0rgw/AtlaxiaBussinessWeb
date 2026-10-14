@@ -6,6 +6,7 @@ import { navSectionIds } from "@/content/shared/sections";
 import { otherLocaleValues } from "@/i18n/alternatives";
 import type { Locale } from "@/i18n/config";
 import { Building } from "@/sections/Building/Building";
+import { Capabilities } from "@/sections/Capabilities/Capabilities";
 import { Contact } from "@/sections/Contact/Contact";
 import { Hero } from "@/sections/Hero/Hero";
 import { Vision } from "@/sections/Vision/Vision";
@@ -32,6 +33,8 @@ export function Home({ locale }: HomeProps) {
           switch (id) {
             case "vision":
               return <Vision key={id} content={dict.vision} />;
+            case "capabilities":
+              return <Capabilities key={id} content={dict.capabilities} />;
             case "building":
               return (
                 <Building

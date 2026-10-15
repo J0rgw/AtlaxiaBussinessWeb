@@ -26,6 +26,21 @@
   text-wrap: balance;
 }
 
+.statement[data-layout="stacked"] {
+  font-size: 1.5em;
+}
+
+.statement[data-layout="stacked"] .word {
+  display: block;
+}
+
+.lead {
+  max-width: 36em;
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+}
+
 /*
   Scroll-linked state. The track is taller than the viewport and the stage
   stays pinned while the words light up. Each word has its own window inside
@@ -48,6 +63,12 @@
       animation: light linear both;
       animation-timeline: --promise;
       animation-range: cover var(--from) cover var(--to);
+    }
+
+    :root:not([data-motion="reduce"]) .lead {
+      animation: light linear both;
+      animation-timeline: --promise;
+      animation-range: cover 56% cover 66%;
     }
   }
 }

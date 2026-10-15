@@ -9,6 +9,10 @@ export type ScrollTextRevealProps = {
   /** Pass the same value to the section `labelledBy`. */
   titleId?: string;
   as?: "h1" | "h2";
+  /** Functional line under the statement: what the company does, in plain words. */
+  lead?: string;
+  /** "stacked" puts every word on its own line, for statements of two or three words. */
+  layout?: "flow" | "stacked";
 };
 
 // Share of the pinned stretch, in percent of the scroll timeline, in which the words light up.
@@ -27,6 +31,8 @@ export function ScrollTextReveal({
   eyebrow,
   titleId,
   as: Heading = "h2",
+  lead,
+  layout = "flow",
 }: ScrollTextRevealProps) {
   const words = text.split(/\s+/).filter(Boolean);
   const last = Math.max(1, words.length - 1);
@@ -35,7 +41,7 @@ export function ScrollTextReveal({
     <div className={styles.track}>
       <div className={styles.stage}>
         {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
-        <Heading id={titleId} className={styles.statement}>
+        <Heading id={titleId} className={styles.statement} data-layout={layout}>
           {words.map((word, i) => {
             const from = START + ((END - START - WINDOW) * i) / last;
             const style = {
@@ -52,6 +58,7 @@ export function ScrollTextReveal({
             );
           })}
         </Heading>
+        {lead ? <p className={styles.lead}>{lead}</p> : null}
       </div>
     </div>
   );

@@ -28,7 +28,8 @@ export type SignalChartProps = {
   className?: string;
 };
 
-const PAD = { top: 12, right: 8, bottom: 12, left: 8 };
+// Right padding fits the deviation halo (r 9) when the marked sample is the last one
+const PAD = { top: 12, right: 12, bottom: 12, left: 8 };
 
 /** Signals over time, with an optional expected band and deviation markers. */
 export function SignalChart({
@@ -83,17 +84,18 @@ export function SignalChart({
         })}
       </svg>
       {legend ? (
-        <figcaption className={styles.legend}>
+        // A list, not a figcaption: as a caption it became the figure's accessible name
+        <ul role="list" className={styles.legend}>
           {legend.map((entry) => (
-            <span key={entry.key} className={styles.legendItem}>
+            <li key={entry.key} className={styles.legendItem}>
               <span
                 className={cx(styles.swatch, styles[`swatch-${entry.key}`])}
                 aria-hidden="true"
               />
               {entry.label}
-            </span>
+            </li>
           ))}
-        </figcaption>
+        </ul>
       ) : null}
     </figure>
   );

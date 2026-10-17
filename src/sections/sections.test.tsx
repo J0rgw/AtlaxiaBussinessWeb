@@ -57,7 +57,9 @@ describe("SignalChart", () => {
     expect(screen.getByRole("img", { name: "Señal frente a lo esperado" })).toBeInTheDocument();
     expect(container.querySelectorAll("svg > path")).toHaveLength(2);
     expect(container.querySelectorAll("circle")).toHaveLength(2);
-    expect(container.querySelector("figcaption")).toHaveTextContent("ObservadoEsperado");
+    // The legend is a list, not a caption: the figure is named by the chart's description only
+    expect(container.querySelector("figcaption")).toBeNull();
+    expect(screen.getByRole("list")).toHaveTextContent("ObservadoEsperado");
   });
 
   it("skips deviations that point outside the series", () => {

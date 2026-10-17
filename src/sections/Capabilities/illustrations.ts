@@ -2,7 +2,7 @@ import type { GraphEdge, GraphNode } from "@/components/data-display/NodeGraph";
 import type { SignalSeries } from "@/components/data-display/SignalChart";
 
 /*
-  Illustrative data for the Vision panels. Deterministic (same output on the
+  Illustrative data for the Capabilities panels. Deterministic (same output on the
   server and the client) and generic: no real plant, sensor or dataset behind it.
 */
 

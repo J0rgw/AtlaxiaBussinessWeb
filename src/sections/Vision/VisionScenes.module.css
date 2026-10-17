@@ -27,15 +27,20 @@
   position: absolute;
   inset: -12%;
   z-index: -1;
-  background: var(--color-border-strong);
-  mask-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24.5 21v7M21 24.5h7' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E"),
-    radial-gradient(circle at 62% 50%, #000 0, #000 18vmax, transparent 46vmax);
-  mask-size:
-    48px 48px,
-    100% 100%;
-  mask-repeat: repeat, no-repeat;
-  mask-composite: intersect;
+  /*
+    The radial fade is painted and only the crosses are a mask. Two masks
+    composited (intersect) made this moving layer repaint on every frame of
+    the scene, about a viewport each time; one mask does not. Same pixels.
+  */
+  background: radial-gradient(
+    circle at 62% 50%,
+    var(--color-border-strong) 0,
+    var(--color-border-strong) 18vmax,
+    transparent 46vmax
+  );
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24.5 21v7M21 24.5h7' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E");
+  mask-size: 48px 48px;
+  mask-repeat: repeat;
   pointer-events: none;
 }
 

@@ -1,3 +1,4 @@
+import { PauseOffscreen } from "@/components/primitives/PauseOffscreen";
 import { cx } from "@/lib/cx";
 import styles from "./NodeGraph.module.css";
 
@@ -52,7 +53,7 @@ export function NodeGraph({
   const byId = new Map(nodes.map((node) => [node.id, node]));
 
   return (
-    <div className={cx(styles.frame, className)}>
+    <PauseOffscreen className={cx(styles.frame, className)}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         role="img"
@@ -100,6 +101,6 @@ export function NodeGraph({
           })}
         </g>
       </svg>
-    </div>
+    </PauseOffscreen>
   );
 }

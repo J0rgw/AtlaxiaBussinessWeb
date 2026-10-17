@@ -1,3 +1,4 @@
+import { PauseOffscreen } from "@/components/primitives/PauseOffscreen";
 import {
   apex,
   arch,
@@ -13,7 +14,6 @@ import {
   VIEW,
 } from "./geometry";
 import styles from "./HeroBlueprint.module.css";
-import { HeroCanvas } from "./HeroCanvas";
 import { HeroDial } from "./HeroDial";
 
 /*
@@ -36,7 +36,7 @@ const viewBox = `${-HALF} ${-HALF} ${VIEW} ${VIEW}`;
 
 export function HeroBlueprint() {
   return (
-    <HeroCanvas className={styles.canvas}>
+    <PauseOffscreen className={styles.canvas} aria-hidden="true">
       <div className={styles.glow} />
       <div className={styles.field}>
         <div className={styles.grid} />
@@ -124,6 +124,6 @@ export function HeroBlueprint() {
       </svg>
 
       <div className={styles.veil} />
-    </HeroCanvas>
+    </PauseOffscreen>
   );
 }

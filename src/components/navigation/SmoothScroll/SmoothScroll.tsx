@@ -14,22 +14,48 @@ export function SmoothScroll() {
   useEffect(() => {
     if (prefersReducedMotion()) return;
 
-    const lenis = new Lenis({ autoRaf: true, lerp: 0.1, smoothWheel: true });
-    setSmoothScroll(lenis);
+    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+
+    // Lenis's own loop (autoRaf) asks for a frame forever, so an idle page kept
+    // rendering 60 frames a second. This one runs only while Lenis animates and
+    // wakes on the next wheel gesture or programmatic scroll.
+    let frame = 0;
+    const loop = (time: number) => {
+      lenis.raf(time);
+      if (lenis.isScrolling === "smooth") {
+        frame = requestAnimationFrame(loop);
+      } else {
+        frame = 0;
+        // The first frame after a pause must not count the pause as elapsed time
+        lenis.time = 0;
+      }
+    };
+    const wake = () => {
+      if (!frame) frame = requestAnimationFrame(loop);
+    };
+    const stopWaking = lenis.on("virtual-scroll", wake);
+    setSmoothScroll(lenis, wake);
+
+    let stopped = false;
+    const stop = () => {
+      if (stopped) return;
+      stopped = true;
+      stopWaking();
+      cancelAnimationFrame(frame);
+      lenis.destroy();
+      setSmoothScroll(null);
+    };
 
     // Turning reduced motion on while the page is open stops the smoothing.
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     const onChange = (event: MediaQueryListEvent) => {
-      if (!event.matches) return;
-      lenis.destroy();
-      setSmoothScroll(null);
+      if (event.matches) stop();
     };
     query.addEventListener("change", onChange);
 
     return () => {
       query.removeEventListener("change", onChange);
-      lenis.destroy();
-      setSmoothScroll(null);
+      stop();
     };
   }, []);
 

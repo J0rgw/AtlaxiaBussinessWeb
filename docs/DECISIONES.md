@@ -141,7 +141,8 @@ Duraciones `150 / 300 / 600 ms` que pasan a `0ms` con `prefers-reduced-motion` o
 | LanguageSwitcher | navigation | Sí (no depende del router de Next) |
 | FloatingSectionNav + useActiveSection | navigation | Sí. Sin copy ni router; iconos opcionales por item |
 | StableLabel | primitives | Sí. Ancho estable entre traducciones y grosores |
-| SmoothAnchorScroll | navigation | Sí. Scroll suave y foco para todas las anclas de la página |
+| SmoothAnchorScroll | navigation | Sí. Scroll suave y foco para todas las anclas de la página; saltos largos con corte y deslizamiento |
+| PauseOffscreen | primitives | Sí. Marca `data-paused` fuera de pantalla para que el CSS pare sus bucles |
 | SplitLayout | layout | Sí. Dos columnas con container queries |
 | NodeGraph | data-display | Sí. Grafo SVG de señales: foco, relacionadas y contexto |
 | ProcessFlowReveal | storytelling | Sí. ProcessFlow que se reproduce una vez al entrar en pantalla |
@@ -271,11 +272,14 @@ Revisada tras el feedback del propietario (2026-09-29): sin menú hamburguesa, b
   - Por debajo de 60rem: elementos cuadrados que escalan con el ancho, `clamp(34px, 10.5vw, 44px)`, para que la barra siempre quepa (304 px a 320 de ancho). El logo se oculta por debajo de 480 px.
   - Cómo se hace: `SegmentedControl` expone sus medidas como variables (`--seg-height`, `--seg-pad`, `--seg-font`, `--seg-track-pad`...) con los valores del producto por defecto. La barra las redefine y escala de una vez sus pestañas, el selector de idioma y el botón. Fuera de la barra el selector sigue siendo idéntico al del producto.
 - **Scroll con inercia (SmoothScroll, Lenis):** lo que el propietario echaba en falta era la inercia de Cerebrium, no solo el desplazamiento suave de las anclas.
-  - Lenis 1.3 con `autoRaf` y `lerp: 0.1`, montado en RootDocument. Añade la clase `lenis` a `<html>` y su CSS desactiva `scroll-behavior` mientras está activo.
+  - Lenis 1.3 con `lerp: 0.1`, montado en RootDocument. Añade la clase `lenis` a `<html>` y su CSS desactiva `scroll-behavior` mientras está activo.
+  - Bucle de frames propio en lugar de `autoRaf` (2026-10-17): solo pide frames mientras Lenis anima y se despierta con la rueda (`virtual-scroll`) o con `wakeSmoothScroll()` tras un `scrollTo` programático. Con `autoRaf` la página quieta dibujaba 60 frames por segundo.
   - No se monta con movimiento reducido y se destruye si el usuario lo activa con la página abierta.
   - La instancia se comparte en `src/lib/smoothScroll.ts` para que otros componentes la usen sin contexto de React.
 - **Anclas (SmoothAnchorScroll):** un único listener delegado para los clics en anclas `#id`.
-  - Con Lenis activo usa `lenis.scrollTo` con el `scroll-margin-top` de la sección como offset; si no, `scrollIntoView({ behavior: "smooth" })`.
+  - Con Lenis activo usa `lenis.scrollTo` con duración y la curva `--ease-in-out` del sitio (0,6 a 1,2 s según la distancia). Lenis 1.3 ya descuenta el `scroll-margin-top` del destino: pasarlo también como offset hacía aterrizar 80 px antes (corregido el 2026-10-17).
+  - Saltos de más de 2,5 pantallas: corte instantáneo hasta una pantalla antes del destino y deslizamiento final de 0,9 s con `--ease-out`. Animar 15 pantallas seguidas movía varias pantallas por frame a través de las escenas más pesadas (`planJump`, con test de que ningún paso supera un quinto de pantalla a 60 Hz).
+  - Sin Lenis: `scrollIntoView({ behavior: "smooth" })`.
   - `pushState` conservando el estado de Next, para que atrás y adelante sigan funcionando.
   - El foco pasa a la sección sin un segundo salto. Las secciones enfocadas por código (`tabindex="-1"`) no muestran anillo.
 
@@ -352,7 +356,7 @@ Viven en `src/sections/`. Son específicas de ATLAXIA y reciben su parte del dic
   - **Marco (Matta):** la barra de marca y el hero forman una sola hoja enmarcada con líneas finas, a `--frame-inset` del borde y con cruces de registro en las esquinas. El logo va en una celda oscura sobre el marco. La hoja completa cabe en la primera pantalla de escritorio.
   - **Composición (Cerebrium):** titular grande en tres líneas, de un solo color y en peso medium, abajo a la izquierda; una frase y los dos botones abajo a la derecha, sobre la misma línea base. Sin eyebrow ni cajetín.
   - **Dibujo centrado:** el símbolo construido sobre sus circunferencias reales (la que pasa por los tres vértices y la inscrita, calculadas en `geometry.ts`), con los lados prolongados, ejes, un dial de instrumento con marcas cada 5 grados, rayado de sección y los vértices como nodos. Todo comparte el mismo centro, también la rejilla de cruces.
-  - **Movimiento:** al cargar, la construcción se abre desde el centro y el símbolo se dibuja (reveal). Después, dos señales recorren el contorno y otra la circunferencia, como datos moviéndose por el sistema (story). Cada señal es una cabeza nítida con una cola tenue. Las señales van en su propia capa SVG; el bucle se pausa fuera de pantalla (`HeroCanvas`) y desaparece con movimiento reducido.
+  - **Movimiento:** al cargar, la construcción se abre desde el centro y el símbolo se dibuja (reveal). Después, dos señales recorren el contorno y otra la circunferencia, como datos moviéndose por el sistema (story). Cada señal es una cabeza nítida con una cola tenue. Las señales van en su propia capa SVG; el bucle se pausa fuera de pantalla (`PauseOffscreen`) y desaparece con movimiento reducido.
   - **Dial que sigue al ratón (feedback, `HeroDial`):** con ratón, la zona de la rueda más cercana al puntero se oscurece (aro y marcas) y esa zona oscura sigue al puntero alrededor de la rueda con inercia; al alejarse, se apaga despacio. Nada cambia de tamaño ni de forma: el aro y las marcas son fijos. Versiones anteriores que agrandaban la rueda, la abombaban o alargaban las marcas se quitaron a petición del propietario. La intensidad depende de la distancia a la rueda: es máxima sobre el aro y nula a 280 unidades de él, así que en el centro del símbolo no actúa. Hay dos copias del mismo dial: una clara de base y otra oscura que solo se ve bajo una máscara radial colocada en el puntero; lo único que se mueve es esa máscara (rAF que se detiene en reposo). Sin listeners en pantallas táctiles ni con movimiento reducido.
   - **Por debajo de 60rem** el hero es una columna: el dibujo ocupa la altura que deja el texto, así la hoja llena exactamente una pantalla sin solaparse. En teléfonos el texto se compacta (titular de 34 px, entradilla a tamaño base y barra de marca de 56 px), y en pantallas de menos de 640 px de alto, aún más (titular de 30 px). Verificado con la altura visible real del navegador, barras incluidas: 390×664 (iPhone con Safari), 375×553 (iPhone SE), 360×700, 430×740 y 320×568. En todas, el hero cabe y el último botón queda por encima de la barra.
   - Los grosores de línea están en unidades del dibujo: unos 0,55 px por unidad en un portátil y 0,85 en una pantalla grande.
@@ -501,9 +505,37 @@ Con scroll rápido por Visión la página daba tirones cuando aparecían las fig
 - **Probado y descartado:** `contain: size layout style` en el marco de la figura (alrededor de un 3 % menos de hilo principal, pero desplaza la figura de la escena A una fracción de píxel) y una capa de composición propia para el SVG (más GPU, sin ganancia clara).
 - **Límite actual:** a 4× los frames de las escenas siguen en unos 33 ms (sin figuras, unos 17 ms). Lo que queda es layerize, pintado y layout de miles de trazados que cambian con el scroll. Bajar más pide figuras con menos elementos (el builder y `--audit`), con riesgo de cambiar el dibujo.
 
+**Fluidez de toda la home (2026-10-17):**
+
+El propietario notaba transiciones que no iban del todo suaves. Se midió toda la home, no solo Visión, y de forma agnóstica al hardware: en lugar de milisegundos, que dependen del equipo, se cuenta el trabajo por frame (elementos restilados, objetos de layout, layouts forzados, superficie repintada con `LayerTree.layerPainted`, frames dibujados en reposo y desplazamiento por frame de los saltos). El scroll avanza un número fijo de píxeles por frame, así cualquier máquina dibuja los mismos frames. Escritorio 1440 × 900 y móvil 390 × 844 a 2×, con el puntero sobre la página como un visitante real.
+
+- **Causas confirmadas:**
+  - _Saltos del menú:_ `lenis.scrollTo` con lerp avanza el 10 % de lo que falta en cada frame. Desde el hero a «Qué hacemos» o «Contacto», de 5 a 9 frames movían más de una pantalla cada uno (hasta 7.120 px en uno). Además aterrizaban 80 px antes: el margen se descontaba dos veces.
+  - _Rejilla de Visión:_ dos máscaras compuestas (`mask-composite: intersect`) en una capa que se mueve repintaban casi una pantalla por frame. Cualquiera de las dos máscaras sola no repinta.
+  - _Página nunca en reposo:_ `autoRaf` de Lenis y los bucles de NodeGraph (`stroke-dashoffset` y el pulso, que además relanza el layout del SVG) corrían en toda la página aunque el grafo no se viera: 55 a 60 frames por segundo con la página quieta, en todas las secciones.
+  - _Lecturas de layout:_ con un ratón sobre la página, HeroDial leía `getBoundingClientRect` en cada frame de scroll, en cualquier sección.
+- **Cambios:** Lenis con bucle propio que duerme; saltos con duración, corte y deslizamiento y sin el margen doble; rejilla con una sola máscara (el degradado radial pasa al fondo; mismos píxeles, diferencia máxima 1/255); `PauseOffscreen` en NodeGraph y en el hero (sustituye a `HeroCanvas`); HeroDial solo con el hero en pantalla; suavizado de ScrubFigure por tiempo y no por frame (igual a 60 o 120 Hz y sin atascarse si se pierde un frame).
+- **Resultado** (main → rama, mismo build y mismo recorrido):
+
+  | Por frame, recorriendo Visión | Escritorio | Móvil |
+  | --- | --- | --- |
+  | Superficie repintada | 1,98 → 0,91 pantallas | 1,84 → 0,78 |
+  | Pasadas de layout | 1,95 → 0,85 | 1,76 → 0,61 |
+  | Layouts forzados (toda la escena) | 491 → 66 | 251 → 1 |
+  | Elementos restilados | 90 → 63 | 91 → 66 |
+
+  En reposo, Visión, Qué construimos, Quiénes somos y Contacto pasan de 55 a 60 frames por segundo a 0. Siguen dibujando el hero y Qué hacemos mientras su animación está a la vista, que es lo previsto. En los saltos largos queda un único frame de más de una pantalla, el corte intencionado. El coste de carga de las figuras no cambia (tareas largas iguales a las de main).
+- **Descartado, con medida:**
+  - _Locomotive Scroll:_ la versión 5 es Lenis 1.3.17 por dentro (más antigua que la nuestra). La 4 y GSAP ScrollSmoother mueven la página con transforms y rompen `position: sticky`, del que dependen las escenas.
+  - _Scroll nativo sin Lenis:_ con ratón en Safari o en macOS cada golpe de rueda salta 100 px de una vez. Es lo que pasa también con «reducir movimiento» activado, porque entonces la web no monta Lenis a propósito.
+  - _Capas propias para lo que se mueve en las figuras:_ por elemento, 22 pantallas repintadas por frame; en dos capas por figura, 12 (el lienzo del zoom es enorme).
+  - _Aplanar en el navegador las partes estáticas de las figuras:_ el 95 % de los trazados de cada figura nunca cambia por sí solo. Convertir cada tramo estático en una imagen SVG bajó los elementos de las figuras de sectores de 1.600 a 1.900 a 235 a 526, y los trazados por redibujar un 80 %, con los mismos píxeles. Pero medir cada tramo obliga a estilar y maquetar la figura entera al cargarla: tareas de 0,3 a 0,45 s por figura (hasta 2,4 s a 4×), que bloquean la rueda porque Lenis la escucha en el hilo principal. Queda como siguiente paso, hecho en el builder (ver Pendientes técnicos).
+- **Límite que queda:** Visión sigue en unos 63 elementos restilados y 0,9 pantallas repintadas por frame, casi todo por las figuras: los bucles (caudal, ventiladores) son la mitad del restilado.
+
 ---
 
 ## Pendientes técnicos
 
 - **Tags en modo claro:** cinco tonos están por debajo de 4,5:1 por decisión de consistencia. Tenerlo en cuenta en las capturas o réplicas del producto (etiquetas cortas, nunca como único portador de información: el icono y el texto ya lo cubren).
+- **Aplanado de figuras en el builder:** generar en `scripts/anatomy` cada tramo estático como SVG aparte (límites y estilos resueltos al construir) y dejar al navegador solo sustituir el grosor de las líneas a la escala de la figura. Ganancia medida en un prototipo: 80 % menos trazados por redibujar en la escena de sectores. La figura del zoom no se puede aplanar así (la cámara escala hasta 200 veces).
 - **Destino de despliegue de v2:** el soporte de `NEXT_PUBLIC_BASE_PATH` está preparado. CI no se configura hasta decidirlo.

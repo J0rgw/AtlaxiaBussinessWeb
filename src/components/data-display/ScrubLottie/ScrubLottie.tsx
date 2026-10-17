@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AnimationItem } from "lottie-web";
 import { useSceneProgress } from "@/components/storytelling/ScrollScene";
 import { cx } from "@/lib/cx";
-import { prefersReducedMotion } from "@/lib/motion";
+import { followShare, prefersReducedMotion } from "@/lib/motion";
 import { withBasePath } from "@/lib/paths";
 import styles from "./ScrubLottie.module.css";
 
@@ -28,7 +28,7 @@ export type ScrubLottieProps = {
 
 type LottieData = { layers: Array<{ nm?: string }> } & Record<string, unknown>;
 
-/** Easing towards the scroll position per frame: 1 follows exactly, lower is smoother. */
+/** Easing towards the scroll position per 60 Hz frame (applied per time): 1 follows exactly, lower is smoother. */
 const FOLLOW = 0.2;
 
 /**
@@ -116,12 +116,16 @@ export function ScrubLottie({
     const smooth = !prefersReducedMotion();
     animation.goToAndStop(current, true);
 
-    const step = () => {
+    let lastTime: number | null = null;
+    const step = (time: number) => {
       frame = 0;
-      current += (target - current) * FOLLOW;
+      current +=
+        (target - current) * followShare(FOLLOW, lastTime === null ? null : time - lastTime);
+      lastTime = time;
       if (Math.abs(target - current) < 0.05) current = target;
       animation.goToAndStop(current, true);
       if (current !== target) frame = requestAnimationFrame(step);
+      else lastTime = null;
     };
     const unsubscribe = scene.subscribe((value) => {
       target = toFrame(value);

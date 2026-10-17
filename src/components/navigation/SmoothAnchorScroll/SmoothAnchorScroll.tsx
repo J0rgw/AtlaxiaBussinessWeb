@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { easeInOut, easeOut, prefersReducedMotion } from "@/lib/motion";
-import { getSmoothScroll, wakeSmoothScroll } from "@/lib/smoothScroll";
+import { getSmoothScroll, smoothScrollTo } from "@/lib/smoothScroll";
 
 /** Beyond this many viewports a jump cuts to one viewport before the target and glides in. */
 const LONG_JUMP = 2.5;
@@ -55,15 +55,21 @@ export function SmoothAnchorScroll() {
       if (!target) return;
 
       event.preventDefault();
-      const lenis = getSmoothScroll();
-      if (lenis) {
-        // Lenis already honors the target's scroll-margin-top: same landing as native anchors.
-        const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-        const distance = target.getBoundingClientRect().top - margin;
-        const { cut, duration, easing } = planJump(distance, window.innerHeight);
-        if (cut) lenis.scrollTo(window.scrollY + cut, { immediate: true });
-        lenis.scrollTo(target, { duration, easing });
-        wakeSmoothScroll();
+      if (getSmoothScroll()) {
+        if (prefersReducedMotion()) {
+          // The manual override (data-motion="reduce") can arrive after Lenis mounted
+          smoothScrollTo(target, { immediate: true });
+        } else {
+          // Lenis subtracts the target's scroll-margin-top and the root's scroll-padding-top
+          // itself (same landing as native anchors); the plan measures the same distance.
+          const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+          const padding =
+            parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+          const distance = target.getBoundingClientRect().top - margin - padding;
+          const { cut, duration, easing } = planJump(distance, window.innerHeight);
+          if (cut) smoothScrollTo(window.scrollY + cut, { immediate: true });
+          smoothScrollTo(target, { duration, easing });
+        }
       } else {
         target.scrollIntoView({
           behavior: prefersReducedMotion() ? "auto" : "smooth",

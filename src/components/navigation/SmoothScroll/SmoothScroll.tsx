@@ -21,19 +21,23 @@ export function SmoothScroll() {
     // wakes on the next wheel gesture or programmatic scroll.
     let frame = 0;
     const loop = (time: number) => {
+      // After a pause, count one frame instead of the pause (or of nothing)
+      if (!lenis.time) lenis.time = time - 1000 / 60;
       lenis.raf(time);
       if (lenis.isScrolling === "smooth") {
         frame = requestAnimationFrame(loop);
       } else {
         frame = 0;
-        // The first frame after a pause must not count the pause as elapsed time
         lenis.time = 0;
       }
     };
     const wake = () => {
       if (!frame) frame = requestAnimationFrame(loop);
     };
-    const stopWaking = lenis.on("virtual-scroll", wake);
+    // Touch scrolling is native (syncTouch off): only the wheel needs the loop
+    const stopWaking = lenis.on("virtual-scroll", ({ event }) => {
+      if (event.type === "wheel") wake();
+    });
     setSmoothScroll(lenis, wake);
 
     let stopped = false;

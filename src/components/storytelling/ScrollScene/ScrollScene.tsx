@@ -20,9 +20,10 @@ export type SceneProgress = {
   /**
    * Runs `callback` once in the scenes' next frame, after every scene has been
    * measured: for followers that keep moving after the scroll stops (easing).
-   * Called while the scene publishes, it runs in that same frame.
+   * Called while the scene publishes, it runs in that same frame. It receives
+   * the frame's timestamp, the same for every follower in the frame.
    */
-  frame: (callback: () => void) => void;
+  frame: (callback: (time: number) => void) => void;
 };
 
 const SceneContext = createContext<SceneProgress | null>(null);
@@ -42,11 +43,11 @@ export function useSceneProgress(): SceneProgress | null {
 type Measured = { measure: () => number; publish: (value: number) => void };
 
 const scenes = new Set<Measured>();
-let pending: Array<() => void> = [];
+let pending: Array<(time: number) => void> = [];
 let frame = 0;
 let publishing = false;
 
-function tick() {
+function tick(time: number) {
   frame = 0;
   const measured = Array.from(scenes, (scene) => [scene, scene.measure()] as const);
   publishing = true;
@@ -54,7 +55,7 @@ function tick() {
   publishing = false;
   const callbacks = pending;
   pending = [];
-  callbacks.forEach((callback) => callback());
+  callbacks.forEach((callback) => callback(time));
 }
 
 function schedule() {

@@ -25,8 +25,13 @@ export type ScrubFigureProps = {
   className?: string;
 };
 
-/** Easing towards the scroll position per frame: 1 follows exactly, lower is smoother. */
+/**
+ * Easing towards the scroll position, per 60 Hz frame: 1 follows exactly, lower
+ * is smoother. Applied per elapsed time, so the figure trails the page the same
+ * at 60 or 120 Hz and does not stall when a frame is dropped.
+ */
 const FOLLOW = 0.2;
+const FRAME_MS = 1000 / 60;
 
 /** A scene progress mapped to the part of it that plays the figure, 0 to 1. */
 const within = (value: number, from: number, to: number) =>
@@ -119,15 +124,22 @@ export function ScrubFigure({
     player.seek(current);
 
     // One eased step per frame, in the scenes' own frame (after they measure)
+    let last = 0;
     const step = () => {
       queued = false;
       if (!active) return;
-      current += (target - current) * FOLLOW;
+      const now = performance.now();
+      // The first step of a movement counts as one frame; a long stall as four at most
+      const frames = last ? Math.min(4, (now - last) / FRAME_MS) : 1;
+      last = now;
+      current += (target - current) * (1 - (1 - FOLLOW) ** frames);
       if (Math.abs(target - current) < 0.0005) current = target;
       player.seek(current);
       if (current !== target) {
         queued = true;
         scene.frame(step);
+      } else {
+        last = 0;
       }
     };
     const unsubscribe = scene.subscribe((value) => {

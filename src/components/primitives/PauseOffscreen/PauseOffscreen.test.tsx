@@ -1,10 +1,13 @@
 import { render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mockIntersectionObserver } from "@/test/intersectionObserver";
 import { PauseOffscreen } from "./PauseOffscreen";
 
 describe("PauseOffscreen", () => {
-  const io = mockIntersectionObserver();
+  let io: ReturnType<typeof mockIntersectionObserver>;
+  beforeEach(() => {
+    io = mockIntersectionObserver();
+  });
   afterEach(() => io.restore());
 
   it("marks itself paused off screen and resumes on screen", () => {

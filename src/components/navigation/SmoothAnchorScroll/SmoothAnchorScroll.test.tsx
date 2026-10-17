@@ -28,6 +28,8 @@ describe("SmoothAnchorScroll", () => {
 
   afterEach(() => {
     scrollIntoView.mockReset();
+    setSmoothScroll(null);
+    delete document.documentElement.dataset.motion;
   });
 
   it("scrolls smoothly to the section, updates the hash and moves focus", async () => {
@@ -47,7 +49,20 @@ describe("SmoothAnchorScroll", () => {
     await userEvent.click(screen.getByRole("link", { name: "Quiénes somos" }));
 
     expect(scrollIntoView).toHaveBeenCalledWith({ behavior: "auto", block: "start" });
-    delete document.documentElement.dataset.motion;
+  });
+
+  it("jumps instantly through Lenis when reduced motion is set after it mounted", async () => {
+    const scrollTo = vi.fn();
+    setSmoothScroll({ scrollTo } as unknown as Lenis, vi.fn());
+    document.documentElement.dataset.motion = "reduce";
+    render(<Page />);
+
+    await userEvent.click(screen.getByRole("link", { name: "Quiénes somos" }));
+
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenCalledWith(screen.getByRole("region", { name: "Quiénes somos" }), {
+      immediate: true,
+    });
   });
 
   it("scrolls through Lenis with a timed animation, leaving scroll-margin-top to Lenis", async () => {
@@ -68,7 +83,6 @@ describe("SmoothAnchorScroll", () => {
     });
     expect(wake).toHaveBeenCalled();
     expect(scrollIntoView).not.toHaveBeenCalled();
-    setSmoothScroll(null);
   });
 
   it("cuts long jumps to one viewport before the target, then glides", async () => {
@@ -87,7 +101,6 @@ describe("SmoothAnchorScroll", () => {
       duration: expect.any(Number),
       easing: expect.any(Function),
     });
-    setSmoothScroll(null);
   });
 
   it("leaves anchors without a target and other pages to the browser", async () => {

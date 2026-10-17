@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { prefersReducedMotion } from "@/lib/motion";
+import { followShare, prefersReducedMotion } from "@/lib/motion";
 import { angleDelta, DIAL_RADIUS, dialTicks, HALF, VIEW } from "./geometry";
 import styles from "./HeroBlueprint.module.css";
 
 // Pointer influence: full on the ring, none this far from it (drawing units).
 const REACH = 280;
-// Inertia per frame (0 to 1): how fast the dark spot follows the pointer.
+// Inertia per 60 Hz frame (0 to 1), applied per time: how fast the dark spot follows the pointer.
 const FOLLOW = 0.14;
 const SETTLE = 0.1;
 
@@ -69,22 +69,27 @@ export function HeroDial() {
       spot.setAttribute("opacity", strength.toFixed(3));
     };
 
-    const tick = () => {
+    let last: number | null = null;
+    const tick = (time: number) => {
       const next = target();
       // At rest and the pointer is elsewhere: nothing to draw.
       if (strength === 0 && next.strength === 0) {
         frame = 0;
+        last = null;
         return;
       }
+      const elapsed = last === null ? null : time - last;
+      last = time;
       // Entering from rest: start at the pointer instead of sweeping round.
       if (strength < 0.02) focus = next.angle;
       const turn = angleDelta(next.angle, focus);
-      focus += turn * FOLLOW;
+      focus += turn * followShare(FOLLOW, elapsed);
       const change = next.strength - strength;
-      strength += change * (change > 0 ? FOLLOW : SETTLE);
+      strength += change * followShare(change > 0 ? FOLLOW : SETTLE, elapsed);
       render();
       const moving = Math.abs(turn) > 0.0005 || Math.abs(change) > 0.002;
       frame = moving ? requestAnimationFrame(tick) : 0;
+      if (!moving) last = null;
       if (!moving && next.strength === 0 && strength !== 0) {
         strength = 0;
         render();
@@ -98,8 +103,9 @@ export function HeroDial() {
     const observer =
       typeof IntersectionObserver === "undefined"
         ? null
-        : new IntersectionObserver(([entry]) => {
-            visible = entry?.isIntersecting ?? true;
+        : new IntersectionObserver((entries) => {
+            // The latest entry wins when one callback reports several crossings
+            visible = entries.at(-1)?.isIntersecting ?? true;
             schedule();
           });
     observer?.observe(svg);

@@ -51,9 +51,11 @@ export function NodeGraph({
   className,
 }: NodeGraphProps) {
   const byId = new Map(nodes.map((node) => [node.id, node]));
+  // Only a looping graph needs to know when it is off screen
+  const Frame = animated ? PauseOffscreen : "div";
 
   return (
-    <PauseOffscreen className={cx(styles.frame, className)}>
+    <Frame className={cx(styles.frame, className)}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         role="img"
@@ -101,6 +103,6 @@ export function NodeGraph({
           })}
         </g>
       </svg>
-    </PauseOffscreen>
+    </Frame>
   );
 }

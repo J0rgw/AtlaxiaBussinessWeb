@@ -12,3 +12,16 @@ export const easeInOut = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2)
 
 /** The site's --ease-out, cubic-bezier(0.25, 1, 0.5, 1), as a function (quartic out). */
 export const easeOut = (t: number) => 1 - (1 - t) ** 4;
+
+const FRAME_MS = 1000 / 60;
+
+/**
+ * Share of the remaining distance an eased follower covers after `elapsed` ms,
+ * given its share per 60 Hz frame. Per time, not per frame: the follower trails
+ * the same at 60 or 120 Hz and does not stall when a frame is dropped. The first
+ * step of a movement (`elapsed` null) counts as one frame; a stall as four at most.
+ */
+export function followShare(perFrame: number, elapsed: number | null): number {
+  const frames = elapsed === null ? 1 : Math.min(4, Math.max(0, elapsed) / FRAME_MS);
+  return 1 - (1 - perFrame) ** frames;
+}

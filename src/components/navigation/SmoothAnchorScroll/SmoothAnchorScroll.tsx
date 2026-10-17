@@ -1,8 +1,34 @@
 "use client";
 
 import { useEffect } from "react";
-import { prefersReducedMotion } from "@/lib/motion";
-import { getSmoothScroll } from "@/lib/smoothScroll";
+import { easeInOut, easeOut, prefersReducedMotion } from "@/lib/motion";
+import { getSmoothScroll, wakeSmoothScroll } from "@/lib/smoothScroll";
+
+/** Beyond this many viewports a jump cuts to one viewport before the target and glides in. */
+const LONG_JUMP = 2.5;
+
+export type JumpPlan = {
+  /** Distance to cover instantly first (long jumps), in px; 0 when the whole way is animated. */
+  cut: number;
+  /** Seconds of the animated part. */
+  duration: number;
+  easing: (t: number) => number;
+};
+
+/**
+ * How to travel `distance` px (signed). A time-based animation keeps every
+ * frame's step small; animating 15 viewports in a second would still move
+ * several viewports per frame through the heaviest scenes, so long jumps cut
+ * to one viewport before the target and glide the rest.
+ */
+export function planJump(distance: number, viewport: number): JumpPlan {
+  const size = Math.abs(distance);
+  if (size > LONG_JUMP * viewport) {
+    return { cut: distance - Math.sign(distance) * viewport, duration: 0.9, easing: easeOut };
+  }
+  const duration = Math.min(1.2, Math.max(0.6, 0.45 + (0.25 * size) / viewport));
+  return { cut: 0, duration, easing: easeInOut };
+}
 
 function isPlainLeftClick(event: MouseEvent) {
   return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
@@ -31,9 +57,13 @@ export function SmoothAnchorScroll() {
       event.preventDefault();
       const lenis = getSmoothScroll();
       if (lenis) {
-        // Same landing point as native anchors: honor the target's scroll-margin-top.
+        // Lenis already honors the target's scroll-margin-top: same landing as native anchors.
         const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-        lenis.scrollTo(target, { offset: -margin });
+        const distance = target.getBoundingClientRect().top - margin;
+        const { cut, duration, easing } = planJump(distance, window.innerHeight);
+        if (cut) lenis.scrollTo(window.scrollY + cut, { immediate: true });
+        lenis.scrollTo(target, { duration, easing });
+        wakeSmoothScroll();
       } else {
         target.scrollIntoView({
           behavior: prefersReducedMotion() ? "auto" : "smooth",

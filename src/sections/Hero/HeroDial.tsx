@@ -42,6 +42,8 @@ export function HeroDial() {
     }
 
     let pointer: { x: number; y: number } | null = null;
+    // Off screen the dial has nothing to show: no frames and no layout reads
+    let visible = true;
     let focus = 0;
     let strength = 0;
     let frame = 0;
@@ -90,8 +92,17 @@ export function HeroDial() {
     };
 
     const schedule = () => {
+      if (!visible && strength === 0) return;
       if (!frame) frame = requestAnimationFrame(tick);
     };
+    const observer =
+      typeof IntersectionObserver === "undefined"
+        ? null
+        : new IntersectionObserver(([entry]) => {
+            visible = entry?.isIntersecting ?? true;
+            schedule();
+          });
+    observer?.observe(svg);
     const onMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
       pointer = { x: event.clientX, y: event.clientY };
@@ -109,6 +120,7 @@ export function HeroDial() {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", schedule);
       document.documentElement.removeEventListener("pointerleave", onLeave);
+      observer?.disconnect();
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);

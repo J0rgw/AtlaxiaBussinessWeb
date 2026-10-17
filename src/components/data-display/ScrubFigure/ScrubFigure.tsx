@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useSceneProgress } from "@/components/storytelling/ScrollScene";
 import { cx } from "@/lib/cx";
-import { followShare, prefersReducedMotion } from "@/lib/motion";
+import { createFrameClock, followShare, prefersReducedMotion } from "@/lib/motion";
 import { queueFigure } from "./loader";
 import { createPlayer, type Player } from "./player";
 import styles from "./ScrubFigure.module.css";
@@ -119,19 +119,18 @@ export function ScrubFigure({
     player.seek(current);
 
     // One eased step per frame, in the scenes' own frame (after they measure)
-    let last: number | null = null;
+    const clock = createFrameClock();
     const step = (time: number) => {
       queued = false;
       if (!active) return;
-      current += (target - current) * followShare(FOLLOW, last === null ? null : time - last);
-      last = time;
+      current += (target - current) * followShare(FOLLOW, clock.elapsed(time));
       if (Math.abs(target - current) < 0.0005) current = target;
       player.seek(current);
       if (current !== target) {
         queued = true;
         scene.frame(step);
       } else {
-        last = null;
+        clock.rest();
       }
     };
     const unsubscribe = scene.subscribe((value) => {

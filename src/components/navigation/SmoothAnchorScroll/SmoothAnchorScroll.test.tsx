@@ -51,53 +51,36 @@ describe("SmoothAnchorScroll", () => {
     expect(scrollIntoView).toHaveBeenCalledWith({ behavior: "auto", block: "start" });
   });
 
-  it("jumps instantly through Lenis when reduced motion is set after it mounted", async () => {
+  it("scrolls through Lenis with a timed animation to the section's landing point", async () => {
     const scrollTo = vi.fn();
-    setSmoothScroll({ scrollTo } as unknown as Lenis, vi.fn());
-    document.documentElement.dataset.motion = "reduce";
-    render(<Page />);
-
-    await userEvent.click(screen.getByRole("link", { name: "Quiénes somos" }));
-
-    expect(scrollTo).toHaveBeenCalledTimes(1);
-    expect(scrollTo).toHaveBeenCalledWith(screen.getByRole("region", { name: "Quiénes somos" }), {
-      immediate: true,
-    });
-  });
-
-  it("scrolls through Lenis with a timed animation, leaving scroll-margin-top to Lenis", async () => {
-    const scrollTo = vi.fn();
-    const wake = vi.fn();
-    setSmoothScroll({ scrollTo } as unknown as Lenis, wake);
+    setSmoothScroll({ scrollTo, animatedScroll: 500 } as unknown as Lenis);
     render(<Page />);
     const section = screen.getByRole("region", { name: "Quiénes somos" });
     section.style.scrollMarginTop = "80px";
+    section.getBoundingClientRect = () => ({ top: 600 }) as DOMRect;
 
     await userEvent.click(screen.getByRole("link", { name: "Quiénes somos" }));
 
-    // Lenis subtracts the margin itself: passing it as an offset too landed 80 px short
+    // Margin subtracted once: 500 + 600 - 80 (as an element target with an offset it landed 80 px short)
     expect(scrollTo).toHaveBeenCalledTimes(1);
-    expect(scrollTo).toHaveBeenCalledWith(section, {
+    expect(scrollTo).toHaveBeenCalledWith(1020, {
       duration: expect.any(Number),
       easing: expect.any(Function),
     });
-    expect(wake).toHaveBeenCalled();
     expect(scrollIntoView).not.toHaveBeenCalled();
   });
 
   it("cuts long jumps to one viewport before the target, then glides", async () => {
     const scrollTo = vi.fn();
-    setSmoothScroll({ scrollTo } as unknown as Lenis, vi.fn());
+    setSmoothScroll({ scrollTo, animatedScroll: 0 } as unknown as Lenis);
     render(<Page />);
     const section = screen.getByRole("region", { name: "Quiénes somos" });
     section.getBoundingClientRect = () => ({ top: 10 * window.innerHeight }) as DOMRect;
 
     await userEvent.click(screen.getByRole("link", { name: "Quiénes somos" }));
 
-    expect(scrollTo).toHaveBeenNthCalledWith(1, window.scrollY + 9 * window.innerHeight, {
-      immediate: true,
-    });
-    expect(scrollTo).toHaveBeenNthCalledWith(2, section, {
+    expect(scrollTo).toHaveBeenNthCalledWith(1, 9 * window.innerHeight, { immediate: true });
+    expect(scrollTo).toHaveBeenNthCalledWith(2, 10 * window.innerHeight, {
       duration: expect.any(Number),
       easing: expect.any(Function),
     });

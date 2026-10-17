@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AnimationItem } from "lottie-web";
 import { useSceneProgress } from "@/components/storytelling/ScrollScene";
 import { cx } from "@/lib/cx";
-import { followShare, prefersReducedMotion } from "@/lib/motion";
+import { createFrameClock, followShare, prefersReducedMotion } from "@/lib/motion";
 import { withBasePath } from "@/lib/paths";
 import styles from "./ScrubLottie.module.css";
 
@@ -112,34 +112,40 @@ export function ScrubLottie({
 
     let current = toFrame(scene.get());
     let target = current;
-    let frame = 0;
+    let queued = false;
+    let active = true;
     const smooth = !prefersReducedMotion();
     animation.goToAndStop(current, true);
 
-    let lastTime: number | null = null;
+    // One eased step per frame, in the scenes' own frame (after they measure, like ScrubFigure)
+    const clock = createFrameClock();
     const step = (time: number) => {
-      frame = 0;
-      current +=
-        (target - current) * followShare(FOLLOW, lastTime === null ? null : time - lastTime);
-      lastTime = time;
+      queued = false;
+      if (!active) return;
+      current += (target - current) * followShare(FOLLOW, clock.elapsed(time));
       if (Math.abs(target - current) < 0.05) current = target;
       animation.goToAndStop(current, true);
-      if (current !== target) frame = requestAnimationFrame(step);
-      else lastTime = null;
+      if (current !== target) {
+        queued = true;
+        scene.frame(step);
+      } else {
+        clock.rest();
+      }
     };
     const unsubscribe = scene.subscribe((value) => {
       target = toFrame(value);
       if (!smooth) {
         current = target;
         animation.goToAndStop(current, true);
-      } else if (!frame) {
-        frame = requestAnimationFrame(step);
+      } else if (!queued && current !== target) {
+        queued = true;
+        scene.frame(step);
       }
     });
 
     return () => {
+      active = false;
       unsubscribe();
-      if (frame) cancelAnimationFrame(frame);
     };
   }, [animation, scene, progress, from, to]);
 

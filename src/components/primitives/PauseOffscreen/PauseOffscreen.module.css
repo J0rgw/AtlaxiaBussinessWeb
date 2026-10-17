@@ -1,0 +1,8 @@
+/*
+  Off screen, every CSS animation inside waits where it is. !important on the
+  longhand so it beats any consumer's `animation` shorthand (which resets the
+  play state to running) whatever the specificity or stylesheet order.
+*/
+.root[data-paused] * {
+  animation-play-state: paused !important;
+}

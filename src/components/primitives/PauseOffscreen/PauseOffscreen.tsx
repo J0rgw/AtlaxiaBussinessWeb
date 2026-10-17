@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useRef, type ComponentPropsWithoutRef } from "react";
+import { cx } from "@/lib/cx";
+import styles from "./PauseOffscreen.module.css";
 
 export type PauseOffscreenProps = ComponentPropsWithoutRef<"div">;
 
 /**
- * A plain div that carries `data-paused` while it is off screen, so the CSS of
- * a looping illustration can stop its animations there (for example
- * `.frame[data-paused] * { animation-play-state: paused }`). A loop nobody
- * sees would otherwise keep the whole page rendering every frame.
+ * A plain div whose CSS animations pause while it is off screen, so a looping
+ * illustration does not keep the whole page rendering where nobody sees it.
+ * The state is also on the element (`data-paused`) for scripts inside it.
  */
-export function PauseOffscreen(props: PauseOffscreenProps) {
+export function PauseOffscreen({ className, ...props }: PauseOffscreenProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,5 +26,5 @@ export function PauseOffscreen(props: PauseOffscreenProps) {
     return () => observer.disconnect();
   }, []);
 
-  return <div ref={ref} {...props} />;
+  return <div ref={ref} className={cx(styles.root, className)} {...props} />;
 }

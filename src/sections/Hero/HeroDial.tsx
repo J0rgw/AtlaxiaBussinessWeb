@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { followShare, prefersReducedMotion } from "@/lib/motion";
+import { createFrameClock, followShare, prefersReducedMotion } from "@/lib/motion";
 import { angleDelta, DIAL_RADIUS, dialTicks, HALF, VIEW } from "./geometry";
 import styles from "./HeroBlueprint.module.css";
 
@@ -42,16 +42,15 @@ export function HeroDial() {
     }
 
     let pointer: { x: number; y: number } | null = null;
-    // Off screen the dial has nothing to show: no frames and no layout reads
-    let visible = true;
+    // The hero's PauseOffscreen marks it while it is off screen: an attribute, no layout read
+    const offscreen = () => svg.closest("[data-paused]") !== null;
     let focus = 0;
     let strength = 0;
     let frame = 0;
 
     const target = () => {
-      if (!pointer) return { angle: focus, strength: 0 };
+      if (!pointer || offscreen()) return { angle: focus, strength: 0 };
       const rect = svg.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return { angle: focus, strength: 0 };
       const unit = rect.width / VIEW;
       const x = (pointer.x - (rect.left + rect.width / 2)) / unit;
       const y = (pointer.y - (rect.top + rect.height / 2)) / unit;
@@ -69,17 +68,16 @@ export function HeroDial() {
       spot.setAttribute("opacity", strength.toFixed(3));
     };
 
-    let last: number | null = null;
+    const clock = createFrameClock();
     const tick = (time: number) => {
       const next = target();
       // At rest and the pointer is elsewhere: nothing to draw.
       if (strength === 0 && next.strength === 0) {
         frame = 0;
-        last = null;
+        clock.rest();
         return;
       }
-      const elapsed = last === null ? null : time - last;
-      last = time;
+      const elapsed = clock.elapsed(time);
       // Entering from rest: start at the pointer instead of sweeping round.
       if (strength < 0.02) focus = next.angle;
       const turn = angleDelta(next.angle, focus);
@@ -89,7 +87,7 @@ export function HeroDial() {
       render();
       const moving = Math.abs(turn) > 0.0005 || Math.abs(change) > 0.002;
       frame = moving ? requestAnimationFrame(tick) : 0;
-      if (!moving) last = null;
+      if (!moving) clock.rest();
       if (!moving && next.strength === 0 && strength !== 0) {
         strength = 0;
         render();
@@ -97,18 +95,10 @@ export function HeroDial() {
     };
 
     const schedule = () => {
-      if (!visible && strength === 0) return;
+      // Off screen and at rest: nothing to show, no frames
+      if (strength === 0 && offscreen()) return;
       if (!frame) frame = requestAnimationFrame(tick);
     };
-    const observer =
-      typeof IntersectionObserver === "undefined"
-        ? null
-        : new IntersectionObserver((entries) => {
-            // The latest entry wins when one callback reports several crossings
-            visible = entries.at(-1)?.isIntersecting ?? true;
-            schedule();
-          });
-    observer?.observe(svg);
     const onMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
       pointer = { x: event.clientX, y: event.clientY };
@@ -126,7 +116,6 @@ export function HeroDial() {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", schedule);
       document.documentElement.removeEventListener("pointerleave", onLeave);
-      observer?.disconnect();
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);

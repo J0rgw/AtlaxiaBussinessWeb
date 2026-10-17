@@ -307,11 +307,6 @@
   }
 }
 
-/* Off screen: loops stop */
-.canvas[data-paused] * {
-  animation-play-state: paused;
-}
-
 /* Reduced motion: final drawing, no signals (HeroDial does not follow the pointer) */
 @media (prefers-reduced-motion: reduce) {
   .canvas * {

@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import { easeInOut, easeOut, prefersReducedMotion } from "@/lib/motion";
-import { getSmoothScroll, smoothScrollTo } from "@/lib/smoothScroll";
+import { getSmoothScroll } from "@/lib/smoothScroll";
 
 /** Beyond this many viewports a jump cuts to one viewport before the target and glides in. */
 const LONG_JUMP = 2.5;
 
-export type JumpPlan = {
+type JumpPlan = {
   /** Distance to cover instantly first (long jumps), in px; 0 when the whole way is animated. */
   cut: number;
   /** Seconds of the animated part. */
@@ -55,21 +55,18 @@ export function SmoothAnchorScroll() {
       if (!target) return;
 
       event.preventDefault();
-      if (getSmoothScroll()) {
-        if (prefersReducedMotion()) {
-          // The manual override (data-motion="reduce") can arrive after Lenis mounted
-          smoothScrollTo(target, { immediate: true });
-        } else {
-          // Lenis subtracts the target's scroll-margin-top and the root's scroll-padding-top
-          // itself (same landing as native anchors); the plan measures the same distance.
-          const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-          const padding =
-            parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
-          const distance = target.getBoundingClientRect().top - margin - padding;
-          const { cut, duration, easing } = planJump(distance, window.innerHeight);
-          if (cut) smoothScrollTo(window.scrollY + cut, { immediate: true });
-          smoothScrollTo(target, { duration, easing });
-        }
+      const lenis = getSmoothScroll();
+      if (lenis) {
+        // Same landing as native anchors: the target's scroll-margin-top and the root's
+        // scroll-padding-top, measured once and passed to Lenis as a position.
+        const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+        const padding =
+          parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+        const distance = target.getBoundingClientRect().top - margin - padding;
+        const start = lenis.animatedScroll;
+        const { cut, duration, easing } = planJump(distance, window.innerHeight);
+        if (cut) lenis.scrollTo(start + cut, { immediate: true });
+        lenis.scrollTo(start + distance, { duration, easing });
       } else {
         target.scrollIntoView({
           behavior: prefersReducedMotion() ? "auto" : "smooth",

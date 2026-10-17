@@ -2,7 +2,7 @@
 
 import Lenis from "lenis";
 import { useEffect } from "react";
-import { prefersReducedMotion } from "@/lib/motion";
+import { FRAME_MS, prefersReducedMotion } from "@/lib/motion";
 import { setSmoothScroll } from "@/lib/smoothScroll";
 
 /**
@@ -17,12 +17,11 @@ export function SmoothScroll() {
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
 
     // Lenis's own loop (autoRaf) asks for a frame forever, so an idle page kept
-    // rendering 60 frames a second. This one runs only while Lenis animates and
-    // wakes on the next wheel gesture or programmatic scroll.
+    // rendering 60 frames a second. This one runs only while Lenis animates.
     let frame = 0;
     const loop = (time: number) => {
       // After a pause, count one frame instead of the pause (or of nothing)
-      if (!lenis.time) lenis.time = time - 1000 / 60;
+      if (!lenis.time) lenis.time = time - FRAME_MS;
       lenis.raf(time);
       if (lenis.isScrolling === "smooth") {
         frame = requestAnimationFrame(loop);
@@ -31,20 +30,15 @@ export function SmoothScroll() {
         lenis.time = 0;
       }
     };
-    const wake = () => {
-      if (!frame) frame = requestAnimationFrame(loop);
+    // Every animation starts in scrollTo (the wheel, anchors and code): wake the loop there.
+    const scrollTo = lenis.scrollTo.bind(lenis);
+    lenis.scrollTo = (target, options) => {
+      scrollTo(target, options);
+      if (!options?.immediate && !frame) frame = requestAnimationFrame(loop);
     };
-    // Touch scrolling is native (syncTouch off): only the wheel needs the loop
-    const stopWaking = lenis.on("virtual-scroll", ({ event }) => {
-      if (event.type === "wheel") wake();
-    });
-    setSmoothScroll(lenis, wake);
+    setSmoothScroll(lenis);
 
-    let stopped = false;
     const stop = () => {
-      if (stopped) return;
-      stopped = true;
-      stopWaking();
       cancelAnimationFrame(frame);
       lenis.destroy();
       setSmoothScroll(null);

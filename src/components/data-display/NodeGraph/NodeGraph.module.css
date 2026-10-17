@@ -110,6 +110,12 @@
   }
 }
 
+/* Off screen (PauseOffscreen): the loops wait where they are */
+.frame[data-paused] .edgeFlow,
+.frame[data-paused] .pulse {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animated .edgeFlow,
   .animated .pulse {

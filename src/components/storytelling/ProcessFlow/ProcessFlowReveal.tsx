@@ -63,7 +63,12 @@ export function ProcessFlowReveal({ stepDuration = 450, ...props }: ProcessFlowR
 
   return (
     <div ref={ref}>
-      <ProcessFlow {...props} activeIndex={activeIndex} />
+      <ProcessFlow
+        {...props}
+        activeIndex={activeIndex}
+        // At rest the last step is only highlighted, not "current"
+        announceCurrent={activeIndex !== null && activeIndex < last}
+      />
     </div>
   );
 }

@@ -20,6 +20,11 @@ export type ProcessFlowProps = {
    * Leave undefined for a static, fully reached flow.
    */
   activeIndex?: number | null;
+  /**
+   * Announce the current step to assistive tech (`aria-current="step"`). Off for a
+   * conceptual chain at rest, where no step is "current" for the reader.
+   */
+  announceCurrent?: boolean;
   /** "auto": horizontal on wide containers, vertical on narrow ones. */
   orientation?: "auto" | "horizontal" | "vertical";
   className?: string;
@@ -42,6 +47,7 @@ export function ProcessFlow({
   steps,
   label,
   activeIndex,
+  announceCurrent = true,
   orientation = "auto",
   className,
 }: ProcessFlowProps) {
@@ -56,7 +62,7 @@ export function ProcessFlow({
               key={step.id}
               className={styles.step}
               data-state={state}
-              aria-current={state === "current" ? "step" : undefined}
+              aria-current={announceCurrent && state === "current" ? "step" : undefined}
             >
               <span className={styles.node} aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}

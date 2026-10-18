@@ -157,9 +157,10 @@
   }
 }
 
-/* Static version: a plain header in the flow */
+/* Static version: a plain header in the flow, on the page's gutters as a Container */
 .static {
-  padding-block: var(--space-10) var(--space-section-compact);
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  padding: var(--space-10) var(--gutter) var(--space-section-compact);
 }
 
 .static .title {

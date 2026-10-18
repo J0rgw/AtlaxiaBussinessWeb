@@ -1,0 +1,64 @@
+.origin {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 62ch;
+}
+
+.originTitle {
+  font-size: var(--text-title);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+.originBody {
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+}
+
+.team {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Same mono label as the other eyebrows of the page */
+.teamLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* A short register, ruled like a drawing's title block */
+.members {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.member {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.name {
+  font-size: var(--text-title);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  /* Small mono text: the label grey, which passes AA where cobalt does not */
+  color: var(--color-text-muted);
+}

@@ -1,5 +1,6 @@
 .section {
-  overflow: hidden;
+  /* Horizontal only: the joint with the block above straddles the top edge */
+  overflow-x: clip;
   isolation: isolate;
 }
 

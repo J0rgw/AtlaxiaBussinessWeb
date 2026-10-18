@@ -7,10 +7,13 @@ import { SignalChart } from "@/components/data-display/SignalChart";
 import { ProcessFlowReveal } from "@/components/storytelling/ProcessFlow";
 import { ParallaxLayer, ScrollScene } from "@/components/storytelling/ScrollScene";
 import { dictionaries } from "@/content";
+import { stateAt } from "@/lib/choreography/choreography";
 import { mockIntersectionObserver } from "@/test/intersectionObserver";
-import { Building } from "./Building/Building";
-import { Capabilities } from "./Capabilities/Capabilities";
+import { About } from "./About/About";
+import { Building, cues as buildingCues } from "./Building/Building";
+import { layerOrder } from "./Building/layers";
 import { Contact } from "./Contact/Contact";
+import { Edge } from "./Edge/Edge";
 import { Hero } from "./Hero/Hero";
 import { SectorsScene } from "./Vision/SectorsScene";
 import { Vision } from "./Vision/Vision";
@@ -311,20 +314,19 @@ describe("Hero", () => {
 });
 
 describe("Vision", () => {
-  const renderVision = () => render(<Vision content={dictionaries.es.vision} />);
+  const renderVision = () =>
+    render(<Vision title={dictionaries.es.nav.vision} content={dictionaries.es.vision} />);
 
-  it("opens on the promise, which names the section, as plain readable text", () => {
+  it("is named by its navigation label", () => {
     renderVision();
 
-    expect(screen.getByRole("region", { name: dictionaries.es.vision.promise })).toHaveAttribute(
+    expect(screen.getByRole("region", { name: dictionaries.es.nav.vision })).toHaveAttribute(
       "id",
       "vision",
     );
-    const heading = screen.getByRole("heading", { level: 2 });
-    expect(heading).toHaveTextContent(dictionaries.es.vision.promise);
   });
 
-  it("closes with the two scroll scenes: where we are going, then where we start", () => {
+  it("plays the two scroll scenes: where we are going, then where we start", () => {
     const { scenes } = dictionaries.es.vision;
     renderVision();
 
@@ -341,98 +343,124 @@ describe("Vision", () => {
       scenes.sectors.items.metal.name,
     ]);
   });
-});
 
-describe("Capabilities", () => {
-  it("opens straight on the index of steps, whose label names the section", () => {
-    render(<Capabilities content={dictionaries.es.capabilities} />);
+  it("closes with why now, after the scenes, each fact with its source", () => {
+    const { scenes, evidence } = dictionaries.es.vision;
+    renderVision();
 
-    expect(screen.getByRole("region", { name: "Qué hacemos" })).toHaveAttribute(
-      "id",
-      "capabilities",
+    const headings = screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent);
+    expect(headings.at(-1)).toBe(evidence.title);
+    expect(headings.indexOf(scenes.sectors.title)).toBeLessThan(headings.indexOf(evidence.title));
+    const facts = within(screen.getByRole("list", { name: evidence.title })).getAllByRole(
+      "listitem",
     );
-    expect(screen.getByRole("heading", { level: 2, name: "Qué hacemos" })).toBeInTheDocument();
-    const index = screen.getByRole("navigation", { name: "Qué hacemos" });
-    expect(
-      within(index)
-        .getAllByRole("link")
-        .map((l) => l.textContent),
-    ).toEqual([
-      "Datos sin contexto",
-      "Relaciones entre señales",
-      "Comportamiento esperado",
-      "De entender a actuar",
-    ]);
-  });
-
-  it("gives every illustration a text alternative and keeps the five-step flow", () => {
-    const { capabilities } = dictionaries.es;
-    render(<Capabilities content={capabilities} />);
-
-    expect(
-      screen.getByRole("img", { name: capabilities.reasons.context.chartDescription }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: capabilities.reasons.relations.graphDescription }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: capabilities.reasons.behavior.chartDescription }),
-    ).toBeInTheDocument();
-    const flow = screen.getByRole("list", { name: "De los datos a la acción" });
-    expect(within(flow).getAllByRole("listitem")).toHaveLength(5);
-  });
-
-  it("renders in English", () => {
-    render(<Capabilities content={dictionaries.en.capabilities} />);
-
-    expect(screen.getByRole("heading", { level: 2, name: "What we do" })).toBeInTheDocument();
+    expect(facts).toHaveLength(3);
+    expect(within(facts[0]!).getByRole("link")).toHaveAttribute("href", evidence.items.perte.href);
   });
 });
 
 describe("Building", () => {
-  function renderBuilding(locale: "es" | "en" = "es") {
-    return render(
-      <Building
-        locale={locale}
-        eyebrow={dictionaries[locale].nav.building}
-        content={dictionaries[locale].building}
-      />,
-    );
-  }
+  const content = dictionaries.es.building;
 
-  it("presents the product as layers, from the operator down to the plant", () => {
-    renderBuilding();
-
-    const region = screen.getByRole("region", { name: "Nuestro primer producto, capa a capa" });
-    expect(region).toHaveAttribute("data-surface", "dark");
-    const list = screen.getByRole("list", { name: "Capas del producto" });
-    const rows = within(list)
-      .getAllByRole("listitem")
-      .filter((li) => li.parentElement === list);
-    expect(rows.map((row) => within(row).getByRole("heading").textContent)).toEqual([
-      "Interfaz de operación",
-      "Observado frente a esperado",
-      "Relaciones entre señales",
-      "En la planta, junto al SCADA",
-    ]);
-    expect(rows.map((row) => row.querySelector('[aria-hidden="true"]')?.textContent)).toEqual([
-      "04",
-      "03",
-      "02",
-      "01",
-    ]);
+  it("never shows two layer texts on top of each other while the scene plays", () => {
+    const visible = (state: ReturnType<typeof stateAt>, name: string) =>
+      (state.get(name)?.opacity ?? 1) > 0.15;
+    for (let progress = 0; progress <= 1; progress += 0.005) {
+      const state = stateAt(buildingCues, progress);
+      const bodies = layerOrder.filter((id) => visible(state, `body-${id}`));
+      expect(bodies.length, `progress ${progress.toFixed(3)}`).toBeLessThanOrEqual(1);
+      // A title arrives only once the text above it has gone
+      layerOrder.slice(1).forEach((id, i) => {
+        if (visible(state, `body-${layerOrder[i]}`)) {
+          expect(
+            state.get(`title-${id}`)?.opacity,
+            `${id} at ${progress.toFixed(3)}`,
+          ).toBeLessThanOrEqual(0.15);
+        }
+      });
+    }
   });
 
-  it("marks the product name as provisional and links to the demo in a new tab", () => {
-    renderBuilding();
+  it("passes the four layers from the plant up, each saying what it represents", () => {
+    render(<Building content={content} />);
 
-    const aside = screen.getByRole("complementary");
-    expect(within(aside).getByText("SCADAXIA")).toBeInTheDocument();
-    expect(aside).toHaveTextContent("Nombre provisional");
-    expect(within(aside).getAllByRole("listitem")).toHaveLength(5);
-    const demo = within(aside).getByRole("link", { name: "Ver la demo" });
+    const region = screen.getByRole("region", { name: "Un modelo de la planta en cuatro capas" });
+    expect(region).toHaveAttribute("data-surface", "dark");
+    const cards = within(region).getAllByRole("heading", { level: 3 }).slice(0, 4);
+    expect(cards.map((h) => h.textContent)).toEqual([
+      "Física",
+      "Red OT",
+      "Funcional",
+      "Influencias",
+    ]);
+    (["physical", "network", "functional", "influence"] as const).forEach((id, index) => {
+      expect(cards[index]!.nextElementSibling).toHaveTextContent(content.layers[id].body);
+    });
+    // A learned relation stays a lead, never a proven cause
+    expect(cards[3]!.nextElementSibling).toHaveTextContent("no una causa probada");
+  });
+
+  it("describes the product as it is today, without a name, and links to the demo in a new tab", () => {
+    render(<Building content={content} />);
+
+    const product = screen.getByRole("heading", { name: "En un equipo en la planta" })
+      .parentElement!.parentElement!;
+    expect(product).not.toHaveTextContent("SCADAXIA");
+    const available = screen.getByText("Telemetría en tiempo real").closest("ul")!;
+    expect(within(available).getAllByRole("listitem")).toHaveLength(5);
+    const demo = within(product).getByRole("link", { name: "Ver la demo" });
     expect(demo).toHaveAttribute("href", "https://demo.atlaxia.es");
     expect(demo).toHaveAttribute("target", "_blank");
+  });
+
+  it("ends with how it comes into a plant, the last steps looping back as it improves", () => {
+    const { container } = render(<Building content={content} />);
+
+    const steps = within(screen.getByRole("list", { name: "Cómo llega ATLAXIA a una planta" }))
+      .getAllByRole("listitem")
+      .map((step) => step.textContent);
+    expect(steps).toHaveLength(4);
+    expect(steps[1]).toContain("Nos conectamos a su red OT");
+    expect(steps[3]).toContain("El sistema mejora a medida que los operadores trabajan con él.");
+    expect(
+      Array.from(container.querySelectorAll("[data-loop]"), (el) => el.getAttribute("data-loop")),
+    ).toEqual(["", "start", "end"]);
+  });
+});
+
+describe("About", () => {
+  it("tells the origin first, then the team by name and role only", () => {
+    render(<About content={dictionaries.es.about} />);
+
+    const region = screen.getByRole("region", { name: "Quiénes somos" });
+    const headings = within(region)
+      .getAllByRole("heading")
+      .map((h) => h.textContent);
+    expect(headings).toEqual([
+      "Quiénes somos",
+      "De la investigación a la planta",
+      "Equipo fundador",
+    ]);
+    expect(region).toHaveTextContent(
+      "proyecto de inteligencia industrial para infraestructuras críticas, basado en una spin-off de la UCAM",
+    );
+    const members = within(screen.getByRole("list")).getAllByRole("listitem");
+    expect(members.map((m) => m.textContent)).toEqual(["JuanmiCEO", "DavidCTO", "JorgeCMO"]);
+  });
+});
+
+describe("Edge", () => {
+  it("reads the headline once and describes the unit; the paper copy stays hidden", () => {
+    const { container } = render(<Edge content={dictionaries.es.edge} />);
+
+    const region = screen.getByRole("region", {
+      name: "Todo el software funciona en un equipo instalado en la planta.",
+    });
+    expect(within(region).getAllByRole("heading")).toHaveLength(1);
+    expect(within(region).getByRole("img")).toHaveAccessibleName(dictionaries.es.edge.alt);
+    expect(region).toHaveTextContent(dictionaries.es.edge.lede);
+    // The knockout copy repeats the words for the eye only.
+    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(1);
   });
 });
 

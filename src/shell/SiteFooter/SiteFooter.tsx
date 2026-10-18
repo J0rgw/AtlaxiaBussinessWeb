@@ -18,9 +18,12 @@ export function SiteFooter({ locale, dict }: SiteFooterProps) {
   return (
     <footer className={styles.footer}>
       <Container className={styles.inner}>
-        <p className={styles.brand}>
-          {company.name} <span className={styles.year}>{year}</span>
-        </p>
+        <div className={styles.identity}>
+          <p className={styles.brand}>
+            {company.name} <span className={styles.year}>{year}</span>
+          </p>
+          <p>{dict.footer.tagline}</p>
+        </div>
         <a className={styles.email} href={`mailto:${company.email}`}>
           {company.email}
         </a>

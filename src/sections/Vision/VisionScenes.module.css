@@ -234,6 +234,15 @@
   letter-spacing: -0.045em;
 }
 
+.sectorNote {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
 /*
   Same 5:4 frame as the sector animations. Phones: as wide as the panel (and
   never taller than the row). Desktop: as tall as the row, width from the ratio.

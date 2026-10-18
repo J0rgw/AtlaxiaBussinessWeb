@@ -1,0 +1,238 @@
+/*
+  Device between the two blocks of a large headline.
+
+  The stage is a grid: upper lines, device row, lower lines, lede. The device
+  sits centered in the middle row and is taller than it, so it crosses the
+  lines around it.
+
+  Over the device the headline turns paper color: a copy of the two blocks
+  lives inside the device box, masked by the device's own alpha. The copy is
+  laid out at the stage width (100cqw) and placed where the real lines are,
+  so both match without measuring anything. Because the mask belongs to the
+  device box, it travels with the device; the copy only has to undo the
+  device's own movement.
+*/
+
+.showcase {
+  position: relative;
+  margin-inline: var(--frame-inset);
+  /* More room above: it follows the hero, and must read as a block of its own */
+  padding-block: calc(var(--space-section) * 1.5) var(--space-section);
+  border-inline: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stage {
+  --device-w: clamp(15rem, 8rem + 30vw, 34rem);
+  --device-h: calc(var(--device-w) * var(--device-ratio, 0.9));
+  /* Middle row: the device overflows it by (h - spacer) / 2 on each side */
+  --spacer: calc(var(--device-h) * 0.3);
+  /* From each far edge of the device to the inner edge of the block beyond it */
+  --reach: calc((var(--device-h) + var(--spacer)) / 2);
+  /* Parallax: how far apart the blocks start */
+  --drift: clamp(2.5rem, 1rem + 6vw, 7rem);
+
+  container-type: inline-size;
+  view-timeline-name: --edge-stage;
+  display: grid;
+  grid-template-rows: auto var(--spacer) auto auto;
+  /* Same box as the hero's text (Container inside the frame): the block continues its sheet */
+  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: calc(var(--gutter) - var(--frame-inset));
+}
+
+.title,
+.type {
+  font-size: clamp(2.5rem, 0.4rem + 6.6vw, 7.5rem);
+  font-weight: var(--weight-medium);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+  text-wrap: initial;
+}
+
+.title {
+  display: grid;
+  grid-row: 1 / 4;
+  grid-column: 1;
+  grid-template-rows: subgrid;
+  color: var(--color-text);
+}
+
+.upper {
+  grid-row: 1;
+  align-self: end;
+}
+
+.lower {
+  grid-row: 3;
+  align-self: start;
+}
+
+.line {
+  display: block;
+}
+
+@media (min-width: 48rem) {
+  .lower,
+  .copyLower {
+    text-align: end;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Device and knockout copy                                                */
+/* ---------------------------------------------------------------------- */
+
+.device {
+  position: relative;
+  z-index: 1;
+  grid-row: 2;
+  grid-column: 1;
+  place-self: center;
+  width: var(--device-w);
+  height: var(--device-h);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+  Contrast of the paper-colored text over the device: 4.8:1 on 95% of its
+  pixels, above 3:1 on 99% (large-text AA); only the fin highlights fall below.
+*/
+.knockout {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  color: var(--color-text-inverse);
+  mask-image: var(--device-mask);
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+}
+
+/* Same width and position as the real blocks, seen from the device box */
+.copyUpper,
+.copyLower {
+  position: absolute;
+  left: calc((100% - 100cqw) / 2);
+  width: 100cqw;
+}
+
+.copyUpper {
+  bottom: var(--reach);
+}
+
+.copyLower {
+  top: var(--reach);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Lede                                                                    */
+/* ---------------------------------------------------------------------- */
+
+.lede {
+  grid-row: 4;
+  grid-column: 1;
+  max-width: 30rem;
+  /* Clear of the device, which reaches below the lower block */
+  margin-top: max(var(--space-8), calc(var(--device-h) * 0.22));
+  font-size: var(--text-lead);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+}
+
+@media (min-width: 48rem) {
+  .lede {
+    justify-self: end;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Parallax                                                                */
+/* ---------------------------------------------------------------------- */
+
+/*
+  While the stage enters the viewport, the blocks close in on the device and
+  the device rises a little; at mid-screen the composition is complete and
+  stays. Scroll-driven, translate only (compositor), so nothing runs at rest.
+  The copy moves by its block's offset minus the device's, because it lives
+  inside the device box. Without scroll timelines, or with reduced motion,
+  the page shows the final composition.
+*/
+@supports (animation-timeline: view()) {
+  .upper,
+  .lower,
+  .lede,
+  .device,
+  .copyUpper,
+  .copyLower {
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --edge-stage;
+    animation-range: cover 0% cover 50%;
+  }
+
+  .upper {
+    animation-name: edge-upper;
+  }
+  .lower,
+  .lede {
+    animation-name: edge-lower;
+  }
+  .device {
+    animation-name: edge-device;
+  }
+  .copyUpper {
+    animation-name: edge-copy-upper;
+  }
+  .copyLower {
+    animation-name: edge-copy-lower;
+  }
+}
+
+@keyframes edge-upper {
+  from {
+    translate: 0 calc(var(--drift) * -1);
+  }
+}
+
+@keyframes edge-lower {
+  from {
+    translate: 0 var(--drift);
+  }
+}
+
+@keyframes edge-device {
+  from {
+    translate: 0 calc(var(--drift) * 0.5);
+  }
+}
+
+/* upper - device */
+@keyframes edge-copy-upper {
+  from {
+    translate: 0 calc(var(--drift) * -1.5);
+  }
+}
+
+/* lower - device */
+@keyframes edge-copy-lower {
+  from {
+    translate: 0 calc(var(--drift) * 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage * {
+    animation: none !important;
+  }
+}
+
+:global(html[data-motion="reduce"]) .stage * {
+  animation: none !important;
+}

@@ -30,7 +30,7 @@ const meta = {
       { key: "observed", label: "Observado" },
       { key: "expected", label: "Esperado" },
       { key: "band", label: "Rango esperado" },
-      { key: "deviation", label: "Desviación" },
+      { key: "deviation", label: "Anomalía" },
     ],
   },
   argTypes: { series: { control: false }, band: { control: false } },

@@ -1,0 +1,175 @@
+/*
+  Two inks only: the plant in thin grey as background, every layer in
+  cobalt. No grid and no dashes: the sheet stays quiet so each layer reads.
+*/
+
+.frame {
+  width: 100%;
+  height: 100%;
+  container-type: inline-size;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  font-family: var(--font-mono);
+}
+
+/* Strokes keep their width in pixels at any size of the sheet */
+.svg :where(rect, circle, line, path) {
+  vector-effect: non-scaling-stroke;
+}
+
+.sheet {
+  fill: var(--color-bg-raised);
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.plant {
+  fill: none;
+  stroke: var(--color-border-strong);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.plantLabel {
+  font-size: 9px;
+  font-weight: var(--weight-semibold);
+  fill: var(--color-border-strong);
+}
+
+/* Process connection of an instrument: thin and solid, as on a P&ID */
+.lead {
+  stroke: var(--color-accent);
+  stroke-width: 1;
+  stroke-opacity: 0.7;
+}
+
+.titleBlock rect,
+.titleBlock line {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.titleBlock text {
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: var(--color-text-muted);
+}
+
+.zone {
+  fill: var(--color-accent-soft);
+  fill-opacity: 0.35;
+  stroke: var(--color-accent);
+  stroke-width: 1;
+}
+
+.zoneLabel,
+.label,
+.deviceLabel {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+}
+
+.zoneLabel {
+  fill: var(--color-accent-text);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bubble {
+  fill: var(--color-bg-raised);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+.bubbleText {
+  font-size: 8px;
+  font-weight: var(--weight-semibold);
+  fill: var(--color-text);
+}
+
+.node {
+  fill: var(--color-bg-raised);
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+/* The graph's names are flat HTML (NodeLabels); the SVG text only serves without JavaScript */
+.nodeText {
+  display: none;
+  font-size: 8px;
+  font-weight: var(--weight-semibold);
+  fill: var(--color-text);
+}
+
+@media (scripting: none) {
+  .nodeText {
+    display: block;
+  }
+}
+
+.device {
+  fill: var(--color-bg-raised);
+  stroke: var(--color-accent);
+  stroke-width: 1.25;
+}
+
+.label,
+.deviceLabel {
+  fill: var(--color-text);
+}
+
+.link {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1;
+  stroke-opacity: 0.6;
+}
+
+/* The water's path: the plant's own strokes, heavier and in cobalt */
+.flow,
+.flowArrow {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.flowArrow {
+  stroke-width: 2;
+}
+
+.line,
+.relation {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.line {
+  stroke-width: 1.25;
+}
+
+/* Small sheets: the secondary labels give way, the rest grows to stay readable */
+@container (max-width: 520px) {
+  .bubbleText,
+  .titleBlock {
+    display: none;
+  }
+
+  .label,
+  .zoneLabel,
+  .deviceLabel {
+    font-size: 15px;
+  }
+}

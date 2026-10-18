@@ -8,12 +8,6 @@ export const company = {
   siteUrl: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://atlaxia.es").replace(/\/+$/, ""),
   demoUrl: "https://demo.atlaxia.es",
 
-  product: {
-    // Placeholder name agreed with the owner, not final.
-    name: "SCADAXIA",
-    nameIsPlaceholder: true,
-  },
-
   legal: {
     // TODO(legal): replace with the real legal entity, tax id and address before publishing.
     // Required for the legal notice (LSSI) and the privacy policy of the contact form.

@@ -80,3 +80,9 @@ export const Mobile: Story = {
   name: "Narrow screen (index on top)",
   globals: { viewport: { value: "mobile2", isRotated: false } },
 };
+
+/** Numbered chapters of a longer text (Forgis), as in "Quiénes somos". */
+export const Chapters: Story = {
+  name: "Chapters of a text",
+  args: { variant: "chapters", label: "Capítulos" },
+};

@@ -433,23 +433,53 @@ describe("Building", () => {
 });
 
 describe("About", () => {
-  it("tells the origin first, then the team by name and role only", () => {
-    render(<About content={dictionaries.es.about} />);
+  const content = dictionaries.es.about;
+  let io: ReturnType<typeof mockIntersectionObserver>;
 
-    const region = screen.getByRole("region", { name: "Quiénes somos" });
-    const headings = within(region)
-      .getAllByRole("heading")
-      .map((h) => h.textContent);
-    expect(headings).toEqual([
-      "Quiénes somos",
-      "De la investigación a la planta",
+  beforeEach(() => {
+    io = mockIntersectionObserver();
+  });
+  afterEach(() => io.restore());
+
+  it("tells the origin in chapters, each paragraph opening with its summary", () => {
+    render(<About content={content} />);
+
+    const region = screen.getByRole("region", { name: content.title });
+    expect(region).toHaveTextContent(content.statement);
+    const index = screen.getByRole("navigation", { name: content.chaptersLabel });
+    expect(
+      within(index)
+        .getAllByRole("link")
+        .map((l) => l.textContent),
+    ).toEqual(["01Origen", "02TRUEDATA", "03ATLAXIA", "04Equipo"]);
+    expect(
+      within(region)
+        .getAllByRole("heading", { level: 3 })
+        .map((h) => h.textContent),
+    ).toEqual([
+      "Un equipo que viene de la investigación",
+      "Probado en el agua antes de ser empresa",
+      "Del proyecto al producto",
       "Equipo fundador",
     ]);
-    expect(region).toHaveTextContent(
-      "proyecto de inteligencia industrial para infraestructuras críticas, basado en una spin-off de la UCAM",
+    for (const chapter of Object.values(content.chapters)) {
+      for (const paragraph of chapter.paragraphs) {
+        expect(region).toHaveTextContent(`${paragraph.lead} ${paragraph.text}`);
+      }
+    }
+  });
+
+  it("closes with the founding team: role, name and profile", () => {
+    render(<About content={content} />);
+
+    const members = within(screen.getByRole("list", { name: content.teamLabel })).getAllByRole(
+      "listitem",
     );
-    const members = within(screen.getByRole("list")).getAllByRole("listitem");
-    expect(members.map((m) => m.textContent)).toEqual(["JuanmiCEO", "DavidCTO", "JorgeCMO"]);
+    expect(members.map((m) => m.textContent)).toEqual([
+      "CEOJuan Miguel Navarro RuizCatedrático de Telecomunicación",
+      "CTO y desarrollo de IADavid Palazón PalauDoctorando en Telecomunicación",
+      "CMO y desarrollo full-stackJorge Arcas VerdejoEstudiante de Ingeniería Informática",
+    ]);
   });
 });
 

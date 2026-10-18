@@ -344,16 +344,89 @@ export const es = {
   },
 
   about: {
-    title: "Quiénes somos",
-    origin: {
-      title: "De la investigación a la planta",
-      body: "ATLAXIA es un proyecto de inteligencia industrial para infraestructuras críticas, basado en una spin-off de la UCAM. Su tecnología nace de TRUEDATA, un proyecto de la compra pública precomercial de INCIBE que se probó en instalaciones reales de agua. ATLAXIA es su fase de comercialización.",
+    eyebrow: "Quiénes somos",
+    // Text-led section (Forgis pattern), approved on 2026-10-18: a statement, then four chapters;
+    // each paragraph opens with the sentence that sums it up. Facts from docs/CONTENIDO.md only.
+    title: "De la investigación a la planta",
+    statement:
+      "ATLAXIA es inteligencia industrial para infraestructuras críticas. Nace en la UCAM, de un equipo que se formó colaborando en proyectos de investigación, y de una tecnología que ya se probó en instalaciones reales de agua.",
+    chaptersLabel: "Capítulos",
+    chapters: {
+      origin: {
+        label: "Origen",
+        title: "Un equipo que viene de la investigación",
+        paragraphs: [
+          {
+            lead: "Nacimos en la universidad.",
+            text: "El equipo de ATLAXIA se formó en la UCAM, colaborando en diversos proyectos de investigación. De esos proyectos sale la base técnica de la empresa.",
+          },
+          {
+            lead: "Una spin-off de la UCAM.",
+            text: "ATLAXIA es un proyecto basado en una spin-off de la universidad. La investigación es el punto de partida; la planta, el sitio donde tiene que funcionar.",
+          },
+        ],
+        record: ["UCAM", "Spin-off universitaria"],
+      },
+      truedata: {
+        label: "TRUEDATA",
+        title: "Probado en el agua antes de ser empresa",
+        paragraphs: [
+          {
+            lead: "La tecnología nace de TRUEDATA.",
+            text: "Es un proyecto de la compra pública precomercial de INCIBE, la fórmula con la que la Administración contrata el desarrollo de soluciones que todavía no existen en el mercado.",
+          },
+          {
+            lead: "Se probó en instalaciones reales de agua.",
+            text: "Con sus datos y sus condiciones de operación. Es el paso que separa una idea prometedora de una tecnología que se puede instalar.",
+          },
+        ],
+        record: ["INCIBE", "Compra pública precomercial", "Instalaciones reales de agua"],
+      },
+      company: {
+        label: "ATLAXIA",
+        title: "Del proyecto al producto",
+        paragraphs: [
+          {
+            lead: "ATLAXIA es su fase de comercialización.",
+            text: "Lo que funcionó en TRUEDATA se convierte en un producto: se instala en un equipo en cada planta, aprende de sus propios datos y trabaja junto a los sistemas que ya tiene. Los datos no salen de la planta.",
+          },
+          {
+            lead: "Lo construimos con quien opera las plantas.",
+            text: "Cada integración se ajusta con sus operadores. Buscamos plantas de agua con las que construirlo y probar el piloto.",
+          },
+        ],
+        record: ["Fase actual", "Comercialización", "Piloto abierto a plantas de agua"],
+      },
+      team: {
+        label: "Equipo",
+        title: "Equipo fundador",
+        paragraphs: [
+          {
+            lead: "Investigación, inteligencia artificial y producto.",
+            text: "Tres perfiles que cubren el camino entero: de la idea al modelo y del modelo a la planta.",
+          },
+        ],
+        record: [],
+      },
     },
     teamLabel: "Equipo fundador",
+    // Full names and academic profiles (confirmed on 2026-09-29, approved for the site on 2026-10-18).
     team: {
-      ceo: { name: "Juanmi", role: "CEO" },
-      cto: { name: "David", role: "CTO" },
-      cmo: { name: "Jorge", role: "CMO" },
+      ceo: {
+        name: "Juan Miguel Navarro Ruiz",
+        role: "CEO",
+        profile: "Catedrático de Telecomunicación",
+      },
+      cto: {
+        name: "David Palazón Palau",
+        role: "CTO y desarrollo de IA",
+        profile: "Doctorando en Telecomunicación",
+      },
+      cmo: {
+        name: "Jorge Arcas Verdejo",
+        role: "CMO y desarrollo full-stack",
+        profile: "Estudiante de Ingeniería Informática",
+      },
     },
   },
 

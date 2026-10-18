@@ -2,7 +2,7 @@
 
 Fuente de verdad para el copy. Todo lo que se publique tiene que salir de aquí o de una fuente marcada como válida. Si algo no está aquí, no se inventa: se marca como pendiente.
 
-Última actualización: 2026-10-08 (Visión: bloque "Hacia dónde vamos" con escala, hoja de ruta y sectores).
+Última actualización: 2026-10-18 (posicionamiento, home reestructurada y copy aprobado por el propietario; ver «Decisiones del propietario (2026-10-17 y 18)», que sustituyen a lo anterior donde choquen).
 
 ---
 
@@ -11,11 +11,11 @@ Fuente de verdad para el copy. Todo lo que se publique tiene que salir de aquí 
 | Tema | Hecho | Dónde vive en código |
 |---|---|---|
 | Marca | Se escribe **ATLAXIA** | `src/content/shared/company.ts` |
-| TrueData | Nombre legacy **sin ninguna relación** con ATLAXIA. No es propietaria. No mencionar | |
+| TrueData | ~~Nombre legacy sin relación con ATLAXIA. No mencionar~~ **Sustituido (2026-10-17):** TRUEDATA es el origen de la tecnología y se menciona en Quiénes somos | `about.origin` |
 | Email | `hola@atlaxia.es` | `company.ts` |
 | Demo | Se puede enlazar `https://demo.atlaxia.es` | `company.ts` |
-| Producto | Nombre provisional **SCADAXIA** (placeholder, no definitivo) | `company.ts` (`nameIsPlaceholder`) |
-| Sectores foco | Agrifood, metalurgia y agua | `vision.where.sectors` ("Dónde empezamos") |
+| Producto | ~~Nombre provisional SCADAXIA~~ **Sustituido (2026-10-17):** la web no nombra el producto | |
+| Sectores foco | ~~Agrifood, metalurgia y agua~~ **Sustituido (2026-10-17):** agua primero; agroalimentación y metalurgia solo como posible expansión | `vision.scenes.sectors` |
 | Equipo | Juan Miguel Navarro, CEO, catedrático de Telecomunicación; David Palazón Palau, CTO y desarrollo de IA, doctorando de Telecomunicación; Jorge Arcas Verdejo, CMO y desarrollo full-stack, estudiante de Ingeniería Informática | Pendiente de pasar a contenido |
 | Origen del equipo | Equipo nacido en la UCAM a partir de la colaboración en proyectos de investigación. Se puede nombrar la UCAM así; sin logo ni relación institucional | Pendiente de pasar a contenido |
 | Investigación | Adquirida en diversos proyectos de investigación | |
@@ -27,25 +27,36 @@ Fuente de verdad para el copy. Todo lo que se publique tiene que salir de aquí 
 | Piloto (2026-10-08) | ATLAXIA busca plantas de agua para colaborar y probar el piloto. Se puede publicar como invitación | Pendiente de pasar a contenido |
 | Sector del caso (2026-10-08) | Agua: el caso concreto de "Dónde empezamos" se cuenta en una instalación de agua | |
 
+## Decisiones del propietario (2026-10-17 y 18)
+
+Aprobadas para publicar. Donde choquen con lo anterior, mandan estas.
+
+- **Categoría:** «Inteligencia industrial para infraestructuras críticas» (título, meta, pie y Quiénes somos).
+- **Hero:** el texto de main («Tecnología para entender sistemas industriales complejos» y «Software para ver lo que ocurre en una planta, entender por qué y decidir a tiempo.»).
+- **Datos:** no salen de la planta en ningún caso. Todo el software funciona en un equipo instalado en la planta, sin depender de la nube (bloque del equipo, `edge`).
+- **Vocabulario:** «anomalía», nunca «desviación». «Solo lee: nunca toca el control» solo en Qué hacemos. ATLAXIA siempre en mayúsculas. Un test de contenido vigila las dos primeras reglas.
+- **Origen:** proyecto basado en una spin-off de la UCAM; la tecnología nace de TRUEDATA (compra pública precomercial de INCIBE, probada en instalaciones reales de agua). Equipo fundador: Juanmi (CEO), David (CTO) y Jorge (CMO).
+- **No se publica:** ronda de inversión, historia del fundador, Zero Trust o ZTA, research (aún no hay; lo habrá), nombre del producto.
+- **Integración:** sin nombre propio. Llegamos a la planta, nos conectamos a su red OT con los permisos que acuerde su responsable, ajustamos el modelo con los operadores y en marcha; mejora con el uso. El ahorro de tiempo se mide en cada planta con métricas pactadas antes de empezar, no se promete en cifras.
+- **Modelo:** «Técnicamente, una ontología multicapa» abre Qué construimos; las relaciones aprendidas son pistas, no causas probadas.
+- **Visión:** empieza en «Hacia dónde vamos»; se quitó el bloque «Una planta de agua no carece de datos…». Cierra con «Por qué el agua, por qué ahora» (fuentes en «Política de evidencia»).
+- **Entrada:** la web siempre se abre por el hero.
+
 ## Placeholders acordados
 
 | Qué | Estado | Recordatorio |
 |---|---|---|
 | Datos legales (razón social, NIF, domicilio, aviso legal, privacidad) | Placeholder visible en el footer | `TODO(legal)` en `company.ts` y `SiteFooter.tsx`. Obligatorio antes de publicar y antes de activar el formulario |
 | Fotos, frase por persona y LinkedIn del equipo | Placeholder | La sección de equipo es un esquema para enseñar, no la versión final |
-| Nombre del producto | SCADAXIA provisional | |
+| Nombre del producto | Sin nombre en la web (2026-10-17) | |
 
 ## Por confirmar
 
-- ¿"Supervisión de procesos" es la forma correcta de describir el primer producto? Se usa en Visión y en la columna del producto.
-- La intención "Inversión" en Contacto no estaba en la lista de AGENTS.md; se añadió por el premio y la fase de la empresa. Quitar si no procede.
-- **Hacia dónde vamos (borrador, 2026-10-08):**
-  - Nivel actual del producto: "Procesos" (ligado a "supervisión de procesos", que ya estaba por confirmar).
-  - "Siguiente: Plantas" (llevar la lectura a la planta completa y a las relaciones entre procesos) y "Objetivo: Sistemas industriales" (varias plantas o redes enteras). Son la dirección que propone el copy, no un plan confirmado.
-  - Frases de cada sector: describen el tipo de sistema de forma genérica, sin clientes ni plantas. Validar que son correctas.
-  - En español se usa "Agroalimentación" en lugar de "Agrifood" (el término que dio el propietario); en inglés, "Agrifood".
-- **Caso del agua y dirección (borrador, 2026-10-08, storyboard v3 en Storybook):** `vision.waterCase` y `vision.direction`. Textos de los cinco pasos, la frase de dirección ("Que cada aviso llegue con su porqué y con lo que se puede hacer") y la invitación al piloto. Sustituyen a las escenas de scroll rechazadas.
-- **Escenas de scroll (en la home desde 2026-10-08):** `vision.scenes`. "Hoy: Procesos", "Siguiente: Plantas completas" y "Objetivo" con la frase de objetivo siguen en borrador. Ojo: "Siguiente" es una etapa de hoja de ruta, y el enfoque aprobado era no publicar hoja de ruta (ver "Rumbo"); el propietario aprobó la escena así, pero conviene confirmarlo antes de publicar. La red de plantas del final es una ilustración de la ambición, no de clientes ni instalaciones reales.
+- **TRUEDATA:** referencia exacta del contrato de INCIBE para enlazarla como prueba. No aparece en la lista de contratos finalizados con éxito consultada el 2026-10-17.
+- **Información técnica nueva (2026-10-18), aún sin publicar:** reentreno semanal en ventanas programadas con el feedback de los operarios; histórico etiquetado de cada planta que sale de la integración y sirve para evaluar el modelo; «evaluación horizontal» con indicadores que no necesitan etiquetas; capacidad de forecasting; relaciones por causa-efecto, correlación y temporalidad sobre las capas física, funcional y red OT. Antes de publicar hay que saber qué funciona hoy, si el forecasting se ofrece (la home no promete predecir) y si las etiquetas se usan para aprender o solo para evaluar (Qué hacemos dice «sin ejemplos de fallos»).
+- **`meta.description`:** «en menos tiempo» es un comparativo sin evidencia (señalado el 2026-10-18).
+- **Visión:** las etapas «Hoy: procesos y señales de una planta» y «En construcción: la planta completa» deben seguir siendo ciertas.
+- La intención «Inversión» en Contacto no estaba en la lista de AGENTS.md; se añadió por el premio y la fase de la empresa. Quitar si no procede.
 
 ---
 
@@ -53,12 +64,13 @@ Fuente de verdad para el copy. Todo lo que se publique tiene que salir de aquí 
 
 | Sección | Estado | Dónde | Notas |
 |---|---|---|---|
-| Hero | Versión 3 (menos texto), pendiente de revisión | `hero` en `src/content/es` y `en` | Titular en un color, una frase y dos botones. Sin GNN, SCADA ni anomalías. Se quitaron el eyebrow y el cajetín (sectores y origen siguen confirmados aquí para otras secciones) |
-| Visión | Abre con una promesa de dos líneas (`vision.promise`, borrador 2026-10-14) que se lee al hacer scroll; las cuatro razones pasaron a Qué hacemos. Antes: versión 2, sin título ni entradilla (quitados el 2026-10-01), pendiente de revisión. "Hacia dónde vamos" en borrador (2026-10-08) | `vision` | Tesis de empresa válida aunque cambie el producto. Abre en "Visión" con cuatro razones (datos sin contexto, relaciones, comportamiento esperado, de entender a actuar) y cierra con "Hacia dónde vamos": la frase de objetivo, la escala (señal, equipo, proceso, planta, sistemas) con la hoja de ruta Hoy, Siguiente y Objetivo, y los tres sectores foco. Menciona "nuestro primer producto" (supervisión de procesos) sin nombre. Ilustraciones y esquemas genéricos, sin datos reales ni numeración de instrumentos real |
-| Qué estamos construyendo | Versión 1, pendiente de revisión | `building` | Solo contenido legacy verificado y conceptual: observado frente a esperado, "la alerta es la divergencia, no un umbral", cada sensor se lee junto a sus vecinos, en la planta junto al SCADA sin escribir en él, on-premise. "Un modelo de grafos" se queda en lo conceptual: sin GNN concreta, dataset ni métricas. SCADAXIA marcado como nombre provisional. Enlace a la demo |
-| Contacto | Versión 1, pendiente de revisión | `contact` | "Solicitar demo" y cinco intenciones (colaboración, investigación o universidad, partnerships, inversión, otra consulta) como correos a hola@atlaxia.es con asunto. Sin formulario hasta tener los textos legales |
-| Qué hacemos | Versión 2, pendiente de revisión (2026-10-14) | `capabilities` | Recibe el bloque que antes abría Visión: datos sin contexto, relaciones entre señales, comportamiento esperado y de entender a actuar, con sus ilustraciones genéricas. Se eliminó la versión 1 (cuatro filas con prueba) |
-| Quiénes somos | Sin redactar | | Placeholder visible. Los datos del equipo ya están confirmados arriba |
+| Hero | Aprobado (2026-10-17) | `hero` | Texto de main |
+| Bloque del equipo | Aprobado (2026-10-18) | `edge` | Titular y frase de apoyo |
+| Visión | Aprobado (2026-10-18) | `vision.scenes`, `vision.evidence` | Hacia dónde vamos, Empezamos por el agua y Por qué el agua, por qué ahora |
+| Qué hacemos | Aprobado (2026-10-18) | `capabilities` | Cinco pasos y gráfica; el paso 5 abre con «Un primer diagnóstico…» |
+| Qué estamos construyendo | Aprobado (2026-10-18) | `building` | Cuatro capas, El producto hoy, Disponible hoy, Integración |
+| Quiénes somos | Aprobado (2026-10-18) | `about` | Origen y equipo fundador |
+| Contacto | Sin cambios | `contact` | Solicitar demo y cinco intenciones por correo; sin formulario hasta tener los textos legales |
 
 "Miles de lecturas cada día" (Visión) es una afirmación genérica sobre cualquier planta, no una métrica de ATLAXIA.
 
@@ -76,6 +88,7 @@ Fuente de verdad para el copy. Todo lo que se publique tiene que salir de aquí 
   - publicar métricas;
   - detallar la arquitectura del modelo más allá de lo conceptual.
 - Los componentes de evidencia (EvidenceCard) se preparan con estado `pending` para rellenarlos cuando se decida.
+- **Fuentes externas enlazadas** (Por qué el agua, por qué ahora; comprobadas el 2026-10-17): PERTE de digitalización del ciclo del agua, 60 % de la población (iAgua, 13 de mayo de 2026); Directiva NIS2, anexo I (agua potable y aguas residuales, sectores de alta criticidad); ES-ISAC Aguas con INCIBE (11 de junio de 2026). Descartadas por no poder confirmarlas: penalidades de pliegos concretos.
 
 ---
 

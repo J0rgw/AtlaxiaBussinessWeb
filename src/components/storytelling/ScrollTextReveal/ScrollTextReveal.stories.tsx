@@ -83,3 +83,13 @@ export const OptionShort: Story = {
     lead: FUNCTIONAL,
   },
 };
+
+/** In the flow of a longer text: it lights up as it crosses the screen, nothing is pinned. */
+export const InTheFlow: Story = {
+  args: {
+    as: "p",
+    pin: false,
+    align: "start",
+    text: "ATLAXIA es inteligencia industrial para infraestructuras críticas. Nace en la UCAM, de un equipo que se formó colaborando en proyectos de investigación, y de una tecnología que ya se probó en instalaciones reales de agua.",
+  },
+};

@@ -192,6 +192,13 @@ describe("StickyIndexStory", () => {
     act(() => io.setIntersecting(panelId, false));
     expect(current()).toEqual(["Acción"]);
   });
+
+  it("numbers the entries when it reads as chapters", () => {
+    render(<StickyIndexStory items={reasons} label="Por qué" variant="chapters" />);
+
+    const links = within(screen.getByRole("navigation", { name: "Por qué" })).getAllByRole("link");
+    expect(links.map((l) => l.textContent)).toEqual(["01Contexto", "02Relaciones", "03Acción"]);
+  });
 });
 
 describe("LayerStack", () => {

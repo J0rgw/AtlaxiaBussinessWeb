@@ -27,6 +27,11 @@ export type StickyIndexStoryProps = {
   labelAs?: "p" | "h2" | "h3";
   labelId?: string;
   titleAs?: "h3" | "h4";
+  /**
+   * "reasons": large index entries next to short panels (Cerebrium "Why").
+   * "chapters": a compact numbered index next to long reading text (Forgis).
+   */
+  variant?: "reasons" | "chapters";
   className?: string;
 };
 
@@ -34,9 +39,10 @@ export type StickyIndexStoryProps = {
 const READING_LINE = "-45% 0px -45% 0px";
 
 /**
- * A pinned index of reasons (large type, the active one emphasized) next to
- * panels that scroll past it, each with a visual, a title and a text.
- * Pattern of the Cerebrium "Why" section. Index entries link to their panel.
+ * A pinned index next to panels that scroll past it, each with a visual, a
+ * title and a text; the entry of the panel being read is emphasized. Two
+ * readings: reasons in large type (Cerebrium "Why") or numbered chapters of a
+ * longer text (Forgis). Index entries link to their panel.
  */
 export function StickyIndexStory({
   items,
@@ -44,8 +50,10 @@ export function StickyIndexStory({
   labelAs: Label = "p",
   labelId,
   titleAs: Title = "h3",
+  variant = "reasons",
   className,
 }: StickyIndexStoryProps) {
+  const chapters = variant === "chapters";
   const prefix = useId();
   const isHeading = Label !== "p";
   const headingId = labelId ?? `${prefix}-label`;
@@ -74,6 +82,9 @@ export function StickyIndexStory({
               className={cx(styles.entry, i === activeIndex && styles.entryActive)}
               aria-current={i === activeIndex ? "true" : undefined}
             >
+              {chapters ? (
+                <span className={styles.number}>{String(i + 1).padStart(2, "0")}</span>
+              ) : null}
               {item.label}
             </a>
           </li>
@@ -84,10 +95,10 @@ export function StickyIndexStory({
 
   return (
     <StickyLayout
-      className={className}
+      className={cx(chapters && styles.chapters, className)}
       sticky={index}
       stickySide="start"
-      ratio="5:7"
+      ratio={chapters ? "4:8" : "5:7"}
       stickyAlign="top"
       offset="var(--space-16)"
     >

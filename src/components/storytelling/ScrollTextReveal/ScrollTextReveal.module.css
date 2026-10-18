@@ -18,6 +18,25 @@
   color: var(--color-accent-text);
 }
 
+/* Aligned with the text around it */
+[data-align="start"] .stage {
+  justify-items: start;
+  margin-inline: 0;
+  text-align: start;
+}
+
+/* In the flow it is part of a longer text: a paragraph, not a slogan */
+.track:not([data-pin]) .stage {
+  max-width: 24em;
+  font-size: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+}
+
+.track:not([data-pin]) .statement {
+  font-weight: var(--weight-medium);
+  line-height: 1.2;
+  text-wrap: pretty;
+}
+
 .statement {
   font-size: 1em;
   font-weight: var(--weight-semibold);
@@ -49,20 +68,29 @@
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     :root:not([data-motion="reduce"]) .track {
-      height: 240svh;
       view-timeline: --promise block;
     }
 
-    :root:not([data-motion="reduce"]) .stage {
+    :root:not([data-motion="reduce"]) .track[data-pin] {
+      height: 240svh;
+    }
+
+    :root:not([data-motion="reduce"]) [data-pin] .stage {
       position: sticky;
       top: 0;
       min-height: 100svh;
     }
 
-    :root:not([data-motion="reduce"]) .word {
+    :root:not([data-motion="reduce"]) [data-pin] .word {
       animation: light linear both;
       animation-timeline: --promise;
       animation-range: cover var(--from) cover var(--to);
+    }
+
+    :root:not([data-motion="reduce"]) .track:not([data-pin]) .word {
+      animation: light linear both;
+      animation-timeline: --promise;
+      animation-range: contain var(--from) contain var(--to);
     }
 
     :root:not([data-motion="reduce"]) .lead {

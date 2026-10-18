@@ -13,6 +13,31 @@ const flowSteps = [
 ];
 
 describe("ProcessFlow", () => {
+  it("draws a feedback loop from the last step back to the one it names, hidden from assistive tech", () => {
+    const { container } = render(
+      <ProcessFlow
+        steps={flowSteps}
+        label="Flujo"
+        loop={{ from: 0, label: "Mejora con el uso" }}
+      />,
+    );
+
+    const parts = Array.from(container.querySelectorAll("li > [data-loop]"));
+    expect(parts.map((el) => el.getAttribute("data-loop"))).toEqual(["start", "through", "end"]);
+    for (const part of parts) expect(part).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByText("Mejora con el uso").closest('[aria-hidden="true"]')).not.toBeNull();
+  });
+
+  it("draws no loop when it does not start before the last step (an indexOf miss is -1)", () => {
+    for (const from of [-1, 2]) {
+      const { container, unmount } = render(
+        <ProcessFlow steps={flowSteps} label="Flujo" loop={{ from }} />,
+      );
+      expect(container.querySelector("[data-loop]")).toBeNull();
+      unmount();
+    }
+  });
+
   it("is a labelled ordered list with every step reached when static", () => {
     render(<ProcessFlow steps={flowSteps} label="De los datos a la acción" />);
 

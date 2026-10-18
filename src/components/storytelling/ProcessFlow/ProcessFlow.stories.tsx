@@ -102,3 +102,17 @@ export const NarrowContainer: Story = {
     </div>
   ),
 };
+
+/** The last step loops back to an earlier one: a process that keeps improving with use. */
+export const FeedbackLoop: Story = {
+  args: {
+    label: "Cómo llega a una planta",
+    steps: [
+      { id: "arrive", label: "Llegamos a la planta" },
+      { id: "connect", label: "Nos conectamos a su red OT" },
+      { id: "adapt", label: "Ajustamos el modelo con los operadores" },
+      { id: "run", label: "En marcha" },
+    ],
+    loop: { from: 2, label: "Mejora con el uso" },
+  },
+};

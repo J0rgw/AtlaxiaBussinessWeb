@@ -27,10 +27,24 @@ export type ProcessFlowProps = {
   announceCurrent?: boolean;
   /** "auto": horizontal on wide containers, vertical on narrow ones. */
   orientation?: "auto" | "horizontal" | "vertical";
+  /**
+   * Feedback loop: after the last step the flow returns to step `from`, drawn
+   * as a return line once the last step is reached. `label` names it on wide
+   * layouts only and is hidden from assistive tech: say it in the steps too.
+   */
+  loop?: { from: number; label?: string };
   className?: string;
 };
 
 type StepState = "reached" | "current" | "pending";
+
+type LoopPart = "start" | "through" | "end";
+
+function loopPart(index: number, last: number, from: number | undefined): LoopPart | null {
+  if (from === undefined || index < from) return null;
+  if (index === from) return "start";
+  return index === last ? "end" : "through";
+}
 
 function stateFor(index: number, activeIndex: number | null | undefined): StepState {
   if (activeIndex === undefined) return "reached";
@@ -49,14 +63,22 @@ export function ProcessFlow({
   activeIndex,
   announceCurrent = true,
   orientation = "auto",
+  loop,
   className,
 }: ProcessFlowProps) {
+  const last = steps.length - 1;
+  // A loop must start on a step before the last one (an indexOf miss gives -1)
+  const loopFrom = loop && loop.from >= 0 && loop.from < last ? loop.from : undefined;
   return (
-    <div className={cx(styles.container, className)}>
+    <div
+      className={cx(styles.container, className)}
+      data-loop={loopFrom === undefined ? undefined : ""}
+    >
       <ol role="list" aria-label={label} className={styles.flow} data-orientation={orientation}>
         {steps.map((step, index) => {
           const state = stateFor(index, activeIndex);
-          const nextState = index < steps.length - 1 ? stateFor(index + 1, activeIndex) : null;
+          const nextState = index < last ? stateFor(index + 1, activeIndex) : null;
+          const part = loopPart(index, last, loopFrom);
           return (
             <li
               key={step.id}
@@ -73,6 +95,13 @@ export function ProcessFlow({
                   data-filled={nextState !== "pending" ? "" : undefined}
                   aria-hidden="true"
                 />
+              ) : null}
+              {part ? (
+                <span className={styles.loop} data-loop={part} aria-hidden="true">
+                  {part === "start" && loop?.label ? (
+                    <span className={styles.loopLabel}>{loop.label}</span>
+                  ) : null}
+                </span>
               ) : null}
               <span className={styles.text}>
                 {step.meta ? <span className={styles.meta}>{step.meta}</span> : null}

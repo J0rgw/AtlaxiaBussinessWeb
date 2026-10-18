@@ -45,7 +45,7 @@ export const es = {
     // Lines above the unit; the rest go below it.
     split: 2,
     // TODO(owner): approve the lede.
-    lede: "Los datos no salen de la planta. Cada planta tiene su propio sistema y no depende de la nube para funcionar.",
+    lede: "Los datos no salen de la planta. Cada planta tiene su propio modelo, entrenado con sus datos, y no depende de la nube para funcionar.",
     alt: "Equipo de ATLAXIA: un miniPC negro con disipador de aletas y el símbolo de ATLAXIA en la tapa.",
   },
 
@@ -196,7 +196,7 @@ export const es = {
       },
       normal: {
         title: "Aprende lo normal",
-        body: "Aprende cómo se mueven juntas las señales con datos de funcionamiento normal de la propia planta, sin ejemplos de fallos. Así estima el valor esperado de cada una.",
+        body: "Aprende cómo se mueven juntas las señales con datos de funcionamiento normal de la propia planta, sin ejemplos de fallos. En cada instante comprueba si lo que ve encaja con lo esperado.",
       },
       mismatch: {
         title: "Detecta el desajuste",
@@ -230,7 +230,7 @@ export const es = {
     },
     inside: {
       label: "Por dentro",
-      body: "Una red neuronal de grafos trata cada señal como un nodo y aprende qué señales se influyen entre sí. Una relación aprendida es una pista para revisar, no una causa probada.",
+      body: "Una red neuronal de grafos trata cada señal como un nodo y aprende qué señales se influyen entre sí. Que el modelo se entienda importa tanto como que acierte: cada aviso se explica con los equipos, procesos y señales de su planta.",
     },
   },
 
@@ -256,7 +256,7 @@ export const es = {
       },
       influence: {
         name: "Influencias",
-        body: "Qué señales se influyen entre sí, según aprende el modelo de los datos. Una relación aprendida es una pista, no una causa probada.",
+        body: "La que aprende el modelo sobre las otras tres: qué señal influye en cuál, con qué fuerza y con cuánto retardo. Una relación aprendida es una pista, no una causa probada.",
       },
     },
     plan: {
@@ -269,14 +269,21 @@ export const es = {
     product: {
       eyebrow: "El producto hoy",
       title: "En un equipo en la planta",
-      body: "Se conecta a lo que ya tiene y no lo sustituye: trabaja junto a su SCADA, su historizador y sus herramientas de ciberseguridad. Sus datos no salen de la planta.",
+      body: "Un gemelo digital del comportamiento de su planta. Se conecta a lo que ya tiene y no lo sustituye: trabaja junto a su SCADA, su historizador y sus herramientas de ciberseguridad. Sus datos no salen de la planta.",
       availableLabel: "Disponible hoy",
       available: [
         "Telemetría en tiempo real",
         "Nivel de anomalía de 0 a 5",
         "Alarmas según su gravedad",
-        "Detección de fallos",
+        "Detección y localización de fallos",
         "Metodología de integración en planta",
+        "Reentreno semanal con sus operadores",
+      ],
+      // TODO(owner): approve. Projection, kept apart from what is available today.
+      nextLabel: "En desarrollo",
+      next: [
+        "Previsión de la evolución de la planta",
+        "Toda la planta en un solo modelo de cuatro capas",
       ],
       demoCta: "Ver la demo",
     },
@@ -289,7 +296,7 @@ export const es = {
       // The brief's answer to "how much time does it save?": no figures, a measurement.
       measure:
         "¿Cuánto tiempo ahorra en su planta? Lo medimos allí, con métricas pactadas antes de empezar.",
-      loop: "Mejora con el uso",
+      loop: "Mejora cada semana",
       steps: {
         arrive: {
           label: "Llegamos a la planta",
@@ -303,11 +310,12 @@ export const es = {
         adapt: {
           label: "Ajustamos el modelo con los operadores",
           description:
-            "Lo entrenamos con un tramo de funcionamiento normal y lo pulimos con ellos hasta adaptarlo a la planta.",
+            "Lo entrenamos con un tramo de funcionamiento normal y lo pulimos con ellos. De esta fase sale un histórico etiquetado de su planta, con el que medimos cuánto acierta.",
         },
         run: {
           label: "En marcha",
-          description: "El sistema mejora a medida que los operadores trabajan con él.",
+          description:
+            "Cada semana, en una ventana programada, el modelo se reentrena con lo que le indican los operadores.",
         },
       },
     },

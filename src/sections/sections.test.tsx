@@ -407,7 +407,11 @@ describe("Building", () => {
       .parentElement!.parentElement!;
     expect(product).not.toHaveTextContent("SCADAXIA");
     const available = screen.getByText("Telemetría en tiempo real").closest("ul")!;
-    expect(within(available).getAllByRole("listitem")).toHaveLength(5);
+    expect(within(available).getAllByRole("listitem")).toHaveLength(6);
+    // What is in development stays apart from what is available today
+    const next = screen.getByText(content.product.next[0]!).closest("ul")!;
+    expect(next).not.toBe(available);
+    expect(within(next).getAllByRole("listitem")).toHaveLength(content.product.next.length);
     const demo = within(product).getByRole("link", { name: "Ver la demo" });
     expect(demo).toHaveAttribute("href", "https://demo.atlaxia.es");
     expect(demo).toHaveAttribute("target", "_blank");
@@ -421,7 +425,7 @@ describe("Building", () => {
       .map((step) => step.textContent);
     expect(steps).toHaveLength(4);
     expect(steps[1]).toContain("Nos conectamos a su red OT");
-    expect(steps[3]).toContain("El sistema mejora a medida que los operadores trabajan con él.");
+    expect(steps[3]).toContain(content.method.steps.run.description);
     expect(
       Array.from(container.querySelectorAll("[data-loop]"), (el) => el.getAttribute("data-loop")),
     ).toEqual(["", "start", "end"]);

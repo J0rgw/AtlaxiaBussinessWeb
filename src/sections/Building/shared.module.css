@@ -47,7 +47,10 @@
   display: grid;
 }
 
+/* The mark hangs: a long item wraps under its text, not under the mark */
 .availableList li {
+  display: flex;
+  gap: var(--space-3);
   padding-block: var(--space-3);
   border-bottom: 1px solid var(--color-border);
   font-weight: var(--weight-medium);
@@ -55,13 +58,27 @@
 
 .availableList li::before {
   content: "";
-  display: inline-block;
+  flex: none;
   width: 7px;
   height: 7px;
-  margin-right: var(--space-3);
+  /* Centered on the first line */
+  margin-top: calc((1lh - 7px) / 2);
   border-radius: 50%;
   background: var(--color-accent);
-  vertical-align: 0.1em;
+}
+
+/* In development: same list, hollow marks and quieter text, apart from what runs today */
+.nextLabel {
+  margin-top: var(--space-4);
+}
+
+.next li {
+  color: var(--color-text-secondary);
+}
+
+.next li::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--color-accent);
 }
 
 .demo {

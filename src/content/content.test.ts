@@ -36,6 +36,27 @@ describe("content dictionaries", () => {
     }
   });
 
+  // Owner's wording rules (2026-10-17)
+  const text = (leaf: Leaf) =>
+    typeof leaf.value === "string"
+      ? leaf.value
+      : Array.isArray(leaf.value)
+        ? leaf.value.join(" ")
+        : "";
+
+  it("calls what the model flags an anomaly, never a deviation", () => {
+    for (const leaf of [...esLeaves, ...enLeaves]) {
+      expect(text(leaf), leaf.path).not.toMatch(/desviaci|deviation/i);
+    }
+  });
+
+  it("says the system only reads in one place: What we do", () => {
+    const where = (all: Leaf[], phrase: RegExp) =>
+      all.filter((leaf) => phrase.test(text(leaf))).map((leaf) => leaf.path);
+    expect(where(esLeaves, /solo lee/i)).toEqual(["capabilities.steps.observe.note"]);
+    expect(where(enLeaves, /only reads/i)).toEqual(["capabilities.steps.observe.note"]);
+  });
+
   it("falls back to Spanish for unknown locales", () => {
     expect(getDictionary("fr")).toBe(dictionaries.es);
     expect(getDictionary("")).toBe(dictionaries.es);

@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { dictionaries } from "@/content";
+import { About } from "./About/About";
 import { Building } from "./Building/Building";
 import { Capabilities } from "./Capabilities/Capabilities";
 import { Contact } from "./Contact/Contact";
+import { Edge } from "./Edge/Edge";
 import { Hero } from "./Hero/Hero";
 import { Vision } from "./Vision/Vision";
 
@@ -27,12 +29,12 @@ export const HeroEn: Story = {
 
 export const VisionEs: Story = {
   name: "Vision (ES)",
-  render: () => <Vision content={dictionaries.es.vision} />,
+  render: () => <Vision title={dictionaries.es.nav.vision} content={dictionaries.es.vision} />,
 };
 
 export const VisionEn: Story = {
   name: "Vision (EN)",
-  render: () => <Vision content={dictionaries.en.vision} />,
+  render: () => <Vision title={dictionaries.en.nav.vision} content={dictionaries.en.vision} />,
 };
 
 export const HeroMobile: Story = {
@@ -44,29 +46,24 @@ export const HeroMobile: Story = {
 export const VisionMobile: Story = {
   name: "Vision (ES, narrow screen)",
   globals: { viewport: { value: "mobile2", isRotated: false } },
-  render: () => <Vision content={dictionaries.es.vision} />,
+  render: () => <Vision title={dictionaries.es.nav.vision} content={dictionaries.es.vision} />,
 };
 
+/** Scroll the canvas to lay the sheets. */
 export const BuildingEs: Story = {
   name: "Building (ES)",
-  render: () => (
-    <Building
-      locale="es"
-      eyebrow={dictionaries.es.nav.building}
-      content={dictionaries.es.building}
-    />
-  ),
+  render: () => <Building content={dictionaries.es.building} />,
 };
 
 export const BuildingEn: Story = {
   name: "Building (EN)",
-  render: () => (
-    <Building
-      locale="en"
-      eyebrow={dictionaries.en.nav.building}
-      content={dictionaries.en.building}
-    />
-  ),
+  render: () => <Building content={dictionaries.en.building} />,
+};
+
+export const BuildingMobile: Story = {
+  name: "Building (ES, narrow screen)",
+  globals: { viewport: { value: "mobile2", isRotated: false } },
+  render: () => <Building content={dictionaries.es.building} />,
 };
 
 export const ContactEs: Story = {
@@ -99,4 +96,24 @@ export const CapabilitiesMobile: Story = {
   name: "Capabilities (ES, narrow screen)",
   globals: { viewport: { value: "mobile2", isRotated: false } },
   render: () => <Capabilities content={dictionaries.es.capabilities} />,
+};
+
+export const EdgeEs: Story = {
+  name: "Edge (ES)",
+  render: () => <Edge content={dictionaries.es.edge} />,
+};
+
+export const EdgeEn: Story = {
+  name: "Edge (EN)",
+  render: () => <Edge content={dictionaries.en.edge} />,
+};
+
+export const AboutEs: Story = {
+  name: "About (ES)",
+  render: () => <About content={dictionaries.es.about} />,
+};
+
+export const AboutEn: Story = {
+  name: "About (EN)",
+  render: () => <About content={dictionaries.en.about} />,
 };

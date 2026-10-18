@@ -1,0 +1,201 @@
+/* Color roles are the shared signal tokens (tokens.css), as in SignalChart. */
+
+.figure {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+  container-type: inline-size;
+}
+
+/* Blueprint sheet (Matta reference): raised surface over a fine grid */
+.frame {
+  padding: clamp(var(--space-3), 2vw, var(--space-6));
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-raised);
+  background-image:
+    linear-gradient(var(--color-signal-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-signal-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+}
+
+/* Every sheet covers the same box; the box takes the ratio of the drawing in use */
+.sheets {
+  position: relative;
+  aspect-ratio: var(--narrow-ratio);
+}
+
+.sheet {
+  position: absolute;
+  inset: 0;
+}
+
+.sheet svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.wide {
+  display: none;
+}
+
+@container (min-width: 32rem) {
+  .sheets {
+    aspect-ratio: var(--wide-ratio);
+  }
+
+  .wide {
+    display: block;
+  }
+
+  .narrow {
+    display: none;
+  }
+}
+
+.axis {
+  stroke: var(--color-border);
+}
+
+.tick,
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  fill: var(--color-text-muted);
+}
+
+.strong {
+  fill: var(--color-text);
+}
+
+.accent {
+  fill: var(--color-accent-text);
+}
+
+.alert {
+  fill: var(--color-signal-deviation);
+}
+
+.measured,
+.expected,
+.context {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.measured {
+  stroke: var(--color-signal-observed);
+  stroke-width: 1.75;
+}
+
+.expected {
+  stroke: var(--color-signal-expected);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+
+/*
+  Opaque on purpose: Chromium paints this light lab() color yellow when it
+  carries alpha inside a parent that is fading (seen in Chromium 141).
+*/
+.band {
+  fill: var(--color-accent-soft);
+}
+
+.context {
+  stroke: var(--color-border-strong);
+  stroke-width: 1.25;
+}
+
+.guide {
+  stroke: var(--color-signal-expected);
+  stroke-dasharray: 2 3;
+  opacity: 0.7;
+}
+
+.anomaly {
+  fill: var(--color-signal-deviation);
+  opacity: 0.07;
+}
+
+.usual {
+  fill: var(--color-signal-expected);
+  opacity: 0.05;
+}
+
+.limit {
+  stroke: var(--color-border-strong);
+  stroke-dasharray: 2 3;
+}
+
+.marker {
+  fill: none;
+  stroke: var(--color-signal-deviation);
+  stroke-width: 1.5;
+}
+
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.captionLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-chip);
+  background: var(--color-bg-raised);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.chip b {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.hot {
+  border-color: var(--color-signal-deviation);
+}
+
+.hot b {
+  color: var(--color-signal-deviation);
+}
+
+@container (max-width: 24rem) {
+  .chip {
+    font-size: var(--text-xs);
+    padding: 0.125rem var(--space-2);
+    gap: var(--space-1);
+  }
+}

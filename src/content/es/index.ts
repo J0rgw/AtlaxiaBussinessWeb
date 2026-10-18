@@ -6,9 +6,9 @@ import type { NavSectionId } from "../shared/sections";
  */
 export const es = {
   meta: {
-    title: "ATLAXIA",
+    title: "ATLAXIA | Inteligencia industrial para infraestructuras críticas",
     description:
-      "ATLAXIA desarrolla software, inteligencia aplicada y herramientas de visualización para sistemas industriales complejos.",
+      "Inteligencia industrial para infraestructuras críticas del agua. Detecta y diagnostica anomalías en menos tiempo, y los datos no salen de la planta.",
   },
 
   a11y: {
@@ -39,10 +39,44 @@ export const es = {
     secondaryCta: "Ver qué construimos",
   },
 
+  // Block right after the hero: the unit at the center of the headline.
+  edge: {
+    lines: ["Todo el software", "funciona en un equipo", "instalado en la planta."],
+    // Lines above the unit; the rest go below it.
+    split: 2,
+    // TODO(owner): approve the lede.
+    lede: "Los datos no salen de la planta. Cada planta tiene su propio sistema y no depende de la nube para funcionar.",
+    alt: "Equipo de ATLAXIA: un miniPC negro con disipador de aletas y el símbolo de ATLAXIA en la tapa.",
+  },
+
   vision: {
-    // Promise that opens the section, revealed word by word as the page scrolls.
-    promise:
-      "Construimos software para que quien opera una planta entienda qué ocurre y por qué, antes de que se convierta en un problema.",
+    // Why now: facts from outside ATLAXIA, each with its source (checked on 2026-10-17).
+    evidence: {
+      title: "Por qué el agua, por qué ahora",
+      sourceLabel: "Fuente",
+      items: {
+        perte: {
+          figure: "60 %",
+          statement:
+            "de la población está ya en el alcance del PERTE que digitaliza el ciclo del agua.",
+          source: "iAgua, 13 may 2026",
+          href: "https://www.iagua.es/noticias/redaccion-iagua/perte-digitaliza-agua-6-cada-10-espanoles",
+        },
+        nis2: {
+          figure: "NIS2",
+          statement:
+            "La directiva europea clasifica el agua potable y las aguas residuales como sectores de alta criticidad.",
+          source: "Directiva (UE) 2022/2555, anexo I",
+          href: "https://eur-lex.europa.eu/eli/dir/2022/2555/oj",
+        },
+        isac: {
+          figure: "ES-ISAC Aguas",
+          statement: "El sector ya comparte información de ciberseguridad con INCIBE.",
+          source: "INCIBE, 11 jun 2026",
+          href: "https://www.incibe.es/empresas/blog/quinta-comision-de-seguimiento-del-es-isac-aguas",
+        },
+      },
+    },
     // Water case ("Dónde empezamos") and direction ("Hacia dónde vamos"), storyboard v3.
     waterCase: {
       title: "Dónde empezamos",
@@ -66,7 +100,7 @@ export const es = {
       },
       status: {
         normal: "Normal",
-        deviation: "Desviación",
+        deviation: "Anomalía",
         stable: "Estable",
         up: "Sube",
         down: "Baja",
@@ -94,7 +128,7 @@ export const es = {
       invitation: "Buscamos plantas de agua con las que construirlo y probar el piloto.",
       cta: "Colaborar en el piloto",
       card: {
-        title: "Desviación en la bomba B-101",
+        title: "Anomalía en la bomba B-101",
         where: "Dónde",
         whereValue: "Bomba B-101, impulsión",
         related: "Señales relacionadas",
@@ -102,40 +136,43 @@ export const es = {
         what: "Qué hacer",
       },
     },
-    // Scroll scenes for "Hacia dónde vamos" (A) and "Dónde empezamos" (B), shown in Storybook.
+    // Scroll scenes for "Hacia dónde vamos" (A) and where it starts and could grow (B).
     scenes: {
       where: {
         title: "Hacia dónde vamos",
-        stagesLabel: "Hoja de ruta",
+        stagesLabel: "De la señal a la infraestructura",
         description:
-          "Animación: la cámara se aleja de un sensor en una tubería. Aparece el proceso en el que trabajamos hoy, con sus señales relacionadas; después, la planta completa en trazo discontinuo y, al final, varias plantas conectadas en red.",
+          "Animación: la cámara se aleja de un sensor en una tubería. Aparece el proceso, con sus señales relacionadas; después, la planta completa en trazo discontinuo y, al final, varias instalaciones del ciclo del agua.",
         stages: {
-          today: { word: "Hoy", detail: "Procesos" },
-          next: { word: "Siguiente", detail: "Plantas completas" },
+          today: { word: "Hoy", detail: "Procesos y señales de una planta" },
+          next: { word: "En construcción", detail: "La planta completa, en cuatro capas" },
           goal: {
-            word: "Objetivo",
+            word: "Dirección",
             detail:
-              "Que cualquier sistema industrial pueda entenderse con la misma precisión con la que hoy se mide.",
+              "Infraestructuras del agua completas, de la captación a la depuración: ETAP, redes y EDAR.",
           },
         },
       },
       sectors: {
-        title: "Dónde empezamos",
+        title: "Empezamos por el agua",
         items: {
           water: {
             name: "Agua",
+            note: "Donde empezamos",
             description:
               "Animación: una red de agua se dibuja desde el depósito, el agua la recorre y los sensores de nivel, presión y caudal se relacionan.",
           },
           food: {
             name: "Agroalimentación",
+            note: "Posible expansión",
             description:
-              "Animación: un tanque por lotes se llena y se agita; al lado, el rango esperado de temperatura cambia en cada fase y la señal medida lo sigue.",
+              "Animación de un posible sector de expansión: un tanque por lotes se llena y se agita; al lado, el rango esperado de temperatura cambia en cada fase y la señal medida lo sigue.",
           },
           metal: {
             name: "Metalurgia",
+            note: "Posible expansión",
             description:
-              "Animación: una pieza sale del horno y se adelgaza al pasar por dos cajas de laminación; los sensores de temperatura, vibración y energía se relacionan.",
+              "Animación de un posible sector de expansión: una pieza sale del horno y se adelgaza al pasar por dos cajas de laminación; los sensores de temperatura, vibración y energía se relacionan.",
           },
         },
       },
@@ -143,131 +180,150 @@ export const es = {
   },
 
   capabilities: {
-    indexLabel: "Qué hacemos",
-    reasons: {
-      context: {
-        label: "Datos sin contexto",
-        title: "Una lectura aislada dice poco",
-        body: "Una planta genera miles de lecturas cada día. Cada una, por separado, es solo un número: no dice si es normal ni qué la provoca.",
-        chartDescription:
-          "Ilustración: varias señales industriales a lo largo del tiempo, sin ningún contexto que ayude a interpretarlas.",
+    eyebrow: "Qué hacemos",
+    title: "Vigilamos que la planta funcione como un todo",
+    lead: "Una planta es un sistema dinámico: cuando la bomba arranca, sube el caudal y baja el nivel. ATLAXIA observa el estado de la planta y vigila que sus señales sigan cuadrando entre sí. Cuando algo se desajusta, lo detecta aunque no sea evidente y señala dónde está.",
+    stepsLabel: "Qué hace ATLAXIA, paso a paso",
+    steps: {
+      observe: {
+        title: "Observa",
+        body: "El estado de la planta: medidas de sensores y estados de actuadores.",
+        note: "Solo lee: nunca toca el control.",
       },
-      relations: {
-        label: "Relaciones entre señales",
-        title: "Cada señal depende de otras",
-        body: "La presión, el caudal o la temperatura no cambian solos. Entender un sistema es entender cómo se influyen sus partes.",
-        graphDescription:
-          "Ilustración de una red de señales industriales. La presión ocupa el centro y se relaciona de forma directa con el caudal, la temperatura y el nivel; el resto de señales completa el sistema.",
-        nodes: {
-          pressure: "Presión",
-          flow: "Caudal",
-          temperature: "Temperatura",
-          level: "Nivel",
-          vibration: "Vibración",
-          energy: "Energía",
-          humidity: "Humedad",
-          speed: "Velocidad",
-        },
+      system: {
+        title: "Ve un sistema",
+        body: "Las señales no cambian solas. Cuando la bomba arranca, sube el caudal de salida y baja el nivel del depósito. Una señal se entiende junto a las demás.",
       },
-      behavior: {
-        label: "Comportamiento esperado",
-        title: "Lo normal cambia con el proceso",
-        body: "Lo que es normal en una fase del proceso no lo es en otra. Por eso importa saber qué se espera en cada momento, y no solo si se cruza un umbral fijo.",
-        chartDescription:
-          "Ilustración: una señal observada frente a su comportamiento esperado. Al final, la señal se sale del rango esperado.",
-        legend: {
-          observed: "Observado",
-          expected: "Esperado",
-          band: "Rango esperado",
-          deviation: "Desviación",
-        },
+      normal: {
+        title: "Aprende lo normal",
+        body: "Aprende cómo se mueven juntas las señales con datos de funcionamiento normal de la propia planta, sin ejemplos de fallos. Así estima el valor esperado de cada una.",
       },
-      action: {
-        label: "De entender a actuar",
-        title: "Comprender para decidir",
-        body: "Quien opera un sistema industrial complejo no necesita más datos: necesita entenderlos a tiempo. ATLAXIA nace para acortar esa distancia, de los datos a la comprensión y de la comprensión a la decisión.",
+      mismatch: {
+        title: "Detecta el desajuste",
+        body: "La bomba y el caudal siguen su ritmo, pero el nivel ya no baja como debería. Todo sigue dentro de los límites y a simple vista parece normal. ATLAXIA lo marca como anomalía; un umbral fijo esperaría a que el nivel lo cruzara.",
+      },
+      where: {
+        title: "Señala dónde",
+        body: "Un primer diagnóstico cuando algo se aparta de lo normal: qué señal y qué proceso, con un nivel de anomalía de 0 a 5 por sensor, por proceso y para la planta. También avisa cuando una señal cruza los límites del operador.",
+        note: "La decisión sigue siendo suya.",
       },
     },
-    flow: {
-      label: "De los datos a la acción",
+    chart: {
+      label: "Ilustración",
+      description:
+        "Ilustración: nivel de un depósito a lo largo de un día, con el estado de la bomba y el caudal de salida debajo. Cada vez que la bomba arranca, el caudal sube y el nivel baja. El modelo estima el nivel esperado y su rango. Hacia el final, la bomba y el caudal siguen como siempre, pero el nivel deja de bajar: se aparta de lo esperado sin llegar al límite del operador. ATLAXIA lo marca como anomalía y señala el nivel del depósito, en el proceso de bombeo.",
+      signals: {
+        level: "nivel del depósito",
+        pump: "bomba, marcha / paro",
+        outflow: "caudal de salida",
+      },
+      notes: {
+        coherence: "la bomba arranca, sube el caudal y baja el nivel",
+        coherenceShort: "bomba en marcha: baja el nivel",
+        limit: "límite del operador",
+        anomaly: "anomalía",
+        usual: "bomba y caudal, como siempre",
+        here: "aquí",
+      },
+      levelsLabel: "Nivel de anomalía, de 0 a 5",
+      levels: { sensor: "nivel", process: "Bombeo", plant: "Planta" },
+    },
+    inside: {
+      label: "Por dentro",
+      body: "Una red neuronal de grafos trata cada señal como un nodo y aprende qué señales se influyen entre sí. Una relación aprendida es una pista para revisar, no una causa probada.",
+    },
+  },
+
+  // Four layers of the plant model, laid like tracing sheets over one plan (P&ID of a pumping station).
+  building: {
+    eyebrow: "Qué estamos construyendo",
+    title: "Un modelo de la planta en cuatro capas",
+    // TODO(owner): approve. Names the model as the multi-layer ontology, in plain words.
+    lead: "Técnicamente, una ontología multicapa: qué hay en la planta y cómo se relaciona cada parte con las demás. Hoy ATLAXIA relaciona procesos y señales y aprende cuáles se influyen entre sí.",
+    sketch: "Esquema",
+    layers: {
+      physical: {
+        name: "Física",
+        body: "Lo que hay en la planta: procesos, equipos y depósitos, y la señal de cada sensor.",
+      },
+      network: {
+        name: "Red OT",
+        body: "Por dónde viajan los datos: controladores, SCADA y comunicaciones. La red se puede escuchar sin intervenir en ella.",
+      },
+      functional: {
+        name: "Funcional",
+        body: "Cómo se encadena el proceso: qué etapa alimenta a cuál y qué reglas conoce la ingeniería.",
+      },
+      influence: {
+        name: "Influencias",
+        body: "Qué señales se influyen entre sí, según aprende el modelo de los datos. Una relación aprendida es una pista, no una causa probada.",
+      },
+    },
+    plan: {
+      title: "Estación de bombeo",
+      zones: { intake: "Captación", pumping: "Bombeo", distribution: "Distribución" },
+      devices: { scada: "SCADA", historian: "Historizador" },
+      description:
+        "Esquema de una estación de bombeo: depósito, bomba y conducción a la red. Sobre él se superponen cuatro láminas. Física: captación, bombeo y distribución, con seis instrumentos unidos al punto que miden. Red OT: PLC, RTU, SCADA, historizador y ATLAXIA, que recibe sus datos. Funcional: el recorrido del agua, de la entrada al depósito, la bomba, el caudalímetro y la válvula hasta la red. Influencias: el plano se tumba y, sobre él, una segunda lámina con un nodo por instrumento y las relaciones entre ellos, más gruesas cuanto más fuertes.",
+    },
+    product: {
+      eyebrow: "El producto hoy",
+      title: "En un equipo en la planta",
+      body: "Se conecta a lo que ya tiene y no lo sustituye: trabaja junto a su SCADA, su historizador y sus herramientas de ciberseguridad. Sus datos no salen de la planta.",
+      availableLabel: "Disponible hoy",
+      available: [
+        "Telemetría en tiempo real",
+        "Nivel de anomalía de 0 a 5",
+        "Alarmas según su gravedad",
+        "Detección de fallos",
+        "Metodología de integración en planta",
+      ],
+      demoCta: "Ver la demo",
+    },
+    // How ATLAXIA comes into a plant. The method has no name of its own; no dates or durations.
+    // TODO(owner): approve.
+    method: {
+      eyebrow: "Integración",
+      title: "Cómo llega ATLAXIA a una planta",
+      body: "Primero se conecta a lo que ya tiene; después aprende de ello, con quienes operan la planta.",
+      // The brief's answer to "how much time does it save?": no figures, a measurement.
+      measure:
+        "¿Cuánto tiempo ahorra en su planta? Lo medimos allí, con métricas pactadas antes de empezar.",
+      loop: "Mejora con el uso",
       steps: {
-        data: { label: "Datos", description: "Lo que miden sensores, equipos y sistemas." },
-        context: {
-          label: "Contexto",
-          description: "Dónde, cuándo y junto a qué se produce cada lectura.",
+        arrive: {
+          label: "Llegamos a la planta",
+          description:
+            "Partimos de su inventario: procesos, señales, el papel de cada una como sensor o actuador, y su tipo.",
         },
-        behavior: {
-          label: "Comportamiento",
-          description: "Qué es lo esperable en ese momento del proceso.",
+        connect: {
+          label: "Nos conectamos a su red OT",
+          description: "Con los permisos que acuerda su responsable de OT.",
         },
-        understanding: { label: "Comprensión", description: "Qué ha cambiado y por qué importa." },
-        action: { label: "Acción", description: "Decidir a tiempo y con criterio." },
+        adapt: {
+          label: "Ajustamos el modelo con los operadores",
+          description:
+            "Lo entrenamos con un tramo de funcionamiento normal y lo pulimos con ellos hasta adaptarlo a la planta.",
+        },
+        run: {
+          label: "En marcha",
+          description: "El sistema mejora a medida que los operadores trabajan con él.",
+        },
       },
     },
   },
 
-  building: {
-    title: "Nuestro primer producto, capa a capa",
-    lead: "La primera materialización de lo que sabemos hacer: software industrial, inteligencia aplicada y visualización trabajando juntos sobre los datos de una planta.",
-    stackLabel: "Capas del producto",
-    layers: {
-      interface: {
-        title: "Interfaz de operación",
-        tagline: "Para quien opera el proceso.",
-        description:
-          "Histórico, eventos y la explicación de cada desviación, en una interfaz pensada para el trabajo diario en planta.",
-        items: {
-          panel: { label: "Panel", sub: "Operación" },
-          events: { label: "Eventos", sub: "Histórico" },
-          explanation: { label: "Explicación", sub: "Contexto" },
-        },
-      },
-      detection: {
-        title: "Observado frente a esperado",
-        tagline: "La alerta es la divergencia, no un umbral.",
-        description:
-          "Cada lectura se compara con el valor que se esperaba en ese momento del proceso.",
-        items: {
-          observed: { label: "Observado", sub: "Lectura" },
-          expected: { label: "Esperado", sub: "Modelo" },
-          deviation: { label: "Desviación", sub: "Diferencia" },
-        },
-      },
-      model: {
-        title: "Relaciones entre señales",
-        tagline: "Cada sensor se lee junto a sus vecinos.",
-        description:
-          "Un modelo de grafos aprende cómo se influyen las señales de la planta y qué comportamiento es normal en cada una.",
-        items: {
-          graph: { label: "Grafo", sub: "Relaciones" },
-          behavior: { label: "Comportamiento", sub: "Aprendido" },
-        },
-      },
-      plant: {
-        title: "En la planta, junto al SCADA",
-        tagline: "Sin escribir en el sistema de control.",
-        description:
-          "Se instala en la infraestructura de la planta y trabaja con los datos que ya existen. El SCADA sigue al mando.",
-        items: {
-          sensors: { label: "Sensores", sub: "Señales" },
-          scada: { label: "SCADA", sub: "Control" },
-          local: { label: "Equipo local", sub: "On-premise" },
-        },
-      },
+  about: {
+    title: "Quiénes somos",
+    origin: {
+      title: "De la investigación a la planta",
+      body: "ATLAXIA es un proyecto de inteligencia industrial para infraestructuras críticas, basado en una spin-off de la UCAM. Su tecnología nace de TRUEDATA, un proyecto de la compra pública precomercial de INCIBE que se probó en instalaciones reales de agua. ATLAXIA es su fase de comercialización.",
     },
-    product: {
-      eyebrow: "Producto",
-      namePending: "Nombre provisional",
-      description: "Supervisión de procesos que recorre todas las capas.",
-      capabilitiesLabel: "Qué permite",
-      capabilities: {
-        monitor: "Monitorizar",
-        understand: "Entender",
-        relate: "Relacionar",
-        investigate: "Investigar",
-        deploy: "Desplegar",
-      },
-      demoCta: "Ver la demo",
+    teamLabel: "Equipo fundador",
+    team: {
+      ceo: { name: "Juanmi", role: "CEO" },
+      cto: { name: "David", role: "CTO" },
+      cmo: { name: "Jorge", role: "CMO" },
     },
   },
 
@@ -296,6 +352,7 @@ export const es = {
     legalNotice: "Aviso legal",
     privacy: "Privacidad",
     legalPending: "Datos legales pendientes de completar.",
+    tagline: "Inteligencia industrial para infraestructuras críticas.",
   },
 
   notFound: {

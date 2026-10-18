@@ -1,72 +1,288 @@
-.layout {
+.section {
+  padding-block: var(--space-section);
+  /* Clear the fixed logo strip on top and, on narrow screens, the floating bar at the bottom */
+  --stage-top: calc(var(--frame-inset) + var(--frame-bar) + var(--space-4));
+  --stage-bottom: calc(var(--space-16) + var(--space-8));
+}
+
+@media (min-width: 60rem) {
+  .section {
+    --stage-top: calc(var(--frame-inset) + var(--frame-bar) + var(--space-6));
+    --stage-bottom: var(--space-8);
+  }
+}
+
+.header {
   display: grid;
-  gap: clamp(var(--space-10), 6vw, var(--space-16));
+  gap: var(--space-4);
+  max-width: 48rem;
 }
 
-.product {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  height: 100%;
-}
-
-.eyebrow,
-.capabilitiesLabel {
+.eyebrow {
   font-family: var(--font-mono);
   font-size: var(--text-label);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
 
-.nameRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
+.title {
+  font-size: var(--text-heading);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  text-wrap: balance;
 }
 
-.name {
-  font-size: var(--text-title);
-  font-weight: var(--weight-semibold);
-  letter-spacing: -0.01em;
-}
-
-.description {
-  font-size: var(--text-sm);
+.lead {
+  font-size: var(--text-lead);
   line-height: var(--leading-body);
   color: var(--color-text-secondary);
 }
 
-.capabilities {
+/*
+  Pinned stage. Narrow: the stack of layers on top, the plan under it.
+  Wide: the stack in a column on the left, the plan next to it.
+*/
+.stage {
   display: grid;
-  gap: var(--space-3);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--color-border);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  padding-block: var(--stage-top) var(--stage-bottom);
+  padding-inline: var(--gutter);
+  /* Title of the layer being read, and the slot one takes once it has shrunk to a line */
+  --title: clamp(1.75rem, 1.1rem + 2.2vw, 3.25rem);
+  --slot: calc(var(--title) * 0.5 * 1.1 + 0.75rem);
 }
 
-.capabilityList {
+@media (min-width: 60rem) {
+  .stage {
+    grid-template-columns: minmax(16rem, 3fr) minmax(0, 7fr);
+    grid-template-rows: minmax(0, 1fr);
+    column-gap: clamp(var(--space-8), 4vw, var(--space-16));
+    align-items: start;
+  }
+}
+
+/*
+  The layers pile up like the sheets: layer i owns the slot at i × --slot.
+  While it is read, its title is large and its text shows below; once the
+  next layer arrives, the title shrinks to a line that fits the slot and the
+  text fades. Only scale and opacity move, so every position is static.
+*/
+.stack {
+  position: relative;
+  /* Three shrunk lines plus the layer being read; the body wraps to four lines at most */
+  height: calc(3 * var(--slot) + var(--title) * 1.1 + 8em);
+}
+
+@media (min-width: 60rem) {
+  .stack {
+    height: auto;
+    min-height: calc(3 * var(--slot) + var(--title) * 1.1 + 11em);
+    padding-top: var(--space-6);
+  }
+}
+
+.card {
+  position: absolute;
+  top: calc(var(--slot-index) * var(--slot));
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (min-width: 60rem) {
+  .card {
+    top: calc(var(--space-6) + var(--slot-index) * var(--slot));
+  }
+}
+
+.cardTitle {
+  font-size: var(--title);
+  font-weight: var(--weight-medium);
+  line-height: 1.1;
+  letter-spacing: var(--tracking-heading);
+  /* Shrinks towards its slot's corner */
+  transform-origin: 0 0;
+}
+
+.cardBody {
+  max-width: 34rem;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  text-wrap: pretty;
+}
+
+@media (min-width: 60rem) {
+  .cardBody {
+    font-size: var(--text-lead);
+    line-height: var(--leading-body);
+  }
+}
+
+.plan {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+@media (min-width: 60rem) {
+  .plan {
+    height: 100%;
+  }
+}
+
+/* Phones: shallower perspective */
+@media (max-width: 47.99rem) {
+  .space {
+    perspective: 1400px;
+  }
+}
+
+/*
+  The 3D space of the plan: perspective for the tilt, and a size container so
+  the lift of the second sheet scales with the room available (cqh).
+*/
+.space {
+  display: grid;
+  /* Fixed tracks: the double-size sheet overflows them evenly instead of growing them */
+  grid-template-columns: minmax(0, 100%);
+  grid-template-rows: minmax(0, 100%);
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  /* Far enough that the near edge of the tilted plan is not magnified (see TILT in the component) */
+  perspective: 2400px;
+  container-type: size;
+  /* Width of the plan; the lift of the second sheet and the posts are fractions of it (see LIFT) */
+  --w: min(100cqw, 160cqh);
+  --lift: calc(var(--w) * 0.18);
+}
+
+/* As large as the stage allows, keeping the plan's proportions (640 x 400) */
+.space > .sheetBox {
+  position: relative;
+  aspect-ratio: 640 / 400;
+  width: var(--w);
+  /* Also ORIGIN in the component, for the labels' projection */
+  transform-origin: 50% 62%;
+  transform-style: preserve-3d;
+  /* will-change: opacity would flatten the 3D children; only the transform moves */
+  will-change: transform;
+}
+
+.full {
+  position: absolute;
+  inset: 0;
+}
+
+/* Posts: a dashed hairline at each instrument, stood up (rotateX) to the height of the lift */
+.posts {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* Length and angle are set inline, from the geometry of both sheets */
+.post {
+  position: absolute;
+  width: 0;
+  transform-origin: 50% 0;
+}
+
+.postLine {
+  height: 100%;
+  border-left: 1px dashed var(--color-accent);
+}
+
+/* The second sheet floats over the plan, at the top of the posts */
+.lift {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+  Names of the graph nodes, flat over the 3D scene (see NodeLabels). Placed
+  by script at each node's projected position; until then they stay hidden.
+*/
+.labels {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.labels[data-placed] {
+  visibility: visible;
+}
+
+/* Centered on the node; the sheet's local deformation comes as an inline matrix */
+.labelAt {
+  position: absolute;
+  translate: -50% -50%;
+}
+
+/* Sized in the sheet's own units (the node text is 8 of 640); the matrix scales it down */
+.label {
+  display: grid;
+  justify-items: center;
+  font-family: var(--font-mono);
+  font-size: calc(var(--w) * 0.0125);
+  line-height: 1.15;
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
+
+/* Static version */
+.static {
+  display: grid;
+  gap: var(--space-10);
+  padding-block: var(--space-10) var(--space-section-compact);
+}
+
+.staticCards {
+  display: grid;
+  gap: var(--space-6) var(--space-10);
+}
+
+@media (min-width: 48rem) {
+  .staticCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.staticCard {
   display: grid;
   gap: var(--space-2);
 }
 
-.capabilityList li {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
+.staticTitle {
+  font-size: var(--text-title);
   font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
 }
 
-.capabilityIndex {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  color: var(--color-accent-text);
-  font-variant-numeric: tabular-nums;
+.staticBody {
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--color-text-secondary);
 }
 
-/* Pinned to the bottom of the column when it is taller than its content */
-.demo {
-  align-self: flex-start;
-  margin-top: auto;
+/* The tilted plan only fills the middle of its box: trim the empty band above and below (in % of the width, as the drawing scales with it) */
+.static .space {
+  height: auto;
+  aspect-ratio: 640 / 400;
+  margin-block: -5% -20%;
+  /* The double-size sheet must not widen the page; its height still shows */
+  overflow: clip visible;
+}
+
+.section > :last-child {
+  margin-top: var(--space-section-compact);
 }

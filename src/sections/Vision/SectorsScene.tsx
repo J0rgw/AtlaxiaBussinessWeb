@@ -86,6 +86,8 @@ export function SectorsScene({ content, drawing = "lottie" }: SectorsSceneProps)
                   >
                     <ParallaxLayer y={["1.5rem", "0rem"]} range={range}>
                       <h4 className={styles.sectorName}>{content.items[id].name}</h4>
+                      {/* Where ATLAXIA starts, or a possible expansion: never presence */}
+                      <p className={styles.sectorNote}>{content.items[id].note}</p>
                     </ParallaxLayer>
                     <div className={styles.panelDrawing} data-drawing={drawing}>
                       {drawing === "anatomy" ? (

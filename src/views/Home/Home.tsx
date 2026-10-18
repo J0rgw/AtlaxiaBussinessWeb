@@ -5,9 +5,11 @@ import { getDictionary } from "@/content";
 import { navSectionIds } from "@/content/shared/sections";
 import { otherLocaleValues } from "@/i18n/alternatives";
 import type { Locale } from "@/i18n/config";
+import { About } from "@/sections/About/About";
 import { Building } from "@/sections/Building/Building";
 import { Capabilities } from "@/sections/Capabilities/Capabilities";
 import { Contact } from "@/sections/Contact/Contact";
+import { Edge } from "@/sections/Edge/Edge";
 import { Hero } from "@/sections/Hero/Hero";
 import { Vision } from "@/sections/Vision/Vision";
 import { PendingTag } from "@/shell/PendingTag";
@@ -29,21 +31,17 @@ export function Home({ locale }: HomeProps) {
       <SiteNav locale={locale} dict={dict} />
       <main id="main" tabIndex={-1} className={styles.main}>
         <Hero locale={locale} content={dict.hero} />
+        <Edge content={dict.edge} />
         {navSectionIds.map((id) => {
           switch (id) {
             case "vision":
-              return <Vision key={id} content={dict.vision} />;
+              return <Vision key={id} title={dict.nav.vision} content={dict.vision} />;
             case "capabilities":
               return <Capabilities key={id} content={dict.capabilities} />;
             case "building":
-              return (
-                <Building
-                  key={id}
-                  locale={locale}
-                  eyebrow={dict.nav.building}
-                  content={dict.building}
-                />
-              );
+              return <Building key={id} content={dict.building} />;
+            case "about":
+              return <About key={id} content={dict.about} />;
             case "contact":
               return <Contact key={id} content={dict.contact} />;
             default:

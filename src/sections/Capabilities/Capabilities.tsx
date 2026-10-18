@@ -1,122 +1,117 @@
-import { NodeGraph } from "@/components/data-display/NodeGraph";
-import { SignalChart } from "@/components/data-display/SignalChart";
 import { Container } from "@/components/primitives/Container";
 import { Section } from "@/components/primitives/Section";
-import { ProcessFlowReveal, type ProcessStep } from "@/components/storytelling/ProcessFlow";
-import { StickyIndexStory, type IndexStoryItem } from "@/components/storytelling/StickyIndexStory";
-import type { Dictionary } from "@/content";
+import { SectionHeader } from "@/components/primitives/SectionHeader";
 import {
-  contextSignals,
-  expectedBehavior,
-  graphRelations,
-  graphSignals,
-  graphSize,
-} from "./illustrations";
+  ChoreographedScene,
+  CueElement,
+  CueSnapshot,
+} from "@/components/storytelling/ChoreographedScene";
+import type { Dictionary } from "@/content";
+import type { Engine } from "@/lib/choreography/engines/types";
+import { CoherenceChart } from "./CoherenceChart";
+import { SCENE_LENGTH, cues, stepOrder, type StepId } from "./cues";
 import styles from "./Capabilities.module.css";
 
 type CapabilitiesContent = Dictionary["capabilities"];
-type FlowStepId = keyof CapabilitiesContent["flow"]["steps"];
 
-const flowOrder: FlowStepId[] = ["data", "context", "behavior", "understanding", "action"];
+const number = (i: number) => String(i + 1).padStart(2, "0");
 
-type CapabilitiesProps = {
+function StepText({ content, id }: { content: CapabilitiesContent; id: StepId }) {
+  const step: { body: string; note?: string } = content.steps[id];
+  return (
+    <p className={styles.body}>
+      {step.body}
+      {step.note ? <strong className={styles.note}> {step.note}</strong> : null}
+    </p>
+  );
+}
+
+export type CapabilitiesProps = {
   content: CapabilitiesContent;
+  /** In-house engine by default; stories can pass another one. */
+  engine?: Engine;
 };
 
 /**
- * What ATLAXIA does, told as the Cerebrium "Why" pattern: the section opens
- * straight on a pinned index (its label is the section heading) with a visual
- * panel for each step, from data without context to acting on it.
+ * What ATLAXIA does, told on one signal over one day: a pinned chart gains a
+ * sheet at each of five steps (observe, see a system, learn what is normal,
+ * detect the mismatch, point to where) while the step text crossfades. The
+ * plant model in four layers stays in "Qué estamos construyendo".
  */
-export function Capabilities({ content }: CapabilitiesProps) {
-  const { reasons } = content;
-  const behavior = expectedBehavior();
-
-  const flowSteps: ProcessStep[] = flowOrder.map((id) => ({
-    id,
-    label: content.flow.steps[id].label,
-    description: content.flow.steps[id].description,
-  }));
-
-  const items: IndexStoryItem[] = [
-    {
-      id: "context",
-      label: reasons.context.label,
-      title: reasons.context.title,
-      body: <p>{reasons.context.body}</p>,
-      visual: (
-        <Panel>
-          <SignalChart series={contextSignals()} description={reasons.context.chartDescription} />
-        </Panel>
-      ),
-    },
-    {
-      id: "relations",
-      label: reasons.relations.label,
-      title: reasons.relations.title,
-      body: <p>{reasons.relations.body}</p>,
-      visual: (
-        <Panel>
-          <NodeGraph
-            nodes={graphSignals.map((s) => ({ ...s, label: reasons.relations.nodes[s.id] }))}
-            edges={graphRelations}
-            width={graphSize.width}
-            height={graphSize.height}
-            description={reasons.relations.graphDescription}
-          />
-        </Panel>
-      ),
-    },
-    {
-      id: "behavior",
-      label: reasons.behavior.label,
-      title: reasons.behavior.title,
-      body: <p>{reasons.behavior.body}</p>,
-      visual: (
-        <Panel>
-          <SignalChart
-            series={behavior.series}
-            band={behavior.band}
-            deviations={[behavior.deviation]}
-            description={reasons.behavior.chartDescription}
-            legend={[
-              { key: "observed", label: reasons.behavior.legend.observed },
-              { key: "expected", label: reasons.behavior.legend.expected },
-              { key: "band", label: reasons.behavior.legend.band },
-              { key: "deviation", label: reasons.behavior.legend.deviation },
-            ]}
-          />
-        </Panel>
-      ),
-    },
-    {
-      id: "action",
-      label: reasons.action.label,
-      title: reasons.action.title,
-      body: <p>{reasons.action.body}</p>,
-      visual: (
-        <Panel>
-          <ProcessFlowReveal steps={flowSteps} label={content.flow.label} orientation="vertical" />
-        </Panel>
-      ),
-    },
-  ];
-
+export function Capabilities({ content, engine }: CapabilitiesProps) {
   return (
-    <Section id="capabilities" labelledBy="capabilities-title">
+    <Section id="capabilities" labelledBy="capabilities-title" className={styles.section}>
       <Container>
-        <StickyIndexStory
-          items={items}
-          label={content.indexLabel}
-          labelAs="h2"
-          labelId="capabilities-title"
+        <SectionHeader
+          titleId="capabilities-title"
+          eyebrow={content.eyebrow}
+          title={content.title}
+          lead={content.lead}
         />
+      </Container>
+
+      <ChoreographedScene
+        cues={cues}
+        length={SCENE_LENGTH}
+        engine={engine}
+        stageClassName={styles.stage}
+        fallback={<Fallback content={content} />}
+      >
+        <Container className={styles.layout}>
+          <div className={styles.text}>
+            {/* Visual index of the steps; the panels below carry the headings */}
+            <ol role="list" className={styles.index} aria-hidden="true">
+              {stepOrder.map((id, i) => (
+                <CueElement as="li" key={id} name={`title-${id}`} className={styles.indexItem}>
+                  <span className={styles.number}>{number(i)}</span>
+                  {content.steps[id].title}
+                </CueElement>
+              ))}
+            </ol>
+            <ol role="list" className={styles.panels} aria-label={content.stepsLabel}>
+              {stepOrder.map((id, i) => (
+                <CueElement as="li" key={id} name={`panel-${id}`} className={styles.panel}>
+                  <h3 className={styles.panelTitle}>
+                    <span className={styles.number}>{number(i)}</span>
+                    {content.steps[id].title}
+                  </h3>
+                  <StepText content={content} id={id} />
+                </CueElement>
+              ))}
+            </ol>
+          </div>
+          <CoherenceChart content={content.chart} className={styles.chart} />
+        </Container>
+      </ChoreographedScene>
+
+      <Container>
+        <p className={styles.after}>
+          <span className={styles.afterLabel}>{content.inside.label}</span>
+          {content.inside.body}
+        </p>
       </Container>
     </Section>
   );
 }
 
-/** Blueprint sheet for each visual: raised surface over a fine grid. */
-function Panel({ children }: { children: React.ReactNode }) {
-  return <div className={styles.panel}>{children}</div>;
+/** Reduced motion and no JavaScript: the five steps in order, then the finished chart. */
+function Fallback({ content }: { content: CapabilitiesContent }) {
+  return (
+    <Container className={styles.static}>
+      <ol role="list" className={styles.staticSteps} aria-label={content.stepsLabel}>
+        {stepOrder.map((id, i) => (
+          <li key={id} className={styles.staticStep}>
+            <h3 className={styles.staticTitle}>
+              <span className={styles.number}>{number(i)}</span>
+              {content.steps[id].title}
+            </h3>
+            <StepText content={content} id={id} />
+          </li>
+        ))}
+      </ol>
+      <CueSnapshot cues={cues} progress={1}>
+        <CoherenceChart content={content.chart} />
+      </CueSnapshot>
+    </Container>
+  );
 }

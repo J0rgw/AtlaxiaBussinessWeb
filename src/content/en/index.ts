@@ -3,9 +3,9 @@ import type { Dictionary } from "../types";
 /** English copy, edited by hand. Must mirror the Spanish shape exactly. */
 export const en = {
   meta: {
-    title: "ATLAXIA",
+    title: "ATLAXIA | Industrial intelligence for critical infrastructure",
     description:
-      "ATLAXIA builds software, applied intelligence and visualization tools for complex industrial systems.",
+      "Industrial intelligence for critical water infrastructure. It detects and diagnoses anomalies in less time, and the data stays at the plant.",
   },
 
   a11y: {
@@ -35,11 +35,41 @@ export const en = {
     secondaryCta: "See what we build",
   },
 
+  // TODO(owner): approve the English headline and lede.
+  edge: {
+    lines: ["All the software", "runs on a unit", "installed at the plant."],
+    split: 2,
+    lede: "The data does not leave the plant. Each plant has its own system, and it does not depend on the cloud to run.",
+    alt: "ATLAXIA unit: a black mini PC with a finned heat sink and the ATLAXIA symbol on the lid.",
+  },
+
   vision: {
-    // Promise that opens the section, revealed word by word as the page scrolls.
-    promise:
-      "We build software so the people who run a plant understand what is happening, and why, before it becomes a problem.",
-    // Water case ("Where we start") and direction ("Where we are going"), storyboard v3.
+    evidence: {
+      title: "Why water, why now",
+      sourceLabel: "Source",
+      items: {
+        perte: {
+          figure: "60%",
+          statement:
+            "of Spain's population is already within the scope of the plan that digitizes the water cycle (PERTE).",
+          source: "iAgua, 13 May 2026",
+          href: "https://www.iagua.es/noticias/redaccion-iagua/perte-digitaliza-agua-6-cada-10-espanoles",
+        },
+        nis2: {
+          figure: "NIS2",
+          statement:
+            "The European directive classes drinking water and waste water as sectors of high criticality.",
+          source: "Directive (EU) 2022/2555, Annex I",
+          href: "https://eur-lex.europa.eu/eli/dir/2022/2555/oj",
+        },
+        isac: {
+          figure: "ES-ISAC Aguas",
+          statement: "The water sector already shares cybersecurity information with INCIBE.",
+          source: "INCIBE, 11 Jun 2026",
+          href: "https://www.incibe.es/empresas/blog/quinta-comision-de-seguimiento-del-es-isac-aguas",
+        },
+      },
+    },
     waterCase: {
       title: "Where we start",
       place: "Water pumping station",
@@ -63,7 +93,7 @@ export const en = {
       },
       status: {
         normal: "Normal",
-        deviation: "Deviation",
+        deviation: "Anomaly",
         stable: "Stable",
         up: "Rising",
         down: "Falling",
@@ -91,7 +121,7 @@ export const en = {
       invitation: "We are looking for water plants to build it with and to test the pilot.",
       cta: "Join the pilot",
       card: {
-        title: "Deviation in pump B-101",
+        title: "Anomaly in pump B-101",
         where: "Where",
         whereValue: "Pump B-101, discharge",
         related: "Related signals",
@@ -103,35 +133,39 @@ export const en = {
     scenes: {
       where: {
         title: "Where we are going",
-        stagesLabel: "Roadmap",
+        stagesLabel: "From signal to infrastructure",
         description:
-          "Animation: the camera pulls back from a sensor on a pipe. The process we work on today appears, with its related signals; then the whole plant in dashed lines and, finally, several plants joined in a network.",
+          "Animation: the camera pulls back from a sensor on a pipe. The process appears with its related signals; then the whole plant in dashed lines and, finally, several facilities of the water cycle.",
         stages: {
-          today: { word: "Today", detail: "Processes" },
-          next: { word: "Next", detail: "Whole plants" },
+          today: { word: "Today", detail: "Processes and signals of one plant" },
+          next: { word: "In progress", detail: "The whole plant, in four layers" },
           goal: {
-            word: "Goal",
-            detail: "Any industrial system, understood as precisely as it is measured today.",
+            word: "Direction",
+            detail:
+              "Whole water infrastructure, from intake to wastewater treatment: treatment plants, networks and wastewater plants.",
           },
         },
       },
       sectors: {
-        title: "Where we start",
+        title: "We start with water",
         items: {
           water: {
             name: "Water",
+            note: "Where we start",
             description:
-              "Animation: a water network draws out from the tank, water runs through it and the level, pressure and flow sensors relate to each other.",
+              "Animation: a water network is drawn from the tank, water runs through it and the level, pressure and flow sensors relate to each other.",
           },
           food: {
             name: "Agrifood",
+            note: "Possible expansion",
             description:
-              "Animation: a batch tank fills and is stirred; next to it, the expected temperature range changes with each phase and the measured signal follows it.",
+              "Animation of a possible expansion sector: a batch tank fills and is stirred; next to it, the expected temperature range changes with each phase and the measured signal follows it.",
           },
           metal: {
             name: "Metallurgy",
+            note: "Possible expansion",
             description:
-              "Animation: a slab leaves the furnace and gets thinner through two roll stands; the temperature, vibration and energy sensors relate to each other.",
+              "Animation of a possible expansion sector: a slab leaves the furnace and thins as it passes through two rolling stands; the temperature, vibration and energy sensors relate to each other.",
           },
         },
       },
@@ -139,134 +173,148 @@ export const en = {
   },
 
   capabilities: {
-    indexLabel: "What we do",
-    reasons: {
-      context: {
-        label: "Data without context",
-        title: "A single reading says little",
-        body: "A plant produces thousands of readings every day. On its own, each one is just a number: it does not tell you whether it is normal or what caused it.",
-        chartDescription:
-          "Illustration: several industrial signals over time, with no context to help interpret them.",
+    eyebrow: "What we do",
+    title: "We check that the plant still works as a whole",
+    lead: "A plant is a dynamic system: when the pump starts, the flow rises and the level drops. ATLAXIA observes the state of the plant and checks that its signals still add up. When something falls out of step, it detects it even when nothing looks wrong, and points to where it is.",
+    stepsLabel: "What ATLAXIA does, step by step",
+    steps: {
+      observe: {
+        title: "Observes",
+        body: "The state of the plant: sensor measurements and actuator states.",
+        note: "It only reads: it never touches the control system.",
       },
-      relations: {
-        label: "How signals relate",
-        title: "Every signal depends on others",
-        body: "Pressure, flow or temperature do not change on their own. Understanding a system means understanding how its parts influence each other.",
-        graphDescription:
-          "Illustration of a network of industrial signals. Pressure sits at the center and relates directly to flow, temperature and level; the other signals complete the system.",
-        nodes: {
-          pressure: "Pressure",
-          flow: "Flow",
-          temperature: "Temperature",
-          level: "Level",
-          vibration: "Vibration",
-          energy: "Energy",
-          humidity: "Humidity",
-          speed: "Speed",
-        },
+      system: {
+        title: "Sees a system",
+        body: "Signals do not change on their own. When the pump starts, the outflow rises and the tank level drops. A signal makes sense next to the others.",
       },
-      behavior: {
-        label: "Expected behavior",
-        title: "Normal changes with the process",
-        body: "What is normal in one phase of the process is not normal in another. That is why it matters to know what to expect at each moment, not only whether a fixed threshold is crossed.",
-        chartDescription:
-          "Illustration: an observed signal against its expected behavior. At the end, the signal leaves the expected range.",
-        legend: {
-          observed: "Observed",
-          expected: "Expected",
-          band: "Expected range",
-          deviation: "Deviation",
-        },
+      normal: {
+        title: "Learns what is normal",
+        body: "It learns how the signals move together from normal operating data of the plant itself, with no examples of faults. That is how it estimates the expected value of each one.",
       },
-      action: {
-        label: "From understanding to action",
-        title: "Understand in order to decide",
-        body: "People who run complex industrial systems do not need more data: they need to understand it in time. ATLAXIA exists to close that gap, from data to understanding and from understanding to decisions.",
+      mismatch: {
+        title: "Detects the mismatch",
+        body: "The pump and the flow keep their rhythm, but the level no longer drops as it should. Everything is still within limits and looks normal at a glance. ATLAXIA flags it as an anomaly; a fixed threshold would wait for the level to cross it.",
+      },
+      where: {
+        title: "Points to where",
+        body: "A first diagnosis when something moves away from normal: which signal and which process, with an anomaly level from 0 to 5 per sensor, per process and for the plant. It also alerts when a signal crosses the operator's limits.",
+        note: "The decision is still yours.",
       },
     },
-    flow: {
-      label: "From data to action",
+    chart: {
+      label: "Illustration",
+      description:
+        "Illustration: the level of a tank over one day, with the pump state and the outflow below it. Each time the pump starts, the outflow rises and the level drops. The model estimates the expected level and its range. Late in the day the pump and the outflow carry on as usual, but the level stops dropping: it moves away from what is expected without reaching the operator limit. ATLAXIA flags it as an anomaly and points to the tank level, in the pumping process.",
+      signals: {
+        level: "tank level",
+        pump: "pump, on / off",
+        outflow: "outflow",
+      },
+      notes: {
+        coherence: "the pump starts, the flow rises and the level drops",
+        coherenceShort: "pump on: the level drops",
+        limit: "operator limit",
+        anomaly: "anomaly",
+        usual: "pump and flow, as usual",
+        here: "here",
+      },
+      levelsLabel: "Anomaly level, from 0 to 5",
+      levels: { sensor: "level", process: "Pumping", plant: "Plant" },
+    },
+    inside: {
+      label: "Under the hood",
+      body: "A graph neural network treats each signal as a node and learns which signals influence each other. A learned relation is a lead to check, not a proven cause.",
+    },
+  },
+
+  // Four layers of the plant model, laid like tracing sheets over one plan (P&ID of a pumping station).
+  building: {
+    eyebrow: "What we are building",
+    title: "A model of the plant in four layers",
+    // TODO(owner): approve.
+    lead: "Technically, a multi-layer ontology: what is in the plant and how each part relates to the rest. Today ATLAXIA links processes and signals and learns which ones influence each other.",
+    sketch: "Sketch",
+    layers: {
+      physical: {
+        name: "Physical",
+        body: "What is in the plant: processes, equipment and tanks, and the signal from each sensor.",
+      },
+      network: {
+        name: "OT network",
+        body: "Where the data travels: controllers, SCADA and communications. The network can be listened to without interfering with it.",
+      },
+      functional: {
+        name: "Functional",
+        body: "How the process is chained: which stage feeds which, and the rules engineering knows.",
+      },
+      influence: {
+        name: "Influences",
+        body: "Which signals influence each other, as the model learns from the data. A learned relation is a lead, not a proven cause.",
+      },
+    },
+    plan: {
+      title: "Pumping station",
+      zones: { intake: "Intake", pumping: "Pumping", distribution: "Distribution" },
+      devices: { scada: "SCADA", historian: "Historian" },
+      description:
+        "Sketch of a pumping station: tank, pump and the line to the network. Four sheets are laid over it. Physical: intake, pumping and distribution, with six instruments linked to the point they measure. OT network: PLCs, an RTU, the SCADA, the historian and ATLAXIA, which receives its data. Functional: the path of the water, from the inlet to the tank, the pump, the flowmeter and the valve, out to the network. Influences: the plan tilts back and, above it, a second sheet with one node per instrument and the relations between them, thicker the stronger they are.",
+    },
+    product: {
+      eyebrow: "The product today",
+      title: "On a machine at the plant",
+      body: "It connects to what you already have and replaces none of it: it works alongside your SCADA, your historian and your cybersecurity tools. Your data does not leave the plant.",
+      availableLabel: "Available today",
+      available: [
+        "Real-time telemetry",
+        "Anomaly level from 0 to 5",
+        "Alarms by severity",
+        "Fault detection",
+        "Plant integration methodology",
+      ],
+      demoCta: "See the demo",
+    },
+    // TODO(owner): approve.
+    method: {
+      eyebrow: "Integration",
+      title: "How ATLAXIA comes into a plant",
+      body: "First it connects to what you already have; then it learns from it, with the people who run the plant.",
+      measure:
+        "How much time does it save at your plant? We measure it there, with metrics agreed before we start.",
+      loop: "Improves with use",
       steps: {
-        data: { label: "Data", description: "What sensors, equipment and systems measure." },
-        context: {
-          label: "Context",
-          description: "Where, when and alongside what each reading happens.",
+        arrive: {
+          label: "We come to the plant",
+          description:
+            "We start from its inventory: processes, signals, the role of each one as sensor or actuator, and its type.",
         },
-        behavior: {
-          label: "Behavior",
-          description: "What is expected at that moment of the process.",
+        connect: {
+          label: "We connect to its OT network",
+          description: "With the permissions your OT manager agrees to.",
         },
-        understanding: {
-          label: "Understanding",
-          description: "What has changed, and why it matters.",
+        adapt: {
+          label: "We tune the model with the operators",
+          description:
+            "We train it on a stretch of normal operation and refine it with them until it fits the plant.",
         },
-        action: { label: "Action", description: "Deciding in time, with judgment." },
+        run: {
+          label: "Up and running",
+          description: "The system improves as the operators work with it.",
+        },
       },
     },
   },
 
-  building: {
-    title: "Our first product, layer by layer",
-    lead: "The first materialization of what we know how to build: industrial software, applied intelligence and visualization working together on a plant's data.",
-    stackLabel: "Product layers",
-    layers: {
-      interface: {
-        title: "Operator interface",
-        tagline: "For the people who run the process.",
-        description:
-          "History, events and an explanation for every deviation, in an interface built for daily work at the plant.",
-        items: {
-          panel: { label: "Panel", sub: "Operation" },
-          events: { label: "Events", sub: "History" },
-          explanation: { label: "Explanation", sub: "Context" },
-        },
-      },
-      detection: {
-        title: "Observed versus expected",
-        tagline: "The alert is the divergence, not a threshold.",
-        description:
-          "Each reading is compared with the value expected at that moment of the process.",
-        items: {
-          observed: { label: "Observed", sub: "Reading" },
-          expected: { label: "Expected", sub: "Model" },
-          deviation: { label: "Deviation", sub: "Difference" },
-        },
-      },
-      model: {
-        title: "How signals relate",
-        tagline: "Every sensor is read together with its neighbors.",
-        description:
-          "A graph model learns how the plant's signals influence each other and what normal behavior looks like for each one.",
-        items: {
-          graph: { label: "Graph", sub: "Relations" },
-          behavior: { label: "Behavior", sub: "Learned" },
-        },
-      },
-      plant: {
-        title: "At the plant, alongside the SCADA",
-        tagline: "Without writing to the control system.",
-        description:
-          "It runs on the plant's own infrastructure and works with the data that already exists. The SCADA stays in charge.",
-        items: {
-          sensors: { label: "Sensors", sub: "Signals" },
-          scada: { label: "SCADA", sub: "Control" },
-          local: { label: "Local unit", sub: "On-premise" },
-        },
-      },
+  about: {
+    title: "Who we are",
+    origin: {
+      title: "From research to the plant",
+      body: "ATLAXIA is an industrial intelligence project for critical infrastructure, built on a UCAM spin-off. Its technology comes from TRUEDATA, a project in INCIBE's pre-commercial public procurement program that was tested in real water facilities. ATLAXIA is its commercialization stage.",
     },
-    product: {
-      eyebrow: "Product",
-      namePending: "Working name",
-      description: "Process monitoring across every layer.",
-      capabilitiesLabel: "What it does",
-      capabilities: {
-        monitor: "Monitor",
-        understand: "Understand",
-        relate: "Relate",
-        investigate: "Investigate",
-        deploy: "Deploy",
-      },
-      demoCta: "See the demo",
+    teamLabel: "Founding team",
+    team: {
+      ceo: { name: "Juanmi", role: "CEO" },
+      cto: { name: "David", role: "CTO" },
+      cmo: { name: "Jorge", role: "CMO" },
     },
   },
 
@@ -294,6 +342,7 @@ export const en = {
     legalNotice: "Legal notice",
     privacy: "Privacy",
     legalPending: "Legal details still to be completed.",
+    tagline: "Industrial intelligence for critical infrastructure.",
   },
 
   notFound: {

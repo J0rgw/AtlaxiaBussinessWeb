@@ -1,12 +1,180 @@
-/* Each visual sits on a blueprint sheet (Matta reference: technical drawings) */
+.section {
+  /* Clear the fixed logo strip on top and, on narrow screens, the floating bar at the bottom */
+  --stage-top: calc(var(--frame-inset) + var(--frame-bar) + var(--space-4));
+  --stage-bottom: calc(var(--space-16) + var(--space-8));
+}
+
+@media (min-width: 60rem) {
+  .section {
+    --stage-top: calc(var(--frame-inset) + var(--frame-bar) + var(--space-6));
+    --stage-bottom: var(--space-8);
+  }
+}
+
+/* Pinned stage: phones stack the chart over the step; wide screens put them side by side */
+.stage {
+  display: grid;
+  align-content: start;
+  padding-block: var(--stage-top) var(--stage-bottom);
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.chart {
+  order: -1;
+}
+
+@media (min-width: 60rem) {
+  .stage {
+    align-content: center;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(var(--space-10), 5vw, var(--space-16));
+  }
+
+  .chart {
+    order: 0;
+  }
+}
+
+.text {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.number {
+  display: inline-block;
+  min-width: 2.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  vertical-align: 0.3em;
+}
+
+/* Index of the steps: wide screens only, the step being read at full opacity */
+.index {
+  display: none;
+}
+
+@media (min-width: 60rem) {
+  .index {
+    display: grid;
+    gap: var(--space-1);
+  }
+}
+
+.indexItem {
+  font-size: var(--text-title);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+}
+
+/* Every panel sits in the same cell; the scene crossfades them */
+.panels {
+  display: grid;
+}
+
 .panel {
-  padding: clamp(var(--space-4), 3vw, var(--space-8));
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-lg);
-  background-color: var(--color-bg-raised);
-  background-image:
-    linear-gradient(var(--color-signal-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-signal-grid) 1px, transparent 1px);
-  background-size: 24px 24px;
-  background-position: -1px -1px;
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.panelTitle {
+  font-size: var(--text-title);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
+}
+
+/* The index already shows the titles on wide screens */
+@media (min-width: 60rem) {
+  .panelTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .panel {
+    padding-left: 2.5rem;
+  }
+}
+
+.body {
+  max-width: var(--measure-text);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+  text-wrap: pretty;
+}
+
+.note {
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+/* One short fact after the scene: how it works inside */
+.after {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 40rem;
+  margin: var(--space-section-compact) 0 0;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+}
+
+.afterLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Static version */
+.static {
+  display: grid;
+  gap: var(--space-10);
+  padding-top: var(--space-10);
+}
+
+@media (min-width: 60rem) {
+  .static {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(var(--space-10), 5vw, var(--space-16));
+  }
+}
+
+.staticSteps {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.staticStep {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.staticTitle {
+  font-size: var(--text-title);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
 }

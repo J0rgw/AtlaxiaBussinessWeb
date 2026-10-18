@@ -329,16 +329,86 @@ export const en = {
   },
 
   about: {
-    title: "Who we are",
-    origin: {
-      title: "From research to the plant",
-      body: "ATLAXIA is an industrial intelligence project for critical infrastructure, built on a UCAM spin-off. Its technology comes from TRUEDATA, a project in INCIBE's pre-commercial public procurement program that was tested in real water facilities. ATLAXIA is its commercialization stage.",
+    eyebrow: "Who we are",
+    title: "From research to the plant",
+    statement:
+      "ATLAXIA is industrial intelligence for critical infrastructure. It was born at UCAM, from a team that formed while collaborating on research projects, and from a technology already tested in real water facilities.",
+    chaptersLabel: "Chapters",
+    chapters: {
+      origin: {
+        label: "Origin",
+        title: "A team that comes from research",
+        paragraphs: [
+          {
+            lead: "We started at the university.",
+            text: "The ATLAXIA team formed at UCAM, collaborating on a range of research projects. Those projects are the technical foundation of the company.",
+          },
+          {
+            lead: "A UCAM spin-off.",
+            text: "ATLAXIA is a project built on a university spin-off. Research is the starting point; the plant is where it has to work.",
+          },
+        ],
+        record: ["UCAM", "University spin-off"],
+      },
+      truedata: {
+        label: "TRUEDATA",
+        title: "Tested in water before becoming a company",
+        paragraphs: [
+          {
+            lead: "The technology comes from TRUEDATA.",
+            text: "It is a project in INCIBE's pre-commercial public procurement program, the way public administrations commission the development of solutions that do not yet exist on the market.",
+          },
+          {
+            lead: "It was tested in real water facilities.",
+            text: "With their data and their operating conditions. That is the step between a promising idea and a technology that can be installed.",
+          },
+        ],
+        record: ["INCIBE", "Pre-commercial public procurement", "Real water facilities"],
+      },
+      company: {
+        label: "ATLAXIA",
+        title: "From project to product",
+        paragraphs: [
+          {
+            lead: "ATLAXIA is its commercialization stage.",
+            text: "What worked in TRUEDATA becomes a product: it runs on a unit at each plant, learns from the plant's own data and works alongside the systems already there. The data never leaves the plant.",
+          },
+          {
+            lead: "We build it with the people who run the plants.",
+            text: "Every integration is tuned with the plant's operators. We are looking for water plants to build it with and to test the pilot.",
+          },
+        ],
+        record: ["Current stage", "Commercialization", "Pilot open to water plants"],
+      },
+      team: {
+        label: "Team",
+        title: "Founding team",
+        paragraphs: [
+          {
+            lead: "Research, artificial intelligence and product.",
+            text: "Three profiles that cover the whole path: from the idea to the model, and from the model to the plant.",
+          },
+        ],
+        record: [],
+      },
     },
     teamLabel: "Founding team",
     team: {
-      ceo: { name: "Juanmi", role: "CEO" },
-      cto: { name: "David", role: "CTO" },
-      cmo: { name: "Jorge", role: "CMO" },
+      ceo: {
+        name: "Juan Miguel Navarro Ruiz",
+        role: "CEO",
+        profile: "Full Professor of Telecommunications",
+      },
+      cto: {
+        name: "David Palazón Palau",
+        role: "CTO and AI development",
+        profile: "PhD candidate in Telecommunications",
+      },
+      cmo: {
+        name: "Jorge Arcas Verdejo",
+        role: "CMO and full-stack development",
+        profile: "Computer Engineering student",
+      },
     },
   },
 

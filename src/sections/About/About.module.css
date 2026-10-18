@@ -1,57 +1,65 @@
-.origin {
+.layout {
   display: grid;
-  gap: var(--space-4);
-  max-width: 62ch;
+  gap: var(--space-12);
 }
 
-.originTitle {
-  font-size: var(--text-title);
-  font-weight: var(--weight-semibold);
-  letter-spacing: -0.01em;
+.chapters {
+  margin-top: var(--space-12);
 }
 
-.originBody {
+/* Reading text, as in a manifesto: the first sentence sums the paragraph up */
+.paragraph {
+  max-width: 40em;
   font-size: var(--text-lead);
   line-height: var(--leading-body);
-  color: var(--color-text-secondary);
+  color: var(--color-text);
 }
 
-.team {
-  display: grid;
-  gap: var(--space-4);
+.paragraph + .paragraph {
+  margin-top: var(--space-5);
 }
 
-/* Same mono label as the other eyebrows of the page */
-.teamLabel {
+.lead {
+  color: var(--color-text-muted);
+}
+
+/* The chapter's facts in a row of ruled boxes, as a drawing's title block */
+.record {
+  display: flex;
+  flex-wrap: wrap;
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+}
+
+.record li {
+  padding: var(--space-2) var(--space-3);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   font-family: var(--font-mono);
   font-size: var(--text-label);
-  font-weight: var(--weight-regular);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
 
-/* A short register, ruled like a drawing's title block */
+/* One cell per person, side by side on wide screens */
 .members {
-  margin: 0;
+  display: grid;
+  margin: var(--space-8) 0 0;
   padding: 0;
   list-style: none;
   border-top: 1px solid var(--color-border);
 }
 
 .member {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-4);
-  padding-block: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  padding-block: var(--space-5) var(--space-6);
   border-bottom: 1px solid var(--color-border);
-}
-
-.name {
-  font-size: var(--text-title);
-  font-weight: var(--weight-medium);
-  letter-spacing: -0.01em;
 }
 
 .role {
@@ -61,4 +69,33 @@
   text-transform: uppercase;
   /* Small mono text: the label grey, which passes AA where cobalt does not */
   color: var(--color-text-muted);
+}
+
+.name {
+  font-size: var(--text-title);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  letter-spacing: -0.015em;
+}
+
+.profile {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+@media (min-width: 40rem) {
+  .members {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .member {
+    padding-inline-end: var(--space-4);
+    border-bottom: 0;
+  }
+
+  .member + .member {
+    padding-inline-start: var(--space-4);
+    border-left: 1px solid var(--color-border);
+  }
 }

@@ -1,0 +1,73 @@
+/*
+  The scene is as tall as its scroll length and the stage sticks to the top
+  for one viewport. The static fallback replaces both with reduced motion,
+  without JavaScript and on very short viewports (see below).
+*/
+
+.scene {
+  position: relative;
+  height: calc(var(--scene-length, 4) * 100svh);
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+}
+
+/* Flowing content beside a sticky column: the scene is as tall as the content. */
+.flowing {
+  height: auto;
+}
+
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+}
+
+.flow {
+  min-width: 0;
+}
+
+/* Moved only by opacity and transform; each one is its own compositor layer while it moves. */
+.cue {
+  will-change: opacity, transform;
+}
+
+.fallback {
+  display: none;
+}
+
+.root:has(> .scene[data-static]) > .scene {
+  display: none;
+}
+
+.root:has(> .scene[data-static]) > .fallback {
+  display: block;
+}
+
+/*
+  The static version also stands in without JavaScript, with reduced motion
+  from the first paint (not only once data-static is set), and on viewports
+  too short for a stage pinned at one screen (phones in landscape, small
+  phones with the browser bars), where it would be cut instead of read.
+*/
+@media (scripting: none), (prefers-reduced-motion: reduce), (max-height: 36rem) {
+  .scene {
+    display: none;
+  }
+
+  .fallback {
+    display: block;
+  }
+}
+
+:global(:root[data-motion="reduce"]) .scene {
+  display: none;
+}
+
+:global(:root[data-motion="reduce"]) .fallback {
+  display: block;
+}

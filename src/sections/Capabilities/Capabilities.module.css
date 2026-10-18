@@ -79,13 +79,18 @@
   line-height: 1.5;
 }
 
-/* Every panel sits in the same cell; the scene crossfades them */
+/* The step texts and the closing note sit in the same cell; one at a time */
+.slot,
 .panels {
   display: grid;
 }
 
+.slot > *,
 .panel {
   grid-area: 1 / 1;
+}
+
+.panel {
   display: grid;
   align-content: start;
   gap: var(--space-2);
@@ -108,7 +113,8 @@
     white-space: nowrap;
   }
 
-  .panel {
+  .panel,
+  .slot > .inside {
     padding-left: 2.5rem;
   }
 }
@@ -126,20 +132,18 @@
   color: var(--color-text);
 }
 
-/* One short fact after the scene: how it works inside */
-.after {
+/* How it works inside: closes the scene, in the place of the step texts */
+.inside {
   display: grid;
+  align-content: start;
   gap: var(--space-2);
-  max-width: 40rem;
-  margin: var(--space-section-compact) 0 0;
-  padding-top: var(--space-6);
-  border-top: 1px solid var(--color-border-subtle);
-  font-size: var(--text-sm);
+  max-width: var(--measure-text);
+  font-size: var(--text-base);
   line-height: var(--leading-body);
   color: var(--color-text-secondary);
 }
 
-.afterLabel {
+.insideLabel {
   font-family: var(--font-mono);
   font-size: var(--text-label);
   font-weight: var(--weight-medium);
@@ -163,6 +167,17 @@
   }
 }
 
+.staticText {
+  display: grid;
+  align-content: start;
+  gap: var(--space-10);
+}
+
+.staticText > .inside {
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
 .staticSteps {
   display: grid;
   gap: var(--space-6);
@@ -177,4 +192,19 @@
   font-size: var(--text-title);
   font-weight: var(--weight-medium);
   letter-spacing: -0.01em;
+}
+
+/*
+  Narrow and short phones (360 or 375 wide, under 672 tall): the chart, sized
+  by the width so its labels stay legible, leaves the step text no room. The
+  static version reads whole there instead of cut.
+*/
+@media (max-width: 24rem) and (max-height: 42rem) {
+  .steps [data-scene] {
+    display: none;
+  }
+
+  .steps [data-fallback] {
+    display: block;
+  }
 }

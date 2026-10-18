@@ -175,7 +175,15 @@ export const en = {
   capabilities: {
     eyebrow: "What we do",
     title: "We check that the plant still works as a whole",
-    lead: "A plant is a dynamic system: when the pump starts, the flow rises and the level drops. ATLAXIA observes the state of the plant and checks that its signals still add up. When something falls out of step, it detects it even when nothing looks wrong, and points to where it is.",
+    intro: {
+      emphasis: "as a whole",
+      beats: [
+        {
+          text: "Five steps, from the first reading to the first diagnosis.",
+          emphasis: "Five steps",
+        },
+      ],
+    },
     stepsLabel: "What ATLAXIA does, step by step",
     steps: {
       observe: {
@@ -232,7 +240,19 @@ export const en = {
     eyebrow: "What we are building",
     title: "A model of the plant in four layers",
     // TODO(owner): approve.
-    lead: "Technically, a multi-layer ontology: what is in the plant and how each part relates to the rest. Today ATLAXIA links processes and signals and learns which ones influence each other.",
+    intro: {
+      emphasis: "four layers",
+      beats: [
+        {
+          text: "Technically, a multi-layer ontology: what is in the plant and how each part relates to the rest, written so that the model and people understand it the same way.",
+          emphasis: "multi-layer ontology",
+        },
+        {
+          text: "Three layers describe the plant; the model learns the fourth.",
+          emphasis: "the model learns the fourth",
+        },
+      ],
+    },
     sketch: "Sketch",
     layers: {
       physical: {

@@ -182,7 +182,17 @@ export const es = {
   capabilities: {
     eyebrow: "Qué hacemos",
     title: "Vigilamos que la planta funcione como un todo",
-    lead: "Una planta es un sistema dinámico: cuando la bomba arranca, sube el caudal y baja el nivel. ATLAXIA observa el estado de la planta y vigila que sus señales sigan cuadrando entre sí. Cuando algo se desajusta, lo detecta aunque no sea evidente y señala dónde está.",
+    // Chapter cover: the title lights up word by word; one line hands over to the five steps,
+    // which tell the story (no lead here, so nothing is told twice).
+    intro: {
+      emphasis: "como un todo",
+      beats: [
+        {
+          text: "Cinco pasos, de la primera medida al primer diagnóstico.",
+          emphasis: "Cinco pasos",
+        },
+      ],
+    },
     stepsLabel: "Qué hace ATLAXIA, paso a paso",
     steps: {
       observe: {
@@ -238,8 +248,20 @@ export const es = {
   building: {
     eyebrow: "Qué estamos construyendo",
     title: "Un modelo de la planta en cuatro capas",
-    // TODO(owner): approve. Names the model as the multi-layer ontology, in plain words.
-    lead: "Técnicamente, una ontología multicapa: qué hay en la planta y cómo se relaciona cada parte con las demás. Hoy ATLAXIA relaciona procesos y señales y aprende cuáles se influyen entre sí.",
+    // TODO(owner): approve. Chapter cover; names the model as the multi-layer ontology, in plain words.
+    intro: {
+      emphasis: "cuatro capas",
+      beats: [
+        {
+          text: "Técnicamente, una ontología multicapa: qué hay en la planta y cómo se relaciona cada parte con las demás, escrita para que la entiendan igual el modelo y las personas.",
+          emphasis: "ontología multicapa",
+        },
+        {
+          text: "Tres capas describen la planta; la cuarta la aprende el modelo.",
+          emphasis: "la cuarta la aprende el modelo",
+        },
+      ],
+    },
     sketch: "Esquema",
     layers: {
       physical: {

@@ -3,24 +3,30 @@ import { afterEach, describe, expect, it } from "vitest";
 import { dictionaries } from "@/content";
 import { stateAt } from "@/lib/choreography/choreography";
 import { Capabilities } from "./Capabilities";
-import { chartLayers, cues, stepOrder } from "./cues";
+import { chartLayers, cues, middleOf, stepOrder } from "./cues";
 
 describe("Capabilities", () => {
   afterEach(() => {
     delete document.documentElement.dataset.motion;
   });
 
-  it("names the region with the section title and opens with the eyebrow and lead", () => {
+  it("opens on its cover: the section title names the region, the lead is read one sentence at a time", () => {
     const { capabilities } = dictionaries.es;
-    render(<Capabilities content={capabilities} />);
+    const { container } = render(<Capabilities content={capabilities} />);
 
     expect(screen.getByRole("region", { name: capabilities.title })).toHaveAttribute(
       "id",
       "capabilities",
     );
-    expect(screen.getByRole("heading", { level: 2, name: capabilities.title })).toBeInTheDocument();
-    expect(screen.getByText(capabilities.eyebrow)).toBeInTheDocument();
-    expect(screen.getByText(capabilities.lead)).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", { level: 2, name: capabilities.title }).length,
+    ).toBeGreaterThan(0);
+    expect(screen.getAllByText(capabilities.eyebrow).length).toBeGreaterThan(0);
+    const beats = Array.from(
+      container.querySelectorAll('[data-cue^="intro-beat-"]'),
+      (beat) => beat.textContent,
+    );
+    expect(beats).toEqual(capabilities.intro.beats.map((beat) => beat.text));
   });
 
   it("gives every step a heading and its text, in order, in the scene and in the static version", () => {
@@ -68,16 +74,29 @@ describe("Capabilities", () => {
       expect(start.get(`layer-${layer}`)?.opacity).toBe(0);
       expect(end.get(`layer-${layer}`)?.opacity).toBe(1);
     }
-    expect(end.get(`panel-${stepOrder.at(-1)}`)?.opacity).toBe(1);
+    // It closes on how it works inside, with the five steps lit as a summary
+    expect(end.get("inside")?.opacity).toBe(1);
+    expect(end.get(`panel-${stepOrder.at(-1)}`)?.opacity).toBe(0);
+    for (const id of stepOrder) expect(end.get(`title-${id}`)?.opacity).toBe(1);
   });
 
   it("shows one step at a time in the middle of each stretch", () => {
     stepOrder.forEach((id, i) => {
-      const middle = stateAt(cues, (i + 0.5) / stepOrder.length);
+      const middle = stateAt(cues, middleOf(i));
       for (const other of stepOrder) {
         expect(middle.get(`panel-${other}`)?.opacity).toBe(other === id ? 1 : 0);
       }
     });
+  });
+
+  it("never shows two step texts on top of each other (they share one cell)", () => {
+    for (let progress = 0; progress <= 1; progress += 0.0025) {
+      const state = stateAt(cues, progress);
+      const visible = [...stepOrder.map((id) => `panel-${id}`), "inside"].filter(
+        (name) => (state.get(name)?.opacity ?? 0) > 0.15,
+      );
+      expect(visible.length, `progress ${progress.toFixed(4)}`).toBeLessThanOrEqual(1);
+    }
   });
 
   it("switches to the static version with reduced motion", () => {
@@ -91,7 +110,9 @@ describe("Capabilities", () => {
     const { capabilities } = dictionaries.en;
     render(<Capabilities content={capabilities} />);
 
-    expect(screen.getByRole("heading", { level: 2, name: capabilities.title })).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", { level: 2, name: capabilities.title }).length,
+    ).toBeGreaterThan(0);
     expect(
       screen.getAllByText("It only reads: it never touches the control system.").length,
     ).toBeGreaterThan(0);

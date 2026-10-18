@@ -9,6 +9,9 @@ import type { Cue } from "@/lib/choreography/choreography";
 import type { Engine } from "@/lib/choreography/engines/types";
 import type { Dictionary } from "@/content";
 import type { CSSProperties } from "react";
+import { SectionIntro } from "@/components/storytelling/SectionIntro";
+import { chapterNumber } from "@/content/shared/sections";
+import { IntroFigure, introFigureCues } from "./IntroFigure";
 import { InfluenceGraph, PlanBase, PlanLayer, sensorPoints } from "./plan";
 import { NodeLabels, type Projection } from "./NodeLabels";
 import { layerOrder, type LayerId } from "./layers";
@@ -166,6 +169,9 @@ export const cues: Cue[] = layerOrder.flatMap((id, i): Cue[] => {
   return cues;
 });
 
+/** The chapter cover: the layers stack up while the lead is read. */
+const introCues = introFigureCues();
+
 const flatLayers = layerOrder.filter(
   (id): id is Exclude<LayerId, "influence"> => id !== "influence",
 );
@@ -248,15 +254,17 @@ export type BuildingProps = {
 export function Building({ content, engine }: BuildingProps) {
   return (
     <Section id="building" labelledBy="building-title" tone="dark" className={styles.section}>
-      <Container>
-        <header className={styles.header}>
-          <p className={styles.eyebrow}>{content.eyebrow}</p>
-          <h2 id="building-title" className={styles.title}>
-            {content.title}
-          </h2>
-          <p className={styles.lead}>{content.lead}</p>
-        </header>
-      </Container>
+      <SectionIntro
+        titleId="building-title"
+        index={chapterNumber("building")}
+        eyebrow={content.eyebrow}
+        title={content.title}
+        emphasis={content.intro.emphasis}
+        beats={content.intro.beats}
+        figure={<IntroFigure layers={content.layers} />}
+        figureCues={introCues}
+        length={2.5}
+      />
       <ChoreographedScene
         cues={cues}
         length={5}

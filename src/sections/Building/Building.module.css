@@ -12,35 +12,6 @@
   }
 }
 
-.header {
-  display: grid;
-  gap: var(--space-4);
-  max-width: 48rem;
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
-.title {
-  font-size: var(--text-heading);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-heading);
-  letter-spacing: var(--tracking-heading);
-  text-wrap: balance;
-}
-
-.lead {
-  font-size: var(--text-lead);
-  line-height: var(--leading-body);
-  color: var(--color-text-secondary);
-}
-
 /*
   Pinned stage. Narrow: the stack of layers on top, the plan under it.
   Wide: the stack in a column on the left, the plan next to it.

@@ -141,7 +141,10 @@ export function ChoreographedScene({
           )}
         </CueSnapshot>
       </div>
-      <div className={styles.fallback}>{fallback}</div>
+      {/* data-fallback lets a scene that needs more room show its static version sooner */}
+      <div className={styles.fallback} data-fallback="">
+        {fallback}
+      </div>
     </div>
   );
 }

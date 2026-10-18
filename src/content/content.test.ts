@@ -4,6 +4,10 @@ import { dictionaries, getDictionary } from "@/content";
 type Leaf = { path: string; value: unknown };
 
 function leaves(node: unknown, path = ""): Leaf[] {
+  // Arrays of objects (the intro beats) are walked; arrays of strings are one leaf
+  if (Array.isArray(node) && node.some((item) => item !== null && typeof item === "object")) {
+    return node.flatMap((item, i) => leaves(item, `${path}.${i}`));
+  }
   if (node !== null && typeof node === "object" && !Array.isArray(node)) {
     return Object.entries(node).flatMap(([key, child]) =>
       leaves(child, path ? `${path}.${key}` : key),
@@ -55,6 +59,18 @@ describe("content dictionaries", () => {
       all.filter((leaf) => phrase.test(text(leaf))).map((leaf) => leaf.path);
     expect(where(esLeaves, /solo lee/i)).toEqual(["capabilities.steps.observe.note"]);
     expect(where(enLeaves, /only reads/i)).toEqual(["capabilities.steps.observe.note"]);
+  });
+
+  it("sets in the accent only words that are in the text", () => {
+    for (const dict of [dictionaries.es, dictionaries.en]) {
+      for (const [title, intro] of [
+        [dict.capabilities.title, dict.capabilities.intro],
+        [dict.building.title, dict.building.intro],
+      ] as const) {
+        expect(title).toContain(intro.emphasis);
+        for (const beat of intro.beats) expect(beat.text).toContain(beat.emphasis);
+      }
+    }
   });
 
   it("falls back to Spanish for unknown locales", () => {

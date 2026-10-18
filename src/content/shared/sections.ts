@@ -6,3 +6,8 @@
 export const navSectionIds = ["vision", "capabilities", "building", "about", "contact"] as const;
 
 export type NavSectionId = (typeof navSectionIds)[number];
+
+/** Chapter number of a section, as shown on its cover: "02" for the second. */
+export function chapterNumber(id: NavSectionId): string {
+  return String(navSectionIds.indexOf(id) + 1).padStart(2, "0");
+}

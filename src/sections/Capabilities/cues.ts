@@ -21,29 +21,42 @@ export const chartLayers = [
 
 export type ChartLayer = (typeof chartLayers)[number];
 
-/** Scroll length of the pinned scene, in viewport heights. */
-export const SCENE_LENGTH = 5;
+/** Scroll length of the pinned scene, in viewport heights: one per step, and one to close. */
+export const SCENE_LENGTH = 6;
 
 const STEPS = stepOrder.length;
+/** The five steps, then the closing stretch: "Por dentro", with the five titles lit as a summary. */
+const STRETCHES = STEPS + 1;
 const FADE = 0.03;
 /** Opacity of the step titles that are not being read. */
 const DIM = 0.38;
 
 /** Progress where step `i` takes over from the previous one. */
-const boundary = (i: number): Range => [i / STEPS - FADE, i / STEPS + FADE];
+const boundary = (i: number): Range => [i / STRETCHES - FADE, i / STRETCHES + FADE];
+/**
+  The step texts share one cell: the text that leaves fades out in the first
+  half of the boundary and the next one fades in during the second, so two
+  texts are never readable on top of each other.
+*/
+const leaving = (i: number): Range => [i / STRETCHES - FADE, i / STRETCHES];
+const arriving = (i: number): Range => [i / STRETCHES, i / STRETCHES + FADE];
 
-export const cues: Cue[] = stepOrder.flatMap((id, i): Cue[] => {
+/** Progress in the middle of step `i`; `STEPS` gives the middle of the closing stretch. */
+export const middleOf = (i: number) => (i + 0.5) / STRETCHES;
+
+const stepCues = stepOrder.flatMap((id, i): Cue[] => {
   const list: Cue[] = [];
   const first = i === 0;
   const last = i === STEPS - 1;
   if (!first) {
     list.push({ target: `title-${id}`, at: boundary(i), opacity: [DIM, 1] });
-    list.push({ target: `panel-${id}`, at: boundary(i), opacity: [0, 1], y: [6, 0], ease: "out" });
+    list.push({ target: `panel-${id}`, at: arriving(i), opacity: [0, 1], y: [6, 0], ease: "out" });
   }
   if (!last) {
     list.push({ target: `title-${id}`, at: boundary(i + 1), opacity: [1, DIM] });
-    list.push({ target: `panel-${id}`, at: boundary(i + 1), opacity: [1, 0], y: [0, -6] });
   }
+  // Every step leaves; the last one gives way to the closing note
+  list.push({ target: `panel-${id}`, at: leaving(i + 1), opacity: [1, 0], y: [0, -6] });
   if ((chartLayers as readonly string[]).includes(id)) {
     list.push({ target: `layer-${id}`, at: boundary(i), opacity: [0, 1] });
   }
@@ -52,3 +65,12 @@ export const cues: Cue[] = stepOrder.flatMap((id, i): Cue[] => {
   }
   return list;
 });
+
+export const cues: Cue[] = [
+  ...stepCues,
+  // Closing: how it works inside, with the five steps lit as a summary
+  ...stepOrder
+    .slice(0, -1)
+    .map((id): Cue => ({ target: `title-${id}`, at: boundary(STEPS), opacity: [DIM, 1] })),
+  { target: "inside", at: arriving(STEPS), opacity: [0, 1], y: [6, 0], ease: "out" },
+];

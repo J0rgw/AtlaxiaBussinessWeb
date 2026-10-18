@@ -69,3 +69,24 @@ Con las capturas de Cerebrium y Matta que pasó el propietario.
 Se quitó del hero: eyebrow, palabra en acento, cajetín y anotaciones con números.
 
 La paleta sigue siendo clara (papel y cobalto) por consistencia con el producto.
+
+## Segunda ronda (2026-10-18)
+
+Doce webs recorridas con Playwright a 1440 × 900 y 390 × 844, con scroll de rueda real y lectura de su código. Motivo: el propietario quería Quiénes somos con más texto, «como Forgis». Capturas en el artifact de revisión «Quiénes somos y referencias».
+
+| Referencia | Qué se vio | Qué se usa |
+|---|---|---|
+| Forgis (nueva) | No tiene página de empresa: la home es un manifiesto de unas 900 palabras en capítulos. Índice numerado fijo a la izquierda con un cuadrado en el capítulo activo; cada párrafo abre con una frase en gris; credenciales enlazadas a su fuente. Texto justificado | Estructura de Quiénes somos: índice numerado, capítulos y frase guía, alineado a la izquierda |
+| Boiler Lab | Ocho pantallas, una idea por pantalla (7 a 19 palabras), barra de capítulos siempre visible. Avanza secuestrando la rueda y escribe con temporizador. Usa Overused Grotesk y JetBrains Mono | El ritmo: frases cortas, una idea por pantalla, con scroll normal |
+| Vectr | Un solo mundo industrial recorrido por la cámara; pasos 01–04 donde el activo se despliega con barra de progreso; página de misión en capítulos | Idea pendiente: un plano de agua recorrido por paradas |
+| Anveril | Frases que pasan de gris a tinta con el scroll. **Corrección a la nota del 2026-10-08:** «From Vision / To Systems» no va fijado en escritorio; sus etapas avanzan con un temporizador de unos 4 s (en móvil sí se fija) | Encendido palabra a palabra de la frase de Quiénes somos |
+| uAvionix | Un incendio contado en 15 paradas sobre un terreno 3D; en cada parada, lo que el sistema percibe (cajas, recuadro térmico, registro) y después el mismo mundo en plano con estados por color | Idea pendiente: el mismo recorrido en SVG 2D sobre una instalación de agua |
+| Matta | Hoja enmarcada con líneas de 1 px, navegación en casillas, reglas de marcas, dibujos sin relleno con cuatro grosores; fichas «medido / ideal / desviación»; About en texto | Hechos de cada capítulo en casillas de cajetín; equipo en casillas |
+| Cerebrium | Índice fijo de razones con su prueba al lado; About con frase grande y párrafos | Base del índice fijo (`StickyIndexStory`) |
+| Radiant | En su About, párrafos de 60 a 90 palabras que pasan de gris a tinta palabra a palabra | Encendido de la frase |
+| Prolibu | Carril 1–7 fijo; trayectoria por años con línea que se llena; muchas animaciones sin respetar «reducir movimiento» | Nada por ahora (no hay fechas verificadas) |
+| Armory | Plantilla con contenido ficticio; tesis que se enciende letra a letra; cuadrícula visible | Nada por ahora |
+| Axiom | Muy poco texto, fondo WebGL | Nada |
+| Rig | Etiqueta, titular y dos líneas por sección; FAQ honesta antes de la demo; red con pulsos en el CTA | Idea pendiente: pulsos por una red en Contacto |
+
+Patrón común de las mejores: nadie enseña un muro de texto de golpe; el índice hace de barra de progreso; el texto se enciende con el scroll, no con un reloj; afirmación más prueba. Casi ninguna respeta «reducir movimiento» y el 3D pesa mucho para lo que cuenta.

@@ -55,6 +55,13 @@ export function SmoothAnchorScroll() {
       if (!target) return;
 
       event.preventDefault();
+      if (window.location.hash !== `#${id}`) {
+        // Before moving: the entry being left keeps the position the reader was at,
+        // so Back returns there (not to the end of a long jump's cut).
+        // Keep the router's history state so back and forward keep working.
+        window.history.pushState(window.history.state, "", `#${id}`);
+      }
+
       const lenis = getSmoothScroll();
       if (lenis) {
         // Same landing as native anchors: the target's scroll-margin-top and the root's
@@ -72,11 +79,6 @@ export function SmoothAnchorScroll() {
           behavior: prefersReducedMotion() ? "auto" : "smooth",
           block: "start",
         });
-      }
-
-      if (window.location.hash !== `#${id}`) {
-        // Keep the router's history state so back and forward keep working.
-        window.history.pushState(window.history.state, "", `#${id}`);
       }
 
       if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");

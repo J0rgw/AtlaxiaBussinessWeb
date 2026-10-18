@@ -41,6 +41,7 @@ Aprobadas para publicar. Donde choquen con lo anterior, mandan estas.
 - **Modelo:** «Técnicamente, una ontología multicapa» abre Qué construimos; las relaciones aprendidas son pistas, no causas probadas.
 - **Visión:** empieza en «Hacia dónde vamos»; se quitó el bloque «Una planta de agua no carece de datos…». Cierra con «Por qué el agua, por qué ahora» (fuentes en «Política de evidencia»).
 - **Entrada:** la web siempre se abre por el hero.
+- **Encaje técnico (aprobado el 2026-10-18):** «gemelo digital del comportamiento de su planta» en El producto hoy; reentreno semanal con los operadores en Disponible hoy; lista «En desarrollo» con la previsión de la evolución de la planta y toda la planta en un solo modelo; histórico etiquetado de la integración con el que se mide el acierto. Las entradillas pasan a `intro.beats` (una frase por paso de la portada). En Qué hacemos la portada lleva solo una línea, «Cinco pasos, de la primera medida al primer diagnóstico»: la entradilla anterior repetía lo que cuentan los pasos.
 
 ## Placeholders acordados
 

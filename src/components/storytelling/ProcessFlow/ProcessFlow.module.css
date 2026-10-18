@@ -182,3 +182,129 @@
     padding-top: 0;
   }
 }
+
+/*
+  Feedback loop: a dashed return line from the last step back to the step
+  where the loop starts, drawn piece by piece on each step it passes, so it
+  needs no measuring. Vertical: on the left of the nodes, with the arrow
+  entering the start node. Horizontal: above the nodes, arrow pointing down.
+  It shows once the last step is reached (story).
+*/
+.container[data-loop] {
+  --loop-gap: 1.25rem;
+  --loop-rise: 2.25rem;
+}
+
+.container[data-loop] .flow {
+  padding-left: var(--loop-gap);
+}
+
+.loop {
+  position: absolute;
+  left: calc(-1 * var(--loop-gap));
+  width: calc(var(--loop-gap) - var(--space-1));
+  border: 0 dashed var(--color-accent);
+  border-left-width: 1px;
+  pointer-events: none;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.flow:has(> .step:last-child:not([data-state="reached"], [data-state="current"])) .loop {
+  opacity: 0;
+}
+
+.loop[data-loop="start"] {
+  top: calc(var(--node) / 2);
+  bottom: 0;
+  border-top-width: 1px;
+  border-top-left-radius: var(--radius-sm);
+}
+
+.loop[data-loop="through"] {
+  top: 0;
+  bottom: 0;
+}
+
+.loop[data-loop="end"] {
+  top: 0;
+  height: calc(var(--node) / 2);
+  border-bottom-width: 1px;
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+/* Arrowhead into the start node */
+.loop[data-loop="start"]::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  right: -1px;
+  border-block: 4.5px solid transparent;
+  border-left: 6px solid var(--color-accent);
+}
+
+.loopLabel {
+  display: none;
+}
+
+@container (min-width: 44rem) {
+  .container[data-loop] .flow[data-orientation="auto"],
+  .container[data-loop] .flow[data-orientation="horizontal"] {
+    padding-left: 0;
+    padding-top: var(--loop-rise);
+  }
+
+  .flow:is([data-orientation="auto"], [data-orientation="horizontal"]) .loop {
+    top: calc(-1 * var(--loop-rise));
+    bottom: auto;
+    width: auto;
+    height: calc(var(--loop-rise) - var(--space-1));
+    border-width: 1px 0 0;
+    border-radius: 0;
+  }
+
+  .flow:is([data-orientation="auto"], [data-orientation="horizontal"]) .loop[data-loop="start"] {
+    left: calc(var(--node) / 2);
+    right: calc(-1 * var(--space-4));
+    border-left-width: 1px;
+    border-top-left-radius: var(--radius-sm);
+  }
+
+  .flow:is([data-orientation="auto"], [data-orientation="horizontal"]) .loop[data-loop="through"] {
+    left: 0;
+    right: calc(-1 * var(--space-4));
+  }
+
+  .flow:is([data-orientation="auto"], [data-orientation="horizontal"]) .loop[data-loop="end"] {
+    left: 0;
+    width: calc(var(--node) / 2);
+    border-right-width: 1px;
+    border-top-right-radius: var(--radius-sm);
+  }
+
+  .flow:is([data-orientation="auto"], [data-orientation="horizontal"])
+    .loop[data-loop="start"]::after {
+    top: auto;
+    right: auto;
+    bottom: -1px;
+    left: -5px;
+    border-inline: 4.5px solid transparent;
+    border-block: 0;
+    border-top: 6px solid var(--color-accent);
+  }
+
+  .flow:is([data-orientation="auto"], [data-orientation="horizontal"]) .loopLabel {
+    display: block;
+    position: absolute;
+    top: -0.75em;
+    left: var(--space-3);
+    padding-inline: var(--space-2);
+    background: var(--color-bg);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    line-height: 1.5;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-accent-text);
+  }
+}

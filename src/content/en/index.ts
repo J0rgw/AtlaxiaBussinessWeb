@@ -39,7 +39,7 @@ export const en = {
   edge: {
     lines: ["All the software", "runs on a unit", "installed at the plant."],
     split: 2,
-    lede: "The data does not leave the plant. Each plant has its own system, and it does not depend on the cloud to run.",
+    lede: "The data does not leave the plant. Each plant has its own model, trained on its own data, and it does not depend on the cloud to run.",
     alt: "ATLAXIA unit: a black mini PC with a finned heat sink and the ATLAXIA symbol on the lid.",
   },
 
@@ -189,7 +189,7 @@ export const en = {
       },
       normal: {
         title: "Learns what is normal",
-        body: "It learns how the signals move together from normal operating data of the plant itself, with no examples of faults. That is how it estimates the expected value of each one.",
+        body: "It learns how the signals move together from normal operating data of the plant itself, with no examples of faults. At every moment it checks whether what it sees fits what is expected.",
       },
       mismatch: {
         title: "Detects the mismatch",
@@ -223,7 +223,7 @@ export const en = {
     },
     inside: {
       label: "Under the hood",
-      body: "A graph neural network treats each signal as a node and learns which signals influence each other. A learned relation is a lead to check, not a proven cause.",
+      body: "A graph neural network treats each signal as a node and learns which signals influence each other. A model you can understand matters as much as one that gets it right: every alert is explained in terms of your plant's equipment, processes and signals.",
     },
   },
 
@@ -249,7 +249,7 @@ export const en = {
       },
       influence: {
         name: "Influences",
-        body: "Which signals influence each other, as the model learns from the data. A learned relation is a lead, not a proven cause.",
+        body: "The one the model learns on top of the other three: which signal influences which, how strongly and with how much delay. A learned relation is a lead, not a proven cause.",
       },
     },
     plan: {
@@ -262,15 +262,18 @@ export const en = {
     product: {
       eyebrow: "The product today",
       title: "On a machine at the plant",
-      body: "It connects to what you already have and replaces none of it: it works alongside your SCADA, your historian and your cybersecurity tools. Your data does not leave the plant.",
+      body: "A digital twin of how your plant behaves. It connects to what you already have and replaces none of it: it works alongside your SCADA, your historian and your cybersecurity tools. Your data does not leave the plant.",
       availableLabel: "Available today",
       available: [
         "Real-time telemetry",
         "Anomaly level from 0 to 5",
         "Alarms by severity",
-        "Fault detection",
+        "Fault detection and localization",
         "Plant integration methodology",
+        "Weekly retraining with your operators",
       ],
+      nextLabel: "In development",
+      next: ["Forecasting how the plant will evolve", "The whole plant in one four-layer model"],
       demoCta: "See the demo",
     },
     // TODO(owner): approve.
@@ -280,7 +283,7 @@ export const en = {
       body: "First it connects to what you already have; then it learns from it, with the people who run the plant.",
       measure:
         "How much time does it save at your plant? We measure it there, with metrics agreed before we start.",
-      loop: "Improves with use",
+      loop: "Improves every week",
       steps: {
         arrive: {
           label: "We come to the plant",
@@ -294,11 +297,12 @@ export const en = {
         adapt: {
           label: "We tune the model with the operators",
           description:
-            "We train it on a stretch of normal operation and refine it with them until it fits the plant.",
+            "We train it on a stretch of normal operation and refine it with them. This stage leaves a labelled history of your plant, which we use to measure how often the model is right.",
         },
         run: {
           label: "Up and running",
-          description: "The system improves as the operators work with it.",
+          description:
+            "Every week, in a scheduled window, the model is retrained with what the operators tell it.",
         },
       },
     },

@@ -3,6 +3,7 @@ import { Button } from "@/components/primitives/Button";
 import { ProcessFlowReveal } from "@/components/storytelling/ProcessFlow";
 import type { Dictionary } from "@/content";
 import { company } from "@/content/shared/company";
+import { cx } from "@/lib/cx";
 import styles from "./shared.module.css";
 
 type BuildingContent = Dictionary["building"];
@@ -21,6 +22,12 @@ export function ProductToday({ content }: { content: BuildingContent }) {
         <p className={styles.eyebrow}>{product.availableLabel}</p>
         <ul role="list" className={styles.availableList}>
           {product.available.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+        <p className={cx(styles.eyebrow, styles.nextLabel)}>{product.nextLabel}</p>
+        <ul role="list" className={cx(styles.availableList, styles.next)}>
+          {product.next.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>

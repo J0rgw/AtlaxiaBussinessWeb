@@ -16,8 +16,8 @@ Fuente de verdad para el copy. Todo lo que se publique tiene que salir de aquí 
 | Demo | Se puede enlazar `https://demo.atlaxia.es` | `company.ts` |
 | Producto | ~~Nombre provisional SCADAXIA~~ **Sustituido (2026-10-17):** la web no nombra el producto | |
 | Sectores foco | ~~Agrifood, metalurgia y agua~~ **Sustituido (2026-10-17):** agua primero; agroalimentación y metalurgia solo como posible expansión | `vision.scenes.sectors` |
-| Equipo | Juan Miguel Navarro, CEO, catedrático de Telecomunicación; David Palazón Palau, CTO y desarrollo de IA, doctorando de Telecomunicación; Jorge Arcas Verdejo, CMO y desarrollo full-stack, estudiante de Ingeniería Informática | Pendiente de pasar a contenido |
-| Origen del equipo | Equipo nacido en la UCAM a partir de la colaboración en proyectos de investigación. Se puede nombrar la UCAM así; sin logo ni relación institucional | Pendiente de pasar a contenido |
+| Equipo | Juan Miguel Navarro Ruiz, CEO, catedrático de Telecomunicación; David Palazón Palau, CTO y desarrollo de IA, doctorando de Telecomunicación; Jorge Arcas Verdejo, CMO y desarrollo full-stack, estudiante de Ingeniería Informática | `about.team` (2026-10-18) |
+| Origen del equipo | Equipo nacido en la UCAM a partir de la colaboración en proyectos de investigación. Se puede nombrar la UCAM así; sin logo ni relación institucional | `about.chapters.origin` |
 | Investigación | Adquirida en diversos proyectos de investigación | |
 | Proyectos | El análisis inteligente del SCADA (el producto que vende la web legacy) | |
 | Premio | **Santander X Award, Proyecto de emprendimiento 2026**: 2.000 € (competición de startups universitarias) | Pendiente de pasar a contenido |
@@ -35,7 +35,8 @@ Aprobadas para publicar. Donde choquen con lo anterior, mandan estas.
 - **Hero:** el texto de main («Tecnología para entender sistemas industriales complejos» y «Software para ver lo que ocurre en una planta, entender por qué y decidir a tiempo.»).
 - **Datos:** no salen de la planta en ningún caso. Todo el software funciona en un equipo instalado en la planta, sin depender de la nube (bloque del equipo, `edge`).
 - **Vocabulario:** «anomalía», nunca «desviación». «Solo lee: nunca toca el control» solo en Qué hacemos. ATLAXIA siempre en mayúsculas. Un test de contenido vigila las dos primeras reglas.
-- **Origen:** proyecto basado en una spin-off de la UCAM; la tecnología nace de TRUEDATA (compra pública precomercial de INCIBE, probada en instalaciones reales de agua). Equipo fundador: Juanmi (CEO), David (CTO) y Jorge (CMO).
+- **Origen:** proyecto basado en una spin-off de la UCAM; la tecnología nace de TRUEDATA (compra pública precomercial de INCIBE, probada en instalaciones reales de agua). Equipo fundador con nombre completo y perfil (2026-10-18): Juan Miguel Navarro Ruiz (CEO, catedrático de Telecomunicación), David Palazón Palau (CTO y desarrollo de IA, doctorando en Telecomunicación) y Jorge Arcas Verdejo (CMO y desarrollo full-stack, estudiante de Ingeniería Informática).
+- **Quiénes somos (2026-10-18):** se cuenta en texto: una frase y cuatro capítulos (origen, TRUEDATA, ATLAXIA, equipo). Incluye tres frases de tono aprobadas: «La investigación es el punto de partida; la planta, el sitio donde tiene que funcionar», «Es el paso que separa una idea prometedora de una tecnología que se puede instalar» y «Tres perfiles que cubren el camino entero».
 - **No se publica:** ronda de inversión, historia del fundador, Zero Trust o ZTA, research (aún no hay; lo habrá), nombre del producto.
 - **Integración:** sin nombre propio. Llegamos a la planta, nos conectamos a su red OT con los permisos que acuerde su responsable, ajustamos el modelo con los operadores y en marcha; mejora con el uso. El ahorro de tiempo se mide en cada planta con métricas pactadas antes de empezar, no se promete en cifras.
 - **Modelo:** «Técnicamente, una ontología multicapa» abre Qué construimos; las relaciones aprendidas son pistas, no causas probadas.
@@ -68,6 +69,7 @@ Aprobadas para publicar. Donde choquen con lo anterior, mandan estas.
 | Hero | Aprobado (2026-10-17) | `hero` | Texto de main |
 | Bloque del equipo | Aprobado (2026-10-18) | `edge` | Titular y frase de apoyo |
 | Visión | Aprobado (2026-10-18) | `vision.scenes`, `vision.evidence` | Hacia dónde vamos, Empezamos por el agua y Por qué el agua, por qué ahora |
+| Quiénes somos | Aprobado (2026-10-18) | `about` | Frase, cuatro capítulos y equipo con nombre completo y perfil |
 | Qué hacemos | Aprobado (2026-10-18) | `capabilities` | Cinco pasos y gráfica; el paso 5 abre con «Un primer diagnóstico…» |
 | Qué estamos construyendo | Aprobado (2026-10-18) | `building` | Cuatro capas, El producto hoy, Disponible hoy, Integración |
 | Quiénes somos | Aprobado (2026-10-18) | `about` | Origen y equipo fundador |

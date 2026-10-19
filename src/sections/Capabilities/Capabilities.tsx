@@ -17,13 +17,25 @@ type CapabilitiesContent = Dictionary["capabilities"];
 
 const number = (i: number) => String(i + 1).padStart(2, "0");
 
+function StepTitle({ content, id, i }: { content: CapabilitiesContent; id: StepId; i: number }) {
+  return (
+    <>
+      <span className={styles.number}>{number(i)}</span>
+      {/* Only the words recede once read: the number keeps the accent at full contrast */}
+      <CueElement as="span" name={`words-${id}`}>
+        {content.steps[id].title}
+      </CueElement>
+    </>
+  );
+}
+
 function StepText({ content, id }: { content: CapabilitiesContent; id: StepId }) {
   const step: { body: string; note?: string } = content.steps[id];
   return (
-    <p className={styles.body}>
+    <>
       {step.body}
       {step.note ? <strong className={styles.note}> {step.note}</strong> : null}
-    </p>
+    </>
   );
 }
 
@@ -46,11 +58,12 @@ export type CapabilitiesProps = {
 /**
  * What ATLAXIA does, in two scenes. The cover: the title lights up as the page
  * scrolls and one line hands over to the steps, which carry the story. Then
- * one signal over one day: a pinned chart gains a sheet at each
- * of five steps (observe, see a system, learn what is normal, detect the
- * mismatch, point to where) while the step text changes, and it closes on how
- * it works inside, with the five steps lit. The plant model in four layers
- * stays in "Qué estamos construyendo".
+ * one signal over one day: a pinned chart gains a sheet at each of five steps
+ * (observe, see a system, learn what is normal, detect the mismatch, point to
+ * where). Each step arrives large with its text under it; when the next one
+ * comes the text goes and the title stays, so the read steps pile up as an
+ * index. It closes on how it works inside, with the five steps lit. The plant
+ * model in four layers stays in "Qué estamos construyendo".
  */
 export function Capabilities({ content, engine }: CapabilitiesProps) {
   return (
@@ -75,32 +88,23 @@ export function Capabilities({ content, engine }: CapabilitiesProps) {
       >
         <Container className={styles.layout}>
           <div className={styles.text}>
-            {/* Visual index of the steps; the panels below carry the headings */}
-            <ol role="list" className={styles.index} aria-hidden="true">
+            {/* Each text sits under its own title, over the rows still to come (they are not shown yet) */}
+            <ol role="list" className={styles.stepList} aria-label={content.stepsLabel}>
               {stepOrder.map((id, i) => (
-                <CueElement as="li" key={id} name={`title-${id}`} className={styles.indexItem}>
-                  <span className={styles.number}>{number(i)}</span>
-                  {content.steps[id].title}
-                </CueElement>
-              ))}
-            </ol>
-            {/* The step texts and the closing note share one cell: one at a time */}
-            <div className={styles.slot}>
-              <ol role="list" className={styles.panels} aria-label={content.stepsLabel}>
-                {stepOrder.map((id, i) => (
-                  <CueElement as="li" key={id} name={`panel-${id}`} className={styles.panel}>
-                    <h3 className={styles.panelTitle}>
-                      <span className={styles.number}>{number(i)}</span>
-                      {content.steps[id].title}
-                    </h3>
+                <li key={id} className={styles.step}>
+                  <CueElement as="h3" name={`title-${id}`} className={styles.stepTitle}>
+                    <StepTitle content={content} id={id} i={i} />
+                  </CueElement>
+                  <CueElement as="p" name={`body-${id}`} className={styles.stepBody}>
                     <StepText content={content} id={id} />
                   </CueElement>
-                ))}
-              </ol>
-              <CueElement as="p" name="inside" className={styles.inside}>
-                <Inside content={content} />
-              </CueElement>
-            </div>
+                </li>
+              ))}
+            </ol>
+            {/* Below the five titles; its box also holds the room the texts reach into */}
+            <CueElement as="p" name="inside" className={styles.inside}>
+              <Inside content={content} />
+            </CueElement>
           </div>
           <CoherenceChart content={content.chart} className={styles.chart} />
         </Container>
@@ -117,15 +121,16 @@ function Fallback({ content }: { content: CapabilitiesContent }) {
         <ol role="list" className={styles.staticSteps} aria-label={content.stepsLabel}>
           {stepOrder.map((id, i) => (
             <li key={id} className={styles.staticStep}>
-              <h3 className={styles.staticTitle}>
-                <span className={styles.number}>{number(i)}</span>
-                {content.steps[id].title}
+              <h3 className={styles.stepTitle}>
+                <StepTitle content={content} id={id} i={i} />
               </h3>
-              <StepText content={content} id={id} />
+              <p className={styles.staticBody}>
+                <StepText content={content} id={id} />
+              </p>
             </li>
           ))}
         </ol>
-        <p className={styles.inside}>
+        <p className={styles.staticInside}>
           <Inside content={content} />
         </p>
       </div>

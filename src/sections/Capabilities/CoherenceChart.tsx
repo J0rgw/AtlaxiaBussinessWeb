@@ -24,8 +24,12 @@ const drawings = [layout("wide"), layout("narrow")] as const;
 const hoursWide = [0, 6, 12, 18, 24];
 const hoursNarrow = [0, 12, 24];
 
-/** "LT-101 · nivel del depósito": the tag stays out of the translated copy. */
-const tagged = (tag: string, name: string) => `${tag} · ${name}`;
+/**
+ * "LT-101  nivel del depósito": the tag stays out of the translated copy. Two
+ * no-break spaces part them, as on a drawing (they survive SVG and HTML
+ * whitespace collapsing; the copy rules leave the middot out).
+ */
+const tagged = (tag: string, name: string) => `${tag}  ${name}`;
 
 type Draw = (l: Layout, c: ChartContent) => ReactNode;
 

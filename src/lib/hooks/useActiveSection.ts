@@ -35,18 +35,24 @@ export function useActiveSection(
       .filter((el): el is HTMLElement => el !== null);
     const intersecting = new Set<string>();
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) intersecting.add(entry.target.id);
-          else intersecting.delete(entry.target.id);
-        }
-        // Document order wins if two sections touch the band at once.
-        const next = sectionIds.find((id) => intersecting.has(id)) ?? null;
-        setActiveId((previous) => next ?? (keepLast ? previous : null));
-      },
-      { rootMargin },
-    );
+    const onChange: IntersectionObserverCallback = (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) intersecting.add(entry.target.id);
+        else intersecting.delete(entry.target.id);
+      }
+      // Document order wins if two sections touch the band at once.
+      const next = sectionIds.find((id) => intersecting.has(id)) ?? null;
+      setActiveId((previous) => next ?? (keepLast ? previous : null));
+    };
+    // The page's own document as root: with the implicit root, a page shown in a
+    // cross-origin iframe (a preview, an embed) has its rootMargin ignored and the
+    // reading line becomes the whole viewport.
+    let observer: IntersectionObserver;
+    try {
+      observer = new IntersectionObserver(onChange, { root: document, rootMargin });
+    } catch {
+      observer = new IntersectionObserver(onChange, { rootMargin });
+    }
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();

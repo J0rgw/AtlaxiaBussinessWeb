@@ -80,10 +80,15 @@
   color: var(--color-text);
 }
 
-/* Without a figure the cover is all title: larger, across the page */
+/*
+  Without a figure the cover is all title: larger, across the page. A pinned
+  cover has one screen, so the height caps it too: on wide, short screens a
+  three-line title would run off the stage (16svh changes nothing from about
+  780px tall).
+*/
 .layout:not(.withFigure):not(.static) .title {
   max-width: 16ch;
-  font-size: clamp(2.75rem, 1rem + 7.5vw, 8rem);
+  font-size: clamp(2.75rem, min(1rem + 7.5vw, 16svh), 8rem);
 }
 
 /* Each word moves on its own (inline-block, so its transform applies) */

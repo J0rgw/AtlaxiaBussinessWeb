@@ -11,6 +11,7 @@ import { Capabilities } from "@/sections/Capabilities/Capabilities";
 import { Contact } from "@/sections/Contact/Contact";
 import { Edge } from "@/sections/Edge/Edge";
 import { Hero } from "@/sections/Hero/Hero";
+import { Team } from "@/sections/Team/Team";
 import { Vision } from "@/sections/Vision/Vision";
 import { PendingTag } from "@/shell/PendingTag";
 import { SiteFooter } from "@/shell/SiteFooter/SiteFooter";
@@ -42,6 +43,8 @@ export function Home({ locale }: HomeProps) {
               return <Building key={id} content={dict.building} />;
             case "about":
               return <About key={id} content={dict.about} />;
+            case "team":
+              return <Team key={id} content={dict.team} />;
             case "contact":
               return <Contact key={id} content={dict.contact} />;
             default:

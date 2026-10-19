@@ -9,6 +9,11 @@ export type SectionHeaderProps = {
   /** Heading level. Visual size is controlled separately with `size`. */
   as?: "h1" | "h2" | "h3";
   size?: "heading" | "display";
+  /**
+   * "split": on wide screens the lead moves beside the title, aligned to its
+   * foot, so the header takes two lines less. Stacks again on narrow screens.
+   */
+  layout?: "stack" | "split";
   /** Ordinal shown before the eyebrow, e.g. "01". */
   index?: string;
   eyebrow?: ReactNode;
@@ -22,6 +27,7 @@ export function SectionHeader({
   titleId,
   as: Heading = "h2",
   size = "heading",
+  layout = "stack",
   index,
   eyebrow,
   lead,
@@ -30,7 +36,7 @@ export function SectionHeader({
   const hasKicker = Boolean(index || eyebrow);
 
   return (
-    <div className={cx(styles.header, className)}>
+    <div className={cx(styles.header, layout === "split" && styles.split, className)}>
       {hasKicker ? (
         <p className={styles.kicker}>
           {index ? <span className={styles.index}>{index}</span> : null}

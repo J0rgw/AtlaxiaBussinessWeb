@@ -99,7 +99,8 @@ export function StickyIndexStory({
       sticky={index}
       stickySide="start"
       ratio={chapters ? "4:8" : "5:7"}
-      stickyAlign="top"
+      // Chapters: the index waits at the reading line, next to what is being read
+      stickyAlign={chapters ? "center" : "top"}
       offset="var(--space-16)"
     >
       <div className={styles.panels}>
@@ -112,6 +113,11 @@ export function StickyIndexStory({
           >
             {item.visual ? <div className={styles.visual}>{item.visual}</div> : null}
             <Title id={`${panelIds[i]}-title`} className={styles.title}>
+              {chapters ? (
+                <>
+                  <span className={styles.titleNumber}>{String(i + 1).padStart(2, "0")}</span>{" "}
+                </>
+              ) : null}
               {item.title}
             </Title>
             {item.body ? <div className={styles.body}>{item.body}</div> : null}

@@ -47,3 +47,28 @@
   line-height: var(--leading-body);
   color: var(--color-text-muted);
 }
+
+/* Split: kicker and title on the left, the lead beside them on its own column */
+@media (min-width: 60rem) {
+  .split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+    column-gap: var(--space-16);
+    max-width: none;
+  }
+
+  .split .kicker,
+  .split .title {
+    grid-column: 1;
+  }
+
+  .split .lead {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+  }
+
+  /* With a kicker the title sits on the second row: the lead spans both */
+  .split:has(> .kicker) .lead {
+    grid-row: 1 / span 2;
+  }
+}

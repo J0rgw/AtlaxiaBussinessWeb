@@ -15,6 +15,7 @@ import { layerOrder } from "./Building/layers";
 import { Contact } from "./Contact/Contact";
 import { Edge } from "./Edge/Edge";
 import { Hero } from "./Hero/Hero";
+import { Team } from "./Team/Team";
 import { SectorsScene } from "./Vision/SectorsScene";
 import { Vision } from "./Vision/Vision";
 import { DirectionFrame, WaterCaseFrame } from "./Vision/waterCase/WaterCaseFrame";
@@ -259,7 +260,7 @@ describe("Water case storyboard", () => {
     expect(screen.getAllByText(vision.waterCase.status.stable).length).toBeGreaterThan(0);
   });
 
-  it("closes with the direction and an invitation that opens an email about the pilot", () => {
+  it("closes with the direction and an invitation that opens an email about a scoped trial", () => {
     render(<DirectionFrame content={vision} />);
 
     expect(
@@ -400,21 +401,36 @@ describe("Building", () => {
     expect(cards[3]!.nextElementSibling).toHaveTextContent("no una causa probada");
   });
 
-  it("describes the product as it is today, without a name, and links to the demo in a new tab", () => {
+  it("tells the product by what the operator gains, proved with an example where no alarm went off", () => {
     render(<Building content={content} />);
 
-    const product = screen.getByRole("heading", { name: "En un equipo en la planta" })
+    const { product } = content;
+    const block = screen.getByRole("heading", { level: 3, name: product.title }).closest("div")!
       .parentElement!.parentElement!;
-    expect(product).not.toHaveTextContent("SCADAXIA");
-    const available = screen.getByText("Telemetría en tiempo real").closest("ul")!;
-    expect(within(available).getAllByRole("listitem")).toHaveLength(6);
-    // What is in development stays apart from what is available today
-    const next = screen.getByText(content.product.next[0]!).closest("ul")!;
-    expect(next).not.toBe(available);
-    expect(within(next).getAllByRole("listitem")).toHaveLength(content.product.next.length);
-    const demo = within(product).getByRole("link", { name: "Ver la demo" });
+    expect(block).not.toHaveTextContent("SCADAXIA");
+    // The example: three rows, highest level first, none of them with an alarm
+    const table = within(block).getByRole("table");
+    const rows = within(table).getAllByRole("row").slice(1);
+    expect(rows.map((row) => within(row).getByRole("rowheader").textContent)).toEqual([
+      `${product.example.rows.sensor.name}LT-101, ${product.example.rows.sensor.kind}`,
+      `${product.example.rows.process.name}${product.example.rows.process.kind}`,
+      `${product.example.rows.plant.name}${product.example.rows.plant.kind}`,
+    ]);
+    expect(rows[0]).toHaveTextContent(product.example.rows.sensor.alarm);
+    expect(rows[0]).toHaveTextContent("Nivel 4 de 5");
+    expect(within(block).getByText(product.example.caption.lead)).toBeInTheDocument();
+    // Why trust it, and the way in: a scoped trial by email and the demo in a new tab
+    expect(within(block).getByText(product.trust.readOnly.title)).toBeInTheDocument();
+    const trial = within(block).getByRole("link", { name: product.trialCta });
+    expect(decodeURIComponent(trial.getAttribute("href")!)).toContain(product.trialCta);
+    const demo = within(block).getByRole("link", { name: product.demoCta });
     expect(demo).toHaveAttribute("href", "https://demo.atlaxia.es");
     expect(demo).toHaveAttribute("target", "_blank");
+    // The capabilities as the product lists them, folded, with the demo data named
+    const spec = within(block).getByText(product.specLabel).closest("details")!;
+    expect(spec).not.toHaveAttribute("open");
+    expect(within(spec).getAllByRole("listitem")).toHaveLength(6);
+    expect(spec).toHaveTextContent("SWaT y WADI");
   });
 
   it("ends with how it comes into a plant, the last steps looping back as it improves", () => {
@@ -441,26 +457,35 @@ describe("About", () => {
   });
   afterEach(() => io.restore());
 
-  it("tells the origin in chapters, each paragraph opening with its summary", () => {
+  it("opens on its cover, as Qué hacemos: the title names the region, one line sums up the origin", () => {
+    const { container } = render(<About content={content} />);
+
+    expect(screen.getByRole("region", { name: content.title })).toHaveAttribute("id", "about");
+    const beats = Array.from(
+      container.querySelectorAll('[data-cue^="intro-beat-"]'),
+      (beat) => beat.textContent,
+    );
+    expect(beats).toEqual(content.intro.beats.map((beat) => beat.text));
+  });
+
+  it("tells the origin in three numbered chapters, each paragraph opening with its summary", () => {
     render(<About content={content} />);
 
     const region = screen.getByRole("region", { name: content.title });
-    expect(region).toHaveTextContent(content.statement);
     const index = screen.getByRole("navigation", { name: content.chaptersLabel });
     expect(
       within(index)
         .getAllByRole("link")
         .map((l) => l.textContent),
-    ).toEqual(["01Origen", "02TRUEDATA", "03ATLAXIA", "04Equipo"]);
+    ).toEqual(["01Origen", "02TRUEDATA", "03ATLAXIA"]);
     expect(
       within(region)
         .getAllByRole("heading", { level: 3 })
         .map((h) => h.textContent),
     ).toEqual([
-      "Un equipo que viene de la investigación",
-      "Probado en el agua antes de ser empresa",
-      "Del proyecto al producto",
-      "Equipo fundador",
+      "01 Un equipo que viene de la investigación",
+      "02 Probado en el agua antes de ser empresa",
+      "03 Del proyecto al producto",
     ]);
     for (const chapter of Object.values(content.chapters)) {
       for (const paragraph of chapter.paragraphs) {
@@ -468,18 +493,82 @@ describe("About", () => {
       }
     }
   });
+});
 
-  it("closes with the founding team: role, name and profile", () => {
-    render(<About content={content} />);
+describe("Team", () => {
+  const content = dictionaries.es.team;
 
-    const members = within(screen.getByRole("list", { name: content.teamLabel })).getAllByRole(
-      "listitem",
+  it("is a section of its own with the three founders side by side, in order", () => {
+    render(<Team content={content} />);
+
+    const region = screen.getByRole("region", { name: content.title });
+    expect(region).toHaveAttribute("id", "team");
+    const list = within(region).getByRole("list", { name: content.title });
+    expect(
+      within(list)
+        .getAllByRole("heading", { level: 3 })
+        .map((h) => h.textContent),
+    ).toEqual(["Juan Miguel Navarro Ruiz", "David Palazón Palau", "Jorge Arcas Verdejo"]);
+  });
+
+  it("gives each founder a role, a profile and what they do at ATLAXIA, all in the page", () => {
+    render(<Team content={content} />);
+
+    const david = screen.getByRole("article", { name: content.members.cto.name });
+    expect(david).toHaveTextContent(content.members.cto.role);
+    expect(david).toHaveTextContent(`${content.fields.profile}${content.members.cto.profile}`);
+    expect(david).toHaveTextContent(`${content.fields.atlaxia}${content.members.cto.atlaxia}`);
+    // The other sheets are in the document too, open or not
+    for (const id of ["ceo", "cmo"] as const) {
+      expect(screen.getByRole("article", { name: content.members[id].name })).toHaveTextContent(
+        content.members[id].atlaxia,
+      );
+    }
+  });
+
+  it("lists each founder's technical and people skills in their sheet", () => {
+    render(<Team content={content} />);
+
+    for (const id of ["ceo", "cto", "cmo"] as const) {
+      const card = screen.getByRole("article", { name: content.members[id].name });
+      for (const kind of ["technical", "social"] as const) {
+        const term = within(card).getByText(content.fields[kind]);
+        const items = within(term.nextElementSibling as HTMLElement)
+          .getAllByRole("listitem")
+          .map((li) => li.textContent);
+        expect(items).toEqual(content.members[id].skills[kind]);
+        expect(items.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("shows each founder's portrait under the name, and links to each profile", () => {
+    const { container } = render(<Team content={content} />);
+
+    const portraits = [
+      ["ceo", "juan-miguel-navarro-ruiz"],
+      ["cto", "david-palazon-palau"],
+      ["cmo", "jorge-arcas-verdejo"],
+    ] as const;
+    for (const [id, stem] of portraits) {
+      const card = screen.getByRole("article", { name: content.members[id].name });
+      const photo = card.querySelector("img")!;
+      // The name is set right over it as text
+      expect(photo).toHaveAttribute("alt", "");
+      expect(photo.getAttribute("src")).toMatch(new RegExp(`/media/team/${stem}-1x\\.webp$`));
+      expect(card.querySelector('source[type="image/avif"]')).not.toBeNull();
+    }
+    // Every founder has a portrait: no initials drawn
+    expect(container.querySelectorAll("svg")).toHaveLength(0);
+    const links = screen.getAllByRole("link");
+    expect(links.map((link) => link.textContent)).toEqual(
+      portraits.map(([id]) => content.fields.linkedin.replace("{name}", content.members[id].name)),
     );
-    expect(members.map((m) => m.textContent)).toEqual([
-      "CEOJuan Miguel Navarro RuizCatedrático de Telecomunicación",
-      "CTO y desarrollo de IADavid Palazón PalauDoctorando en Telecomunicación",
-      "CMO y desarrollo full-stackJorge Arcas VerdejoEstudiante de Ingeniería Informática",
-    ]);
+    for (const link of links) {
+      expect(link.getAttribute("href")).toMatch(/^https:\/\/www\.linkedin\.com\/in\//);
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
   });
 });
 

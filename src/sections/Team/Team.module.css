@@ -1,0 +1,15 @@
+/* The lead's first sentence, muted as in Quiénes somos: it sums the rest up */
+.leadIn {
+  color: var(--color-text-muted);
+}
+
+/*
+  The row fits under the bar with the header: the space left by the bar, the
+  section's top margin, the header and the gap (about 15rem), never taller
+  than the width allows. On short screens it keeps a floor and scrolls.
+*/
+.gallery {
+  --gallery-row-height: clamp(20rem, min(42vw, 100svh - var(--nav-offset) - 15rem), 36rem);
+
+  margin-top: var(--space-10);
+}

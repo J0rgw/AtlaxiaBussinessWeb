@@ -1,7 +1,8 @@
 /*
-  Segmented selector, mirror of the product filter (atlaxia-demo Segmented.tsx):
-  inset track (8px radius, 4px padding, 2px gap), 28px options (36px on touch),
-  6px radius, 12px label; selected = raised surface, semibold, soft shadow.
+  Segmented selector, after the product filter (atlaxia-demo Segmented.tsx):
+  inset track (4px padding, 2px gap), 28px options (36px on touch), 12px
+  label; selected = raised surface, semibold, soft shadow. Square corners on
+  the site (the product rounds them: 8px track, 6px options).
   Other selectors (LanguageSwitcher, FloatingSectionNav) compose these classes to stay identical.
   Sizes are variables whose defaults are the product values; a container can
   scale every selector inside it at once (the floating navigation bar does).

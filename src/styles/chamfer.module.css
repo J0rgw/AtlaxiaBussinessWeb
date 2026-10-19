@@ -1,0 +1,63 @@
+/*
+  Chamfer: two opposite corners cut at 45 degrees, like a machined part
+  (owner, 2026-10-19). The shape lives in ::before, behind the content, so the
+  element itself is not clipped and keeps its focus outline.
+
+  Knobs, set on the element:
+  --cut            size of the cut corners (10px)
+  --chamfer-fill   colour inside the shape (transparent)
+  --chamfer-line   colour of a 1px outline along the shape (none without .outline)
+*/
+
+.chamfer {
+  --cut: 10px;
+
+  position: relative;
+  isolation: isolate;
+}
+
+.chamfer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--chamfer-fill, transparent);
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/*
+  The outline on any surface: an inset line for the straight edges and, in
+  each cut corner, a diagonal drawn as a thin band of a corner-to-corner
+  gradient. No surface colour is needed, so it works on paper, inset or night.
+*/
+.outline {
+  composes: chamfer;
+}
+
+.outline::before {
+  --diagonal: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 0.6px),
+    var(--chamfer-line) calc(50% - 0.6px),
+    var(--chamfer-line) calc(50% + 0.6px),
+    transparent calc(50% + 0.6px)
+  );
+
+  background-image: var(--diagonal), var(--diagonal);
+  background-position:
+    left top,
+    right bottom;
+  background-size: var(--cut) var(--cut);
+  background-repeat: no-repeat;
+  box-shadow: inset 0 0 0 1px var(--chamfer-line);
+}

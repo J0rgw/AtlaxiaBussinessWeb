@@ -1,4 +1,4 @@
-/* Same look as every selector: composed from SegmentedControl, not copied. */
+/* Sizes composed from SegmentedControl; in the bar the options are plain text, the current one underlined. */
 
 .switcher {
   display: inline-flex;
@@ -44,6 +44,7 @@
 
 .list {
   composes: track from "../../primitives/SegmentedControl/SegmentedControl.module.css";
+  gap: var(--space-3);
   margin: 0;
   list-style: none;
 }
@@ -57,7 +58,17 @@
 }
 
 .current {
-  composes: selected from "../../primitives/SegmentedControl/SegmentedControl.module.css";
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+.current::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: var(--underline-bottom, 4px);
+  height: 2px;
+  background: var(--color-accent);
 }
 
 .visuallyHidden {

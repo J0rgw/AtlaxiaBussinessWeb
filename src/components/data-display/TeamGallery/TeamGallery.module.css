@@ -1,0 +1,343 @@
+/*
+  Phones and narrow tablets: the people stack, each square portrait with its
+  sheet in view. Wide screens (60rem): one row of three tiles of the same
+  height; the open tile widens to its portrait plus its sheet and the others
+  narrow. The row's height can be set from outside with --gallery-row-height
+  (a page fits it to the screen); by default it follows the width.
+*/
+.row {
+  display: grid;
+  gap: var(--space-12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  min-width: 0;
+}
+
+.card {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/*
+  The portrait frame of a drawing: the sheet's grid, a hairline border and a
+  square node at each corner. The frame is its own stacking context: the
+  picture and the scrim sit behind the name, which stays in the flow at the
+  foot of the frame.
+*/
+.face {
+  --node: linear-gradient(var(--color-accent), var(--color-accent));
+
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  display: grid;
+  align-content: end;
+  width: min(100%, 26rem);
+  aspect-ratio: 1;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-raised);
+  background-image:
+    linear-gradient(var(--color-signal-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-signal-grid) 1px, transparent 1px);
+  background-size: 1.5rem 1.5rem;
+  background-position: -1px -1px;
+}
+
+.face::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    var(--node) left top / 7px 7px no-repeat,
+    var(--node) right top / 7px 7px no-repeat,
+    var(--node) left bottom / 7px 7px no-repeat,
+    var(--node) right bottom / 7px 7px no-repeat;
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 25%;
+}
+
+/*
+  Over a photo: a dark scrim at the foot so the name reads in white in both
+  themes. It stays dense up to the name's first line (light shirts sit there).
+*/
+.withPhoto::before {
+  content: "";
+  position: absolute;
+  inset: 30% 0 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgb(8 11 16 / 0.9), rgb(8 11 16 / 0.7) 40%, rgb(8 11 16 / 0));
+}
+
+/* The initials, filled and faint: an outline would show where the glyph's contours overlap */
+.monogram {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-sans);
+  font-size: 54px;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.04em;
+  fill: var(--color-accent-soft);
+}
+
+.caption {
+  display: grid;
+  gap: var(--space-2);
+  padding: clamp(var(--space-4), 7cqi, var(--space-8));
+}
+
+.name {
+  font-size: clamp(1.25rem, 9.5cqi, 2.75rem);
+  font-weight: var(--weight-medium);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  color: var(--color-text);
+}
+
+/* Small mono text on paper: the label grey, which passes AA where cobalt does not */
+.role {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: 1.5;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.withPhoto .name {
+  color: #fff;
+}
+
+.withPhoto .role {
+  color: rgb(255 255 255 / 0.86);
+}
+
+/* The name is the button; its box stretches over the whole portrait */
+.toggle {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.toggle:focus-visible {
+  outline: none;
+}
+
+.toggle:focus-visible::after {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -4px;
+}
+
+/* The sheet: ruled rows, a mono label over its text */
+.sheet {
+  display: grid;
+  gap: var(--space-5);
+  align-content: end;
+}
+
+.facts {
+  display: grid;
+  margin: 0;
+  border-top: 1px solid var(--color-border-strong);
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.value {
+  margin: 0;
+  max-width: 34rem;
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+  text-wrap: pretty;
+}
+
+/* Skills: hairline tags, like the callouts on a drawing */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin: var(--space-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 0.125rem var(--space-2);
+  border: 1px solid var(--color-border-strong);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.link {
+  font-size: var(--text-sm);
+  color: var(--color-accent-text);
+  text-underline-offset: 0.2em;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/*
+  Tablets in portrait: the sheet beside a smaller portrait. Without scripts
+  wide screens keep this layout too: the name is a button only once React
+  runs, and with no way to open a tile the closed sheets would stay hidden.
+*/
+@media (min-width: 40rem) and (max-width: 59.99rem), (min-width: 40rem) and (scripting: none) {
+  .card {
+    grid-template-columns: 16rem minmax(0, 1fr);
+    align-items: end;
+    gap: var(--space-8);
+  }
+
+  .face {
+    width: 100%;
+  }
+}
+
+/*
+  The row. Every tile is as tall as the row; --o is 1 on the open tile and 0
+  on the rest. The open tile is exactly its portrait (4:5 of the row's
+  height) plus its sheet; the others share what is left, narrowing their
+  portraits (object-fit: cover keeps the faces). Widths and the sheet's fade
+  are transitions, so the change reads as one movement; with reduced motion
+  the durations are zero.
+*/
+@media (min-width: 60rem) and (scripting: enabled) {
+  .row {
+    --row-h: var(--gallery-row-height, clamp(26rem, 36vw, 36rem));
+    --portrait-w: calc(var(--row-h) * 0.8);
+    --sheet-w: clamp(17rem, 30vw - 1rem, 28rem);
+    --move: calc(var(--duration-base) * 1.4);
+
+    display: flex;
+    gap: var(--space-4);
+    height: var(--row-h);
+  }
+
+  .tile {
+    --o: 0;
+
+    position: relative;
+    flex-grow: calc(1 - var(--o));
+    flex-shrink: 1;
+    flex-basis: calc(var(--o) * (var(--portrait-w) + var(--sheet-w)));
+    /* Sideways the closed sheets are cut off; downwards a long sheet may spill */
+    overflow-x: clip;
+    overflow-y: visible;
+    transition-property: flex-grow, flex-basis;
+    transition-duration: var(--move);
+    transition-timing-function: var(--ease-in-out);
+  }
+
+  .card {
+    display: block;
+    height: 100%;
+  }
+
+  .face {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc((1 - var(--o)) * 100% + var(--o) * var(--portrait-w));
+    aspect-ratio: auto;
+    transition: width var(--move) var(--ease-in-out);
+  }
+
+  /*
+    Beside the portrait; outside the tile (clipped) while it is closed. At
+    least as tall as the portrait, its foot on the portrait's foot; on short
+    screens a long sheet grows downwards rather than losing its first lines.
+  */
+  .sheet {
+    position: absolute;
+    top: 0;
+    min-height: 100%;
+    left: var(--portrait-w);
+    width: var(--sheet-w);
+    gap: var(--space-3);
+    padding-inline-start: var(--space-6);
+    opacity: var(--o);
+    transition: opacity calc(var(--duration-base) * 0.8) var(--ease-out);
+    transition-delay: calc(var(--o) * var(--duration-base) * 0.6);
+  }
+
+  /* The sheet is as tall as the portrait: tighter rows and smaller tags */
+  .fact {
+    padding-block: var(--space-2) var(--space-3);
+  }
+
+  .tag {
+    font-size: var(--text-xs);
+  }
+
+  /* Open: the tile pinned by a click, unless another one is being previewed */
+  .tile[data-open] {
+    --o: 1;
+  }
+
+  /* Keyboard preview: the tile holding the focus opens, the rest close */
+  .row:not([data-quiet]):has(> .tile :focus-visible) > .tile {
+    --o: 0;
+  }
+
+  .row:not([data-quiet]):has(> .tile :focus-visible) > .tile:has(:focus-visible) {
+    --o: 1;
+  }
+}
+
+/* Pointer preview, only where there is a real hover (taps would leave it stuck) */
+@media (min-width: 60rem) and (scripting: enabled) and (hover: hover) {
+  .row:not([data-quiet]):has(> .tile:hover) > .tile:not(:hover) {
+    --o: 0;
+  }
+
+  .row:not([data-quiet]):has(> .tile:hover) > .tile:hover {
+    --o: 1;
+  }
+}

@@ -54,6 +54,22 @@ describe("content dictionaries", () => {
     }
   });
 
+  // Business vocabulary (owner's business repo, AGENTS.md 2.8; aligned on 2026-10-19): a trial at a
+  // plant is a "prueba acotada", never a pilot; the model of the plant is never a digital twin.
+  it("speaks of scoped trials and the plant model, never of pilots or digital twins", () => {
+    for (const leaf of [...esLeaves, ...enLeaves]) {
+      expect(text(leaf), leaf.path).not.toMatch(/piloto|\bpilots?\b|gemelo digital|digital twin/i);
+    }
+  });
+
+  // External kit: ATLAXIA does not anticipate; it is a limit of its identity (understanding the
+  // plant). Catching things early is the proof of value, never the promise.
+  it("never promises to anticipate, predict or forecast", () => {
+    for (const leaf of [...esLeaves, ...enLeaves]) {
+      expect(text(leaf), leaf.path).not.toMatch(/anticip|predic|previsi|forecast/i);
+    }
+  });
+
   it("says the system only reads in one place: What we do", () => {
     const where = (all: Leaf[], phrase: RegExp) =>
       all.filter((leaf) => phrase.test(text(leaf))).map((leaf) => leaf.path);
@@ -66,6 +82,7 @@ describe("content dictionaries", () => {
       for (const [title, intro] of [
         [dict.capabilities.title, dict.capabilities.intro],
         [dict.building.title, dict.building.intro],
+        [dict.about.title, dict.about.intro],
       ] as const) {
         expect(title).toContain(intro.emphasis);
         for (const beat of intro.beats) expect(beat.text).toContain(beat.emphasis);

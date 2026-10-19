@@ -22,6 +22,7 @@ export const es = {
     capabilities: "Qué hacemos",
     building: "Qué estamos construyendo",
     about: "Quiénes somos",
+    team: "Equipo",
     contact: "Contacto",
   } satisfies Record<NavSectionId, string>,
 
@@ -125,8 +126,9 @@ export const es = {
     direction: {
       title: "Hacia dónde vamos",
       statement: "Que cada aviso llegue con su porqué y con lo que se puede hacer.",
-      invitation: "Buscamos plantas de agua con las que construirlo y probar el piloto.",
-      cta: "Colaborar en el piloto",
+      invitation:
+        "Buscamos plantas de agua con las que construirlo, empezando por una prueba acotada.",
+      cta: "Solicitar una prueba acotada",
       card: {
         title: "Anomalía en la bomba B-101",
         where: "Dónde",
@@ -288,26 +290,66 @@ export const es = {
       description:
         "Esquema de una estación de bombeo: depósito, bomba y conducción a la red. Sobre él se superponen cuatro láminas. Física: captación, bombeo y distribución, con seis instrumentos unidos al punto que miden. Red OT: PLC, RTU, SCADA, historizador y ATLAXIA, que recibe sus datos. Funcional: el recorrido del agua, de la entrada al depósito, la bomba, el caudalímetro y la válvula hasta la red. Influencias: el plano se tumba y, sobre él, una segunda lámina con un nodo por instrumento y las relaciones entre ellos, más gruesas cuanto más fuertes.",
     },
+    // Sales angle (owner, 2026-10-19): the identity is understanding how the plant behaves;
+    // catching things early is the proof, not the promise. Claims from the business repo's
+    // external kit and "35 · Producto"; the example is the one Qué hacemos draws.
     product: {
       eyebrow: "El producto hoy",
-      title: "En un equipo en la planta",
-      body: "Un gemelo digital del comportamiento de su planta. Se conecta a lo que ya tiene y no lo sustituye: trabaja junto a su SCADA, su historizador y sus herramientas de ciberseguridad. Sus datos no salen de la planta.",
-      availableLabel: "Disponible hoy",
-      available: [
-        "Telemetría en tiempo real",
-        "Nivel de anomalía de 0 a 5",
-        "Alarmas según su gravedad",
-        "Detección y localización de fallos",
-        "Metodología de integración en planta",
-        "Reentreno semanal con sus operadores",
-      ],
-      // TODO(owner): approve. Projection, kept apart from what is available today.
-      nextLabel: "En desarrollo",
-      next: [
-        "Previsión de la evolución de la planta",
-        "Toda la planta en un solo modelo de cuatro capas",
-      ],
+      title: "No todos los problemas empiezan con una alarma.",
+      hook: "Muchos empiezan como cambios pequeños: señales que, por separado, parecen normales y que juntas cuentan otra historia.",
+      analogy: {
+        text: "Una planta funciona como una orquesta. Cada sistema escucha su instrumento.",
+        emphasis: "ATLAXIA escucha cómo suenan juntos.",
+      },
+      example: {
+        title: "Estación de bombeo",
+        note: "ejemplo ilustrativo",
+        scale: "Nivel de 0 a 5",
+        columns: { signal: "Señal", alarm: "Alarma", level: "ATLAXIA" },
+        rows: {
+          sensor: { name: "Nivel del depósito", kind: "sensor", alarm: "Dentro de límites" },
+          process: { name: "Bombeo", kind: "proceso", alarm: "Sin alarma" },
+          plant: { name: "Toda la planta", kind: "planta", alarm: "Sin alarma" },
+        },
+        // {n} is replaced with the level
+        levelLabel: "Nivel {n} de 5",
+        caption: {
+          lead: "No ha saltado ninguna alarma.",
+          text: "El nivel del depósito sigue dentro de sus límites, pero no cuadra con la bomba ni con el caudal de salida.",
+        },
+      },
+      does: {
+        text: "ATLAXIA aprende cómo se comporta su planta cuando todo va bien y detecta en tiempo real lo que se aparta de lo habitual, de un sensor a la planta completa.",
+        then: "Su equipo gana contexto para entender qué ocurre, investigar su origen y decidir a tiempo.",
+      },
+      trust: {
+        readOnly: {
+          title: "Solo lectura",
+          text: "No interviene en el control ni sustituye sus sistemas de supervisión.",
+        },
+        local: {
+          title: "Sus datos se quedan en la planta",
+          text: "Funciona en un equipo instalado allí. Un sistema por planta, sin nube en operación.",
+        },
+        learns: {
+          title: "Aprende de su planta",
+          text: "Se entrena con su histórico de funcionamiento normal. No necesita ejemplos de fallos.",
+        },
+      },
+      close: "¿Gestiona infraestructuras del agua? Hablemos.",
+      trialCta: "Solicitar una prueba acotada",
       demoCta: "Ver la demo",
+      // What the product does today, as "35 · Producto" lists it
+      specLabel: "Ficha técnica",
+      spec: [
+        "Telemetría en tiempo real, con su histórico",
+        "Nivel de anomalía de 0 a 5 por sensor, proceso y planta",
+        "Alarmas por umbral, con los límites que fija el operador",
+        "Alta de cada planta desde su inventario de procesos y señales",
+        "Entrenamiento con el histórico normal de cada planta",
+        "Usuarios con roles de administrador y técnico",
+      ],
+      demoNote: "La demo usa los bancos de pruebas públicos SWaT y WADI.",
     },
     // How ATLAXIA comes into a plant. The method has no name of its own; no dates or durations.
     // TODO(owner): approve.
@@ -345,11 +387,21 @@ export const es = {
 
   about: {
     eyebrow: "Quiénes somos",
-    // Text-led section (Forgis pattern), approved on 2026-10-18: a statement, then four chapters;
-    // each paragraph opens with the sentence that sums it up. Facts from docs/CONTENIDO.md only.
+    // Chapter cover, as in "Qué hacemos": the title, then one line. Approved on 2026-10-19.
     title: "De la investigación a la planta",
-    statement:
-      "ATLAXIA es inteligencia industrial para infraestructuras críticas. Nace en la UCAM, de un equipo que se formó colaborando en proyectos de investigación, y de una tecnología que ya se probó en instalaciones reales de agua.",
+    intro: {
+      emphasis: "a la planta",
+      beats: [
+        {
+          text: "Un equipo formado en proyectos de investigación de la UCAM y una tecnología ya probada en instalaciones reales de agua.",
+          emphasis: "ya probada en instalaciones reales de agua",
+        },
+      ],
+    },
+    // Three chapters (Forgis pattern); each paragraph opens with the sentence that sums it up.
+    // Facts added on 2026-10-18 and approved on 2026-10-19 (name of TRUEDATA, three facilities,
+    // the plant without Internet, from protecting data to understanding the plant). Source:
+    // the owner's business repo, vigente/10_Origen_y_equipo.md.
     chaptersLabel: "Capítulos",
     chapters: {
       origin: {
@@ -373,59 +425,92 @@ export const es = {
         paragraphs: [
           {
             lead: "La tecnología nace de TRUEDATA.",
-            text: "Es un proyecto de la compra pública precomercial de INCIBE, la fórmula con la que la Administración contrata el desarrollo de soluciones que todavía no existen en el mercado.",
+            text: "«Trazabilidad segura y fiable de datos de infraestructuras hidrológicas»: un proyecto de la compra pública precomercial de INCIBE, la fórmula con la que la Administración contrata el desarrollo de soluciones que todavía no existen en el mercado.",
           },
           {
-            lead: "Se probó en instalaciones reales de agua.",
-            text: "Con sus datos y sus condiciones de operación. Es el paso que separa una idea prometedora de una tecnología que se puede instalar.",
+            lead: "Se probó en tres instalaciones reales.",
+            text: "Una potabilizadora, una depuradora y una planta industrial con agua de proceso, con sus datos y sus condiciones de operación. Una de ellas no tenía Internet ni acceso remoto: todo tenía que funcionar en local, sin tocar lo instalado.",
           },
         ],
-        record: ["INCIBE", "Compra pública precomercial", "Instalaciones reales de agua"],
+        record: ["INCIBE", "Compra pública precomercial", "Tres instalaciones de agua"],
       },
       company: {
         label: "ATLAXIA",
         title: "Del proyecto al producto",
         paragraphs: [
           {
+            lead: "De proteger el dato a entender la planta.",
+            text: "TRUEDATA nació para proteger el dato, con la ciberseguridad de la red de control como eje. Al construir la plataforma vimos un alcance mayor: el modelo de equipos, conexiones y procesos permitía entender la planta entera, no solo su red.",
+          },
+          {
             lead: "ATLAXIA es su fase de comercialización.",
             text: "Lo que funcionó en TRUEDATA se convierte en un producto: se instala en un equipo en cada planta, aprende de sus propios datos y trabaja junto a los sistemas que ya tiene. Los datos no salen de la planta.",
           },
           {
             lead: "Lo construimos con quien opera las plantas.",
-            text: "Cada integración se ajusta con sus operadores. Buscamos plantas de agua con las que construirlo y probar el piloto.",
+            text: "Cada integración se ajusta con sus operadores. Buscamos plantas de agua con las que construirlo, empezando por una prueba acotada.",
           },
         ],
-        record: ["Fase actual", "Comercialización", "Piloto abierto a plantas de agua"],
-      },
-      team: {
-        label: "Equipo",
-        title: "Equipo fundador",
-        paragraphs: [
-          {
-            lead: "Investigación, inteligencia artificial y producto.",
-            text: "Tres perfiles que cubren el camino entero: de la idea al modelo y del modelo a la planta.",
-          },
-        ],
-        record: [],
+        record: ["Fase actual", "Comercialización", "Pruebas acotadas abiertas a plantas de agua"],
       },
     },
-    teamLabel: "Equipo fundador",
-    // Full names and academic profiles (confirmed on 2026-09-29, approved for the site on 2026-10-18).
-    team: {
+  },
+
+  // Own section after Quiénes somos: the three founders side by side; one opens to its sheet.
+  // Perfil and En ATLAXIA approved on 2026-10-19. Source: owner's business repo,
+  // vigente/10_Origen_y_equipo.md, and the owner's corrections.
+  team: {
+    eyebrow: "Equipo",
+    title: "Equipo fundador",
+    lead: {
+      lead: "Investigación, inteligencia artificial y producto.",
+      text: "Tres perfiles que cubren el camino entero: de la idea al modelo y del modelo a la planta.",
+    },
+    fields: {
+      profile: "Perfil",
+      atlaxia: "En ATLAXIA",
+      technical: "Habilidades técnicas",
+      social: "Habilidades sociales",
+      // {name} is replaced with the person's full name
+      linkedin: "LinkedIn de {name}",
+    },
+    // Skills drafted from the role and the facts above; reviewed by the owner on 2026-10-19.
+    members: {
       ceo: {
         name: "Juan Miguel Navarro Ruiz",
         role: "CEO",
-        profile: "Catedrático de Telecomunicación",
+        profile: "Catedrático de Telecomunicación.",
+        atlaxia:
+          "Impulsó la spin-off y le dio vida. Mantiene su vinculación académica con la UCAM.",
+        skills: {
+          technical: ["Telecomunicación", "Investigación", "Transferencia tecnológica"],
+          social: ["Ventas", "Liderazgo", "Presentación a inversores"],
+        },
       },
       cto: {
         name: "David Palazón Palau",
         role: "CTO y desarrollo de IA",
-        profile: "Doctorando en Telecomunicación",
+        profile: "Doctorando en Telecomunicación en la UCAM.",
+        atlaxia: "Diseña la arquitectura del sistema e investiga en su base técnica.",
+        skills: {
+          technical: [
+            "Inteligencia artificial",
+            "Arquitectura de sistemas",
+            "Investigación aplicada",
+          ],
+          social: ["Comunicación técnica"],
+        },
       },
       cmo: {
         name: "Jorge Arcas Verdejo",
         role: "CMO y desarrollo full-stack",
-        profile: "Estudiante de Ingeniería Informática",
+        profile: "Estudiante de Ingeniería Informática.",
+        atlaxia:
+          "Participa en el desarrollo de la plataforma y lleva el marketing y los contactos.",
+        skills: {
+          technical: ["Desarrollo full-stack"],
+          social: ["Marketing", "Ventas", "Gestión de contactos"],
+        },
       },
     },
   },

@@ -19,6 +19,7 @@ export const en = {
     capabilities: "What we do",
     building: "What we are building",
     about: "Who we are",
+    team: "Team",
     contact: "Contact",
   },
 
@@ -118,8 +119,8 @@ export const en = {
     direction: {
       title: "Where we are going",
       statement: "Every alert should come with its why and with what can be done.",
-      invitation: "We are looking for water plants to build it with and to test the pilot.",
-      cta: "Join the pilot",
+      invitation: "We are looking for water plants to build it with, starting with a scoped trial.",
+      cta: "Request a scoped trial",
       card: {
         title: "Anomaly in pump B-101",
         where: "Where",
@@ -281,20 +282,59 @@ export const en = {
     },
     product: {
       eyebrow: "The product today",
-      title: "On a machine at the plant",
-      body: "A digital twin of how your plant behaves. It connects to what you already have and replaces none of it: it works alongside your SCADA, your historian and your cybersecurity tools. Your data does not leave the plant.",
-      availableLabel: "Available today",
-      available: [
-        "Real-time telemetry",
-        "Anomaly level from 0 to 5",
-        "Alarms by severity",
-        "Fault detection and localization",
-        "Plant integration methodology",
-        "Weekly retraining with your operators",
-      ],
-      nextLabel: "In development",
-      next: ["Forecasting how the plant will evolve", "The whole plant in one four-layer model"],
+      title: "Not every problem starts with an alarm.",
+      hook: "Many start as small changes: signals that look normal on their own and tell a different story together.",
+      analogy: {
+        text: "A plant works like an orchestra. Each system listens to its own instrument.",
+        emphasis: "ATLAXIA listens to how they sound together.",
+      },
+      example: {
+        title: "Pumping station",
+        note: "illustrative example",
+        scale: "Level 0 to 5",
+        columns: { signal: "Signal", alarm: "Alarm", level: "ATLAXIA" },
+        rows: {
+          sensor: { name: "Tank level", kind: "sensor", alarm: "Within limits" },
+          process: { name: "Pumping", kind: "process", alarm: "No alarm" },
+          plant: { name: "Whole plant", kind: "plant", alarm: "No alarm" },
+        },
+        levelLabel: "Level {n} of 5",
+        caption: {
+          lead: "No alarm has gone off.",
+          text: "The tank level is still within its limits, but it does not match the pump or the outflow.",
+        },
+      },
+      does: {
+        text: "ATLAXIA learns how your plant behaves when everything is running well and detects in real time what departs from the usual, from a single sensor to the whole plant.",
+        then: "Your team gains the context to understand what is happening, trace its origin and decide in time.",
+      },
+      trust: {
+        readOnly: {
+          title: "Read-only",
+          text: "It never acts on the control system and replaces none of your supervision systems.",
+        },
+        local: {
+          title: "Your data stays at the plant",
+          text: "It runs on a machine installed there. One system per plant, no cloud in operation.",
+        },
+        learns: {
+          title: "Learns from your plant",
+          text: "It is trained on your plant's normal operating history. It needs no examples of failures.",
+        },
+      },
+      close: "Do you run water infrastructure? Let's talk.",
+      trialCta: "Request a scoped trial",
       demoCta: "See the demo",
+      specLabel: "Spec sheet",
+      spec: [
+        "Real-time telemetry, with its history",
+        "Anomaly level from 0 to 5 per sensor, process and plant",
+        "Threshold alarms, with limits set by the operator",
+        "Each plant set up from its inventory of processes and signals",
+        "Training on each plant's normal history",
+        "Users with administrator and technician roles",
+      ],
+      demoNote: "The demo uses the public SWaT and WADI testbeds.",
     },
     // TODO(owner): approve.
     method: {
@@ -330,9 +370,18 @@ export const en = {
 
   about: {
     eyebrow: "Who we are",
+    // TODO(owner): approve.
     title: "From research to the plant",
-    statement:
-      "ATLAXIA is industrial intelligence for critical infrastructure. It was born at UCAM, from a team that formed while collaborating on research projects, and from a technology already tested in real water facilities.",
+    intro: {
+      emphasis: "to the plant",
+      beats: [
+        {
+          text: "A team formed in UCAM research projects and a technology already tested in real water facilities.",
+          emphasis: "already tested in real water facilities",
+        },
+      ],
+    },
+    // Facts added on 2026-10-18 and approved on 2026-10-19 (see the Spanish note).
     chaptersLabel: "Chapters",
     chapters: {
       origin: {
@@ -356,58 +405,82 @@ export const en = {
         paragraphs: [
           {
             lead: "The technology comes from TRUEDATA.",
-            text: "It is a project in INCIBE's pre-commercial public procurement program, the way public administrations commission the development of solutions that do not yet exist on the market.",
+            text: "Its name stands for secure and reliable traceability of water infrastructure data. It is a project in INCIBE's pre-commercial public procurement program, the way public administrations commission the development of solutions that do not yet exist on the market.",
           },
           {
-            lead: "It was tested in real water facilities.",
-            text: "With their data and their operating conditions. That is the step between a promising idea and a technology that can be installed.",
+            lead: "It was tested in three real facilities.",
+            text: "A drinking water treatment plant, a wastewater treatment plant and an industrial plant with process water, with their own data and operating conditions. One of them had no Internet or remote access: everything had to run on site, without touching what was installed.",
           },
         ],
-        record: ["INCIBE", "Pre-commercial public procurement", "Real water facilities"],
+        record: ["INCIBE", "Pre-commercial public procurement", "Three water facilities"],
       },
       company: {
         label: "ATLAXIA",
         title: "From project to product",
         paragraphs: [
           {
+            lead: "From protecting data to understanding the plant.",
+            text: "TRUEDATA was born to protect the data, with the cybersecurity of the control network at its core. While building the platform we saw a wider reach: the model of equipment, connections and processes could explain the whole plant, not just its network.",
+          },
+          {
             lead: "ATLAXIA is its commercialization stage.",
             text: "What worked in TRUEDATA becomes a product: it runs on a unit at each plant, learns from the plant's own data and works alongside the systems already there. The data never leaves the plant.",
           },
           {
             lead: "We build it with the people who run the plants.",
-            text: "Every integration is tuned with the plant's operators. We are looking for water plants to build it with and to test the pilot.",
+            text: "Every integration is tuned with the plant's operators. We are looking for water plants to build it with, starting with a scoped trial.",
           },
         ],
-        record: ["Current stage", "Commercialization", "Pilot open to water plants"],
-      },
-      team: {
-        label: "Team",
-        title: "Founding team",
-        paragraphs: [
-          {
-            lead: "Research, artificial intelligence and product.",
-            text: "Three profiles that cover the whole path: from the idea to the model, and from the model to the plant.",
-          },
-        ],
-        record: [],
+        record: ["Current stage", "Commercialization", "Scoped trials open to water plants"],
       },
     },
-    teamLabel: "Founding team",
-    team: {
+  },
+
+  // TODO(owner): approve the English.
+  team: {
+    eyebrow: "Team",
+    title: "Founding team",
+    lead: {
+      lead: "Research, artificial intelligence and product.",
+      text: "Three profiles that cover the whole path: from the idea to the model, and from the model to the plant.",
+    },
+    fields: {
+      profile: "Profile",
+      atlaxia: "At ATLAXIA",
+      technical: "Technical skills",
+      social: "People skills",
+      linkedin: "{name} on LinkedIn",
+    },
+    members: {
       ceo: {
         name: "Juan Miguel Navarro Ruiz",
         role: "CEO",
-        profile: "Full Professor of Telecommunications",
+        profile: "Full Professor of Telecommunications.",
+        atlaxia: "Drove the spin-off and brought it to life. Keeps close academic ties with UCAM.",
+        skills: {
+          technical: ["Telecommunications", "Research", "Technology transfer"],
+          social: ["Sales", "Leadership", "Investor pitching"],
+        },
       },
       cto: {
         name: "David Palazón Palau",
         role: "CTO and AI development",
-        profile: "PhD candidate in Telecommunications",
+        profile: "PhD candidate in Telecommunications at UCAM.",
+        atlaxia: "Designs the system architecture and researches its technical core.",
+        skills: {
+          technical: ["Artificial intelligence", "Systems architecture", "Applied research"],
+          social: ["Technical communication"],
+        },
       },
       cmo: {
         name: "Jorge Arcas Verdejo",
         role: "CMO and full-stack development",
-        profile: "Computer Engineering student",
+        profile: "Computer Engineering student.",
+        atlaxia: "Takes part in building the platform and runs marketing and outreach.",
+        skills: {
+          technical: ["Full-stack development"],
+          social: ["Marketing", "Sales", "Outreach"],
+        },
       },
     },
   },

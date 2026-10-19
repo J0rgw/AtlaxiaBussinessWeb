@@ -13,6 +13,7 @@ const meta = {
   argTypes: {
     as: { control: "inline-radio", options: ["h1", "h2", "h3"] },
     size: { control: "inline-radio", options: ["heading", "display"] },
+    layout: { control: "inline-radio", options: ["stack", "split"] },
   },
 } satisfies Meta<typeof SectionHeader>;
 
@@ -28,6 +29,27 @@ export const TitleOnly: Story = {
 export const Display: Story = {
   name: "Display (hero)",
   args: { as: "h1", size: "display", index: undefined, eyebrow: undefined, title: "ATLAXIA" },
+};
+
+/** Lead beside the title on wide screens (Equipo); stacks below 60rem. */
+export const Split: Story = {
+  args: {
+    layout: "split",
+    size: "display",
+    index: undefined,
+    eyebrow: "Equipo",
+    title: "Equipo fundador",
+    lead: "Investigación, inteligencia artificial y producto. Tres perfiles que cubren el camino entero: de la idea al modelo y del modelo a la planta.",
+  },
+};
+
+export const SplitLongTitle: Story = {
+  args: {
+    layout: "split",
+    eyebrow: "Qué estamos construyendo",
+    title: "Un titular largo que ocupa dos o tres líneas en la columna de la izquierda",
+    lead: "La entrada se alinea al pie del titular, en su propia columna.",
+  },
 };
 
 export const LongContent: Story = {

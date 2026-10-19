@@ -37,6 +37,23 @@
   height: 0.8125rem;
 }
 
+/*
+  Laptops: the logo, five section labels and the actions share one strip.
+  Below 75rem the items tighten; below 68.75rem the logo keeps its symbol
+  alone (the link keeps its name). `nav.bar` outranks the nav's own rules.
+*/
+@media (min-width: 60rem) and (max-width: 74.99rem) {
+  nav.bar {
+    --nav-gap: var(--space-4);
+  }
+}
+
+@media (min-width: 60rem) and (max-width: 68.74rem) {
+  .wordmark {
+    display: none;
+  }
+}
+
 /* Call to action: compact button at the height of the selector tracks, so it
    ranks below the logo cell. `a.cta` outranks the Button module rules
    regardless of stylesheet order. */
@@ -44,11 +61,11 @@ a.cta {
   min-height: calc(var(--seg-height) + 2 * var(--seg-track-pad));
   padding-block: 0;
   padding-inline: var(--space-5);
-  border-radius: var(--seg-track-radius);
   font-size: var(--seg-font);
 }
 
-a.cta span svg {
+/* Wide screens: the label and an arrow; the envelope is for the icon-only cell */
+.mailIcon {
   display: none;
 }
 
@@ -61,15 +78,21 @@ a.cta span svg {
     width: calc(var(--seg-height) + 2 * var(--seg-track-pad));
     height: calc(var(--seg-height) + 2 * var(--seg-track-pad));
     padding-inline: 0;
-    border-radius: var(--seg-track-radius);
   }
 
   a.cta:hover span {
     transform: none;
   }
 
-  a.cta span svg {
+  .mailIcon {
     display: block;
+  }
+
+  .arrowIcon {
+    display: none;
+  }
+
+  a.cta span svg {
     width: var(--bar-icon);
     height: var(--bar-icon);
   }

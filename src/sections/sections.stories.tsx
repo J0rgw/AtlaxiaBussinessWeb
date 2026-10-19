@@ -6,6 +6,7 @@ import { Capabilities } from "./Capabilities/Capabilities";
 import { Contact } from "./Contact/Contact";
 import { Edge } from "./Edge/Edge";
 import { Hero } from "./Hero/Hero";
+import { Team } from "./Team/Team";
 import { Vision } from "./Vision/Vision";
 
 /** Real sections with the real dictionaries, to review copy and layout in both languages. */
@@ -116,4 +117,14 @@ export const AboutEs: Story = {
 export const AboutEn: Story = {
   name: "About (EN)",
   render: () => <About content={dictionaries.en.about} />,
+};
+
+export const TeamEs: Story = {
+  name: "Team (ES)",
+  render: () => <Team content={dictionaries.es.team} />,
+};
+
+export const TeamEn: Story = {
+  name: "Team (EN)",
+  render: () => <Team content={dictionaries.en.team} />,
 };

@@ -1,4 +1,4 @@
-import { Box, Compass, Layers, Mail, Users } from "lucide-react";
+import { ArrowRight, Box, Compass, Layers, Mail, Milestone, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { FloatingSectionNav } from "@/components/navigation/FloatingSectionNav";
 import { LanguageSwitcher } from "@/components/navigation/LanguageSwitcher";
@@ -19,7 +19,9 @@ const sectionIcons: Record<NavSectionId, ReactNode> = {
   vision: <Compass />,
   capabilities: <Layers />,
   building: <Box />,
-  about: <Users />,
+  // Where the company comes from; the people are the team
+  about: <Milestone />,
+  team: <Users />,
   contact: <Mail />,
 };
 
@@ -52,7 +54,17 @@ export function SiteNav({ locale, dict }: SiteNavProps) {
         label={dict.a11y.languageSwitcher}
         persistKey={LOCALE_STORAGE_KEY}
       />
-      <Button href="#contact" size="sm" className={styles.cta} endIcon={sectionIcons.contact}>
+      <Button
+        href="#contact"
+        size="sm"
+        className={styles.cta}
+        endIcon={
+          <>
+            <Mail className={styles.mailIcon} />
+            <ArrowRight className={styles.arrowIcon} />
+          </>
+        }
+      >
         <span className={styles.ctaLabel}>
           <StableLabel alternatives={otherLocaleValues(locale, (d) => d.nav.contact)}>
             {dict.nav.contact}
@@ -77,6 +89,7 @@ export function SiteNav({ locale, dict }: SiteNavProps) {
         items={items}
         label={dict.navigation.label}
         placement="top-frame"
+        className={styles.bar}
         brand={lockup}
         actions={actions}
       />

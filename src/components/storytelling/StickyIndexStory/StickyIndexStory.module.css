@@ -134,6 +134,12 @@
   letter-spacing: -0.03em;
 }
 
+/* The chapter number before its title, in the accent (as the steps of "Qué hacemos") */
+.titleNumber {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent-text);
+}
+
 .chapters .body {
   max-width: none;
   color: var(--color-text);

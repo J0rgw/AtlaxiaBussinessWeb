@@ -1,10 +1,6 @@
 .layout {
   display: grid;
-  gap: var(--space-12);
-}
-
-.chapters {
-  margin-top: var(--space-12);
+  gap: var(--space-section);
 }
 
 /* Reading text, as in a manifesto: the first sentence sums the paragraph up */
@@ -43,59 +39,4 @@
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
-}
-
-/* One cell per person, side by side on wide screens */
-.members {
-  display: grid;
-  margin: var(--space-8) 0 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--color-border);
-}
-
-.member {
-  display: grid;
-  gap: var(--space-2);
-  align-content: start;
-  padding-block: var(--space-5) var(--space-6);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.role {
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  /* Small mono text: the label grey, which passes AA where cobalt does not */
-  color: var(--color-text-muted);
-}
-
-.name {
-  font-size: var(--text-title);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-snug);
-  letter-spacing: -0.015em;
-}
-
-.profile {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-}
-
-@media (min-width: 40rem) {
-  .members {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .member {
-    padding-inline-end: var(--space-4);
-    border-bottom: 0;
-  }
-
-  .member + .member {
-    padding-inline-start: var(--space-4);
-    border-left: 1px solid var(--color-border);
-  }
 }

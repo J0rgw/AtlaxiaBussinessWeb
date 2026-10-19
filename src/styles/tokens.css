@@ -181,11 +181,21 @@
   /* Anchor offset so section titles are not hidden under the navigation */
   --nav-offset: 5rem;
 
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  /* Product chip radius (badges) */
-  --radius-chip: 7px;
+  /*
+    The site draws square corners, like the lines of a drawing (owner,
+    2026-10-19): buttons, bars, selectors, cards and tags. Circles stay for
+    nodes and markers.
+  */
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-chip: 0;
+
+  /* Replicas of the product's own screens keep the product's radii */
+  --radius-product-sm: 4px;
+  --radius-product-md: 6px;
+  --radius-product-lg: 8px;
+  --radius-product-chip: 7px;
   --radius-pill: 999px;
 
   --shadow-float: 0 16px 40px -24px rgb(14 17 22 / 0.22);

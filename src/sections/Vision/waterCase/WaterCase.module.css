@@ -16,7 +16,7 @@
   padding: 3.2cqi 4cqi;
   overflow: hidden;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-product-lg);
   background: var(--color-bg);
 }
 
@@ -47,7 +47,7 @@
   margin-left: 0.8cqi;
   padding: 0.2cqi 0.6cqi;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-product-sm);
 }
 
 /* The step message: large, under the heading, next to the drawing */
@@ -292,7 +292,7 @@
   gap: 1.2cqi;
   padding: 1.8cqi;
   border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-product-lg);
   background: var(--color-bg-raised);
 }
 
@@ -521,18 +521,25 @@
   color: var(--color-text-muted);
 }
 
+/* The invitation is the site's own button, chamfered, not part of the product replica */
 .cta {
+  composes: chamfer from "../../../styles/chamfer.module.css";
+  --cut: 0.8cqi;
+  --chamfer-fill: var(--color-action);
+
   display: inline-flex;
   align-items: center;
   gap: 0.8cqi;
   justify-self: start;
   padding: 1.1cqi 2cqi;
-  border-radius: var(--radius-pill);
-  background: var(--color-action);
   color: var(--color-action-text);
   font-size: 1.25cqi;
   font-weight: var(--weight-medium);
   text-decoration: none;
+}
+
+.cta:hover {
+  --chamfer-fill: var(--color-accent-text);
 }
 
 .cta svg {
@@ -545,7 +552,7 @@
   gap: 1.6cqi;
   padding: 2cqi;
   border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-product-lg);
   background: var(--color-bg-raised);
   box-shadow: var(--shadow-float);
 }
@@ -607,7 +614,7 @@
   place-items: center;
   min-height: 6cqi;
   border: 1.5px dashed var(--color-border-strong);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-product-md);
   font-size: 1.2cqi;
   font-weight: var(--weight-medium);
   color: var(--color-text-muted);

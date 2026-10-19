@@ -3,25 +3,33 @@
   - Narrow (< 60rem): items with an icon show only the icon (label kept for
     assistive technology). Brand hides below 25rem.
   - Wide (>= 60rem): items show their label.
-  Section links reuse the SegmentedControl look; the active pill is a single
-  element that slides, and parks outside the track (clipped) when no section is
-  active, so it visibly leaves in the direction the reader is going.
+  Section links are plain text (owner, 2026-10-19: no grey track, no pill);
+  the active one is underlined by a single accent line that slides, and parks
+  outside the track (clipped) when no section is active, so it visibly leaves
+  in the direction the reader is going. Sizes still come from the
+  SegmentedControl variables, so every selector in the bar scales at once.
 */
 
 .bar {
   /* Scale of everything inside the bar (selectors, actions, brand) */
   --seg-height: 38px;
   --seg-height-touch: 44px;
-  --seg-pad: 16px;
+  --seg-pad: 0px;
   --seg-font: var(--text-sm);
-  --seg-track-pad: 5px;
-  --seg-track-radius: 11px;
-  --seg-radius: 7px;
+  --seg-track-pad: 0px;
+  --seg-track-radius: 0;
+  --seg-radius: 0;
   --bar-pad: 12px;
   --bar-icon: 20px;
-  /* Deeper track on the white bar so the grey reads clearly */
-  --seg-track-bg: var(--color-border-subtle);
+  /* No track: the links sit on the bar itself. Zero lengths keep their unit:
+     they go into calc() sums with other lengths */
+  --seg-track-bg: transparent;
   --seg-track-shadow: none;
+  /* Space between section links (they have no padding of their own) */
+  --nav-gap: var(--space-6);
+  /* The underline: under the whole label on wide screens, short under an icon */
+  --underline-inset: 0px;
+  --underline-bottom: 4px;
   position: fixed;
   /* Centered with auto margins, not left: 50% + translate: that would cap the
      shrink-to-fit width at half the viewport and squeeze the track. */
@@ -35,8 +43,8 @@
   margin-inline: auto;
   padding: var(--bar-pad);
   border: 1px solid var(--color-border-subtle);
-  /* Concentric with the inner track: track radius + bar padding */
-  border-radius: calc(var(--seg-track-radius) + var(--bar-pad));
+  /* Square, like the rest of the site's chrome */
+  border-radius: 0;
   background: var(--color-bg-raised);
   box-shadow: var(--shadow-float);
 }
@@ -161,10 +169,13 @@
     --seg-height: var(--nav-item);
     --seg-height-touch: var(--nav-item);
     --seg-pad: 10px;
-    --seg-track-pad: 4px;
-    --seg-track-radius: 10px;
-    --seg-radius: 6px;
+    --seg-track-pad: 0px;
+    --seg-track-radius: 0;
+    --seg-radius: 0;
     --bar-pad: 8px;
+    --nav-gap: 2px;
+    --underline-inset: 28%;
+    --underline-bottom: 5px;
     gap: var(--space-2);
   }
 }
@@ -216,7 +227,7 @@
 
 .list {
   display: flex;
-  gap: 2px;
+  gap: var(--nav-gap);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -229,6 +240,23 @@
 .link {
   composes: option from "../../primitives/SegmentedControl/SegmentedControl.module.css";
   z-index: 1;
+}
+
+/* Hover: a short stretch of the underline shows where a click would go */
+.link::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--underline-inset);
+  bottom: var(--underline-bottom);
+  height: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.link:hover::after {
+  transform: scaleX(0.35);
 }
 
 .linkActive {
@@ -268,15 +296,22 @@
   }
 }
 
+/* The indicator spans the active link; its line is drawn at the foot */
 .thumb {
   position: absolute;
-  top: var(--seg-track-pad);
-  bottom: var(--seg-track-pad);
+  top: 0;
+  bottom: 0;
   left: 0;
-  border-radius: var(--seg-radius);
-  background: var(--color-bg-raised);
-  box-shadow: var(--shadow-raise);
   pointer-events: none;
+}
+
+.thumb::before {
+  content: "";
+  position: absolute;
+  inset-inline: var(--underline-inset);
+  bottom: var(--underline-bottom);
+  height: 2px;
+  background: var(--color-accent);
 }
 
 .thumbAnimated {
@@ -303,7 +338,7 @@
     margin-inline: auto;
     padding: var(--bar-pad);
     border: 1px solid var(--color-border-subtle);
-    border-radius: calc(var(--seg-track-radius) + var(--bar-pad));
+    border-radius: 0;
     box-shadow: var(--shadow-float);
   }
 
@@ -317,9 +352,11 @@
     margin-inline-start: 0;
   }
 
+  /* A hairline parts the sections from the language and contact */
   .topFrame .actions {
     gap: var(--space-2);
-    padding-inline: 0;
+    padding-inline: var(--space-2) 0;
+    border-inline-start: 1px solid var(--color-border);
   }
 
   /* Brand strip: same frame language as the desktop strip, logo only */

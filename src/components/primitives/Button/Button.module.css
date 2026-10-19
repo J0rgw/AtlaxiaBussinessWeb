@@ -1,10 +1,11 @@
+/* Chamfered, like a machined part (owner, 2026-10-19): the shape is drawn behind the label */
 .button {
+  composes: chamfer from "../../../styles/chamfer.module.css";
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
   font-family: var(--font-sans);
   font-weight: var(--weight-semibold);
   line-height: 1.2;
@@ -12,8 +13,6 @@
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background-color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out),
     color var(--duration-fast) var(--ease-out),
     transform var(--duration-fast) var(--ease-out);
 }
@@ -38,6 +37,8 @@
 }
 
 .sm {
+  --cut: 8px;
+
   min-height: var(--target-compact);
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
@@ -45,23 +46,27 @@
 
 /* Variants */
 
+/* Filled; on hover the fill turns to the accent */
 .primary {
-  background: var(--color-action);
+  --chamfer-fill: var(--color-action);
+
   color: var(--color-action-text);
 }
 
 .primary:hover:not(:disabled) {
-  background: var(--color-action-hover);
+  --chamfer-fill: var(--color-accent-text);
 }
 
+/* Outlined along the cut shape; on hover the line turns to ink */
 .secondary {
-  background: transparent;
-  border-color: var(--color-border-strong);
+  composes: outline from "../../../styles/chamfer.module.css";
+  --chamfer-line: var(--color-border-strong);
+
   color: var(--color-text);
 }
 
 .secondary:hover:not(:disabled) {
-  border-color: var(--color-text);
+  --chamfer-line: var(--color-text);
 }
 
 .icon {

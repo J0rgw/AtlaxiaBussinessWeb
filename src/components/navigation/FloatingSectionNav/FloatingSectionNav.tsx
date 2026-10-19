@@ -43,8 +43,8 @@ const placementClass = { bottom: "bottom", top: "top", "top-frame": "topFrame" }
 
 /**
  * Section navigation for long single pages: one floating bar at every width.
- * Sections read like a SegmentedControl; a single raised pill slides to the
- * section being read, and slides out past the track edge when none is active.
+ * Sections are plain links; a single accent underline slides to the section
+ * being read, and slides out past the track edge when none is active.
  * On narrow screens, items with an icon collapse to the icon.
  */
 export function FloatingSectionNav({

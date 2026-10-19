@@ -41,12 +41,10 @@ describe("Capabilities", () => {
         .map((h) => h.textContent?.replace(/^\d+/, ""));
       expect(titles).toEqual(stepOrder.map((id) => capabilities.steps[id].title));
     }
-    // The visual index repeats the titles, so it is hidden from assistive technology
+    // One list per version: no hidden duplicate of the titles
     expect(
-      screen
-        .getAllByRole("list", { hidden: true })
-        .some((l) => l.getAttribute("aria-hidden") === "true"),
-    ).toBe(true);
+      screen.queryAllByRole("list", { hidden: true }).filter((l) => l.closest("[aria-hidden]")),
+    ).toEqual([]);
   });
 
   it("keeps the two fixed messages: read only, and the decision stays with the operator", () => {
@@ -68,34 +66,64 @@ describe("Capabilities", () => {
   it("starts on the first step with the chart bare, and ends with every sheet laid down", () => {
     const start = stateAt(cues, 0);
     const end = stateAt(cues, 1);
-    expect(start.get(`panel-${stepOrder[0]}`)?.opacity).toBe(1);
-    for (const id of stepOrder.slice(1)) expect(start.get(`panel-${id}`)?.opacity).toBe(0);
+    expect(start.get(`body-${stepOrder[0]}`)?.opacity ?? 1).toBe(1);
+    for (const id of stepOrder.slice(1)) {
+      expect(start.get(`title-${id}`)?.opacity).toBe(0);
+      expect(start.get(`body-${id}`)?.opacity).toBe(0);
+    }
     for (const layer of chartLayers) {
       expect(start.get(`layer-${layer}`)?.opacity).toBe(0);
       expect(end.get(`layer-${layer}`)?.opacity).toBe(1);
     }
     // It closes on how it works inside, with the five steps lit as a summary
     expect(end.get("inside")?.opacity).toBe(1);
-    expect(end.get(`panel-${stepOrder.at(-1)}`)?.opacity).toBe(0);
-    for (const id of stepOrder) expect(end.get(`title-${id}`)?.opacity).toBe(1);
+    for (const id of stepOrder) {
+      expect(end.get(`body-${id}`)?.opacity).toBe(0);
+      expect(end.get(`title-${id}`)?.opacity ?? 1).toBe(1);
+      expect(end.get(`words-${id}`)?.opacity ?? 1).toBe(1);
+    }
   });
 
-  it("shows one step at a time in the middle of each stretch", () => {
+  it("reads one step at a time: its text under it, the titles read so far above", () => {
     stepOrder.forEach((id, i) => {
       const middle = stateAt(cues, middleOf(i));
-      for (const other of stepOrder) {
-        expect(middle.get(`panel-${other}`)?.opacity).toBe(other === id ? 1 : 0);
+      stepOrder.forEach((other, j) => {
+        expect(middle.get(`body-${other}`)?.opacity ?? 1, `text ${other} at step ${id}`).toBe(
+          other === id ? 1 : 0,
+        );
+        const title = middle.get(`title-${other}`)?.opacity ?? 1;
+        const words = middle.get(`words-${other}`)?.opacity ?? 1;
+        // A title read so far stays whole (its number at full contrast); only its words recede
+        if (j < i) expect([title, words], `title ${other} read`).toEqual([1, 0.6]);
+        if (j === i) expect([title, words], `title ${other} current`).toEqual([1, 1]);
+        if (j > i) expect(title, `title ${other} to come`).toBe(0);
+      });
+      expect(middle.get("inside")?.opacity).toBe(0);
+    });
+  });
+
+  it("keeps every title on screen from the moment it arrives", () => {
+    stepOrder.forEach((id, i) => {
+      const arrival = i / (stepOrder.length + 1) + 0.03;
+      for (let progress = arrival; progress <= 1; progress += 0.0025) {
+        const state = stateAt(cues, progress);
+        const opacity =
+          (state.get(`title-${id}`)?.opacity ?? 1) * (state.get(`words-${id}`)?.opacity ?? 1);
+        expect(opacity, `${id} at ${progress.toFixed(4)}`).toBeGreaterThanOrEqual(0.6);
       }
     });
   });
 
-  it("never shows two step texts on top of each other (they share one cell)", () => {
+  it("never shows two texts at once, and how it works inside only at the end", () => {
     for (let progress = 0; progress <= 1; progress += 0.0025) {
       const state = stateAt(cues, progress);
-      const visible = [...stepOrder.map((id) => `panel-${id}`), "inside"].filter(
-        (name) => (state.get(name)?.opacity ?? 0) > 0.15,
+      const visible = [...stepOrder.map((id) => `body-${id}`), "inside"].filter(
+        (name) => (state.get(name)?.opacity ?? 1) > 0.15,
       );
       expect(visible.length, `progress ${progress.toFixed(4)}`).toBeLessThanOrEqual(1);
+      if (progress < stepOrder.length / (stepOrder.length + 1)) {
+        expect(state.get("inside")?.opacity, `inside at ${progress.toFixed(4)}`).toBe(0);
+      }
     }
   });
 

@@ -294,6 +294,14 @@
   color: var(--color-text-muted);
   cursor: pointer;
   list-style: none;
+  min-height: 24px;
+}
+
+/* Touch: a full-size target; it also takes up the air that sat under the folded line */
+@media (pointer: coarse) {
+  .spec summary {
+    min-height: 44px;
+  }
 }
 
 .spec summary::-webkit-details-marker {

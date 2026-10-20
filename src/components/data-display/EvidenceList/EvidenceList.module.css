@@ -61,6 +61,9 @@
 }
 
 .source a {
+  /* A 24px target without moving anything: the padding is taken back by the margin */
+  padding-block: 5px;
+  margin-block: -5px;
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 0.25em;

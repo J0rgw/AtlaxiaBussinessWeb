@@ -37,21 +37,32 @@
   --reach: calc((var(--device-h) + var(--spacer)) / 2);
   /* Parallax: how far apart the blocks start */
   --drift: clamp(2.5rem, 1rem + 6vw, 7rem);
+  /* The svh cap keeps both blocks, with the device between, inside a short screen */
+  --headline: clamp(2.5rem, min(0.4rem + 6.6vw, 11.5svh), 7.5rem);
 
   container-type: inline-size;
   view-timeline-name: --edge-stage;
   display: grid;
   grid-template-rows: auto var(--spacer) auto auto;
-  /* Same box as the hero's text (Container inside the frame): the block continues its sheet */
-  max-width: calc(var(--container-max) + 2 * var(--gutter));
+  /*
+    Same box as the hero's text (Container inside the frame): the block
+    continues its sheet. Where the svh cap shrinks the headline, the box
+    narrows with it (13 times its size wide, the proportion of a 1440 x 900
+    screen), so the blocks keep their place around the device instead of
+    drifting to the outer edges (owner, 2026-10-20). Uncapped, 13 times the
+    type is wider than the box and nothing changes.
+  */
+  max-width: min(
+    calc(var(--container-max) + 2 * var(--gutter)),
+    calc(13 * var(--headline) + 2 * (var(--gutter) - var(--frame-inset)))
+  );
   margin-inline: auto;
   padding-inline: calc(var(--gutter) - var(--frame-inset));
 }
 
 .title,
 .type {
-  /* The svh cap keeps both blocks, with the device between, inside a short screen */
-  font-size: clamp(2.5rem, min(0.4rem + 6.6vw, 11.5svh), 7.5rem);
+  font-size: var(--headline);
   font-weight: var(--weight-medium);
   line-height: 0.96;
   letter-spacing: -0.045em;

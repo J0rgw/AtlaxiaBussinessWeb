@@ -23,7 +23,13 @@
 }
 
 .stage {
-  --device-w: clamp(15rem, 8rem + 30vw, 34rem);
+  /*
+    Width scales the device up to 34rem; the height (svh) and, on narrow
+    phones, 100vw - 9rem keep it from crossing more than a line or two of the
+    headline, or from outgrowing a short screen. From 390px wide and 900px tall
+    up, none of the caps applies.
+  */
+  --device-w: clamp(11rem, min(8rem + 30vw, 100vw - 9rem, 65svh - 2.4rem), 34rem);
   --device-h: calc(var(--device-w) * var(--device-ratio, 0.9));
   /* Middle row: the device overflows it by (h - spacer) / 2 on each side */
   --spacer: calc(var(--device-h) * 0.3);
@@ -44,7 +50,8 @@
 
 .title,
 .type {
-  font-size: clamp(2.5rem, 0.4rem + 6.6vw, 7.5rem);
+  /* The svh cap keeps both blocks, with the device between, inside a short screen */
+  font-size: clamp(2.5rem, min(0.4rem + 6.6vw, 11.5svh), 7.5rem);
   font-weight: var(--weight-medium);
   line-height: 0.96;
   letter-spacing: -0.045em;
@@ -192,6 +199,22 @@
   }
   .copyLower {
     animation-name: edge-copy-lower;
+  }
+
+  /*
+    On short screens the stage is nearly as tall as the screen, so the
+    composition would only complete with its top already under the top bar:
+    complete it earlier, while the whole stage is still in view.
+  */
+  @media (max-height: 36rem) {
+    .upper,
+    .lower,
+    .lede,
+    .device,
+    .copyUpper,
+    .copyLower {
+      animation-range: cover 0% cover 36%;
+    }
   }
 }
 

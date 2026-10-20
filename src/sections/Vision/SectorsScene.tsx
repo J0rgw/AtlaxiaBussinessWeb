@@ -57,7 +57,8 @@ export function SectorsScene({ content, drawing = "lottie" }: SectorsSceneProps)
       <ParallaxLayer className={styles.grid} x={["0vw", "-8vw"]} opacity={[0.6, 0.4]} />
 
       <div className={styles.sectorsLayout}>
-        <ParallaxLayer className={styles.heading} x={["0vw", "-4vw"]}>
+        {/* No sideways travel: it would eat the gutter, and the title would leave the page's margin */}
+        <ParallaxLayer className={styles.heading}>
           <h3 className={styles.title}>{content.title}</h3>
         </ParallaxLayer>
 

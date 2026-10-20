@@ -22,9 +22,17 @@
   gap: var(--space-8);
 }
 
+/* Three facts fit one row from 48rem (12rem each and a 2rem gap: 640px, the page is 706px at 768);
+   a wider minimum left the third one alone on a second row */
 @media (min-width: 48rem) {
   .list {
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--space-8);
+  }
+}
+
+@media (min-width: 60rem) {
+  .list {
     gap: var(--space-10);
   }
 }

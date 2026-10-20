@@ -271,7 +271,8 @@
   .row {
     --row-h: var(--gallery-row-height, clamp(26rem, 36vw, 36rem));
     --portrait-w: calc(var(--row-h) * 0.8);
-    --sheet-w: clamp(17rem, 30vw - 1rem, 28rem);
+    /* The second slope keeps the closed tiles wide enough for their names (two lines) from 60rem; equal to the first from 80rem */
+    --sheet-w: clamp(15rem, min(30vw - 1rem, 40vw - 9rem), 28rem);
     --gutter: var(--space-4);
     --move: calc(var(--duration-base) * 1.8);
     /* Answers at once and settles slowly; a retarget halfway keeps moving */

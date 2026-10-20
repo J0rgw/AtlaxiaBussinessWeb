@@ -476,9 +476,10 @@ export const en = {
         name: "Jorge Arcas Verdejo",
         role: "CMO and full-stack development",
         profile: "Computer Engineering student.",
-        atlaxia: "Takes part in building the platform and runs marketing and outreach.",
+        atlaxia:
+          "Builds the platform and manages marketing, sales strategy and client relationships.",
         skills: {
-          technical: ["Full-stack development"],
+          technical: ["Full-stack development", "UI/UX design", "CRM and automation"],
           social: ["Marketing", "Sales", "Outreach"],
         },
       },

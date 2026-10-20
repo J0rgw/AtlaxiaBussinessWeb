@@ -242,38 +242,71 @@
 }
 
 /*
-  The row. Every tile is as tall as the row; --o is 1 on the open tile and 0
-  on the rest. The open tile is exactly its portrait (4:5 of the row's
-  height) plus its sheet; the others share what is left, narrowing their
-  portraits (object-fit: cover keeps the faces). Widths and the sheet's fade
-  are transitions, so the change reads as one movement; with reduced motion
-  the durations are zero.
+  How open a tile is: 1 on the open tile, 0 on the rest. Registered so that
+  it is the one value that transitions: the widths, the portrait, the name
+  and the sheet are all worked out from it on every frame, so they move as
+  one. Without @property support the row switches without a transition.
+*/
+@property --team-open {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/*
+  The row. Every tile is as tall as the row. The open tile is exactly its
+  portrait (4:5 of the row's height) plus its sheet; the others share what is
+  left. While two tiles swap, every width moves in a straight line between
+  its two sizes:
+  - the portrait goes from its closed width to 4:5 and never past it, so the
+    photo keeps its scale (object-fit: cover, bound by the height) and the
+    frame only uncovers more of it;
+  - the name is sized in container units of the portrait, so it scales with
+    it and keeps its line breaks instead of reflowing halfway;
+  - the sheet travels on the portrait's right edge and fades in over the
+    second half of the opening.
+  With reduced motion the duration is zero.
 */
 @media (min-width: 60rem) and (scripting: enabled) {
   .row {
     --row-h: var(--gallery-row-height, clamp(26rem, 36vw, 36rem));
     --portrait-w: calc(var(--row-h) * 0.8);
     --sheet-w: clamp(17rem, 30vw - 1rem, 28rem);
-    --move: calc(var(--duration-base) * 1.4);
+    --gutter: var(--space-4);
+    --move: calc(var(--duration-base) * 1.8);
+    /* Answers at once and settles slowly; a retarget halfway keeps moving */
+    --glide: cubic-bezier(0.32, 0.72, 0, 1);
 
     display: flex;
-    gap: var(--space-4);
+    /* The tiles' own borders space them (see below) */
+    gap: 0;
     height: var(--row-h);
   }
 
   .tile {
-    --o: 0;
+    --team-open: 0;
+    --edge: 0px;
 
     position: relative;
-    flex-grow: calc(1 - var(--o));
+    flex-grow: calc(1 - var(--team-open));
     flex-shrink: 1;
-    flex-basis: calc(var(--o) * (var(--portrait-w) + var(--sheet-w)));
+    flex-basis: calc(var(--team-open) * (var(--portrait-w) + var(--sheet-w)) + var(--edge));
     /* Sideways the closed sheets are cut off; downwards a long sheet may spill */
     overflow-x: clip;
     overflow-y: visible;
-    transition-property: flex-grow, flex-basis;
-    transition-duration: var(--move);
-    transition-timing-function: var(--ease-in-out);
+    transition: --team-open var(--move) var(--glide);
+  }
+
+  /*
+    The space between tiles is a transparent border of the tile on its left,
+    not a gap: the pointer is always over some tile, so moving from one person
+    to the next never passes over "no tile", which would start reopening the
+    pinned one for an instant.
+  */
+  .tile:not(:last-child) {
+    --edge: var(--gutter);
+
+    border-inline-end: var(--edge) solid transparent;
   }
 
   .card {
@@ -281,30 +314,50 @@
     height: 100%;
   }
 
+  /* The tile less the sheet's share: the closed width at 0, the portrait at 1 */
   .face {
     position: absolute;
     inset: 0 auto 0 0;
-    width: calc((1 - var(--o)) * 100% + var(--o) * var(--portrait-w));
+    width: calc(100% - var(--team-open) * var(--sheet-w));
     aspect-ratio: auto;
-    transition: width var(--move) var(--ease-in-out);
+  }
+
+  /* All in units of the portrait: the caption is a scaled copy at any width.
+     The column is the caption's own width: the wider role must not widen it */
+  .caption {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 7cqi;
+    overflow-x: clip;
+  }
+
+  .name {
+    font-size: 9.5cqi;
   }
 
   /*
-    Beside the portrait; outside the tile (clipped) while it is closed. At
-    least as tall as the portrait, its foot on the portrait's foot; on short
-    screens a long sheet grows downwards rather than losing its first lines.
+    The role is set at the open portrait's width, so it never rewraps while
+    the portrait changes; it shows with the sheet, on the open tile only.
+  */
+  .role {
+    width: calc(var(--portrait-w) * 0.86);
+    opacity: clamp(0, var(--team-open) * 2 - 1, 1);
+  }
+
+  /*
+    Beside the portrait, on its right edge; outside the tile (clipped) while
+    it is closed. At least as tall as the portrait, its foot on the
+    portrait's foot; on short screens a long sheet grows downwards rather
+    than losing its first lines.
   */
   .sheet {
     position: absolute;
     top: 0;
     min-height: 100%;
-    left: var(--portrait-w);
+    left: calc(100% - var(--team-open) * var(--sheet-w));
     width: var(--sheet-w);
     gap: var(--space-3);
     padding-inline-start: var(--space-6);
-    opacity: var(--o);
-    transition: opacity calc(var(--duration-base) * 0.8) var(--ease-out);
-    transition-delay: calc(var(--o) * var(--duration-base) * 0.6);
+    opacity: clamp(0, var(--team-open) * 2 - 1, 1);
   }
 
   /* The sheet is as tall as the portrait: tighter rows and smaller tags */
@@ -318,26 +371,26 @@
 
   /* Open: the tile pinned by a click, unless another one is being previewed */
   .tile[data-open] {
-    --o: 1;
+    --team-open: 1;
   }
 
   /* Keyboard preview: the tile holding the focus opens, the rest close */
   .row:not([data-quiet]):has(> .tile :focus-visible) > .tile {
-    --o: 0;
+    --team-open: 0;
   }
 
   .row:not([data-quiet]):has(> .tile :focus-visible) > .tile:has(:focus-visible) {
-    --o: 1;
+    --team-open: 1;
   }
 }
 
 /* Pointer preview, only where there is a real hover (taps would leave it stuck) */
 @media (min-width: 60rem) and (scripting: enabled) and (hover: hover) {
   .row:not([data-quiet]):has(> .tile:hover) > .tile:not(:hover) {
-    --o: 0;
+    --team-open: 0;
   }
 
   .row:not([data-quiet]):has(> .tile:hover) > .tile:hover {
-    --o: 1;
+    --team-open: 1;
   }
 }

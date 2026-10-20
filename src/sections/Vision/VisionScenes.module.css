@@ -291,6 +291,9 @@
 [data-static] .whereLayout,
 [data-static] .sectorsLayout {
   height: auto;
+  /* Nothing is pinned here: no need to keep clear of the bars as the stage does,
+     which left a screen of air between scenes */
+  padding-block: var(--space-10);
 }
 
 [data-static] .lottie {

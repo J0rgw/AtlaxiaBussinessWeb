@@ -226,6 +226,13 @@
   }
 }
 
+/* Short screens (phones in landscape): sections would open with a screen of air */
+@media (max-height: 36rem) {
+  :root {
+    --space-section: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  }
+}
+
 /* Control-room surface: same semantic names, night values. */
 [data-surface="dark"] {
   --color-bg: var(--palette-night-900);

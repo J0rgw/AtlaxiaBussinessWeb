@@ -4,7 +4,7 @@ import { Section } from "@/components/primitives/Section";
 import type { Dictionary } from "@/content";
 import { company } from "@/content/shared/company";
 import { mailto } from "@/lib/mailto";
-import { AtlaxiaSymbol } from "@/shell/Brand/Brand";
+import { AtlaxiaSymbol, AtlaxiaWordmark } from "@/shell/Brand/Brand";
 import styles from "./Contact.module.css";
 import { meshPaths, meshSize } from "./mesh";
 
@@ -79,6 +79,9 @@ export function Contact({ content }: ContactProps) {
           </p>
         </div>
       </Container>
+
+      {/* The page's sign-off: the name across the whole frame, at the very end */}
+      <AtlaxiaWordmark className={styles.signature} title={company.name} />
     </Section>
   );
 }

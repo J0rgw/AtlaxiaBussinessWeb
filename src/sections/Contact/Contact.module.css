@@ -4,13 +4,29 @@
   isolation: isolate;
 }
 
-/* Wireframe surface along the bottom, fading towards the horizon */
+/*
+  The page ends on the signature. Wide screens: the frame inset under it, as
+  over the top strip. Narrow screens: room for the floating bar at the bottom,
+  as the pinned stages leave. `section.section` outranks the Section spacing.
+*/
+section.section {
+  padding-bottom: calc(var(--space-16) + var(--space-8));
+}
+
+@media (min-width: 60rem) {
+  section.section {
+    padding-bottom: var(--frame-inset);
+  }
+}
+
+/* Wireframe surface along the bottom, fading towards the horizon; the
+   signature stands on it and its horizon stays under the mail line */
 .mesh {
   position: absolute;
   inset: auto 0 0;
   z-index: -1;
   width: 100%;
-  height: clamp(12rem, 40vw, 30rem);
+  height: clamp(12rem, 30vw, 24rem);
   fill: none;
   stroke-width: 1;
   mask-image: linear-gradient(to bottom, transparent 0%, transparent 12%, #000 60%);
@@ -32,7 +48,7 @@
   display: grid;
   justify-items: center;
   gap: var(--space-6);
-  padding-block: var(--space-8) clamp(var(--space-16), 14vw, 12rem);
+  padding-top: var(--space-8);
   text-align: center;
 }
 
@@ -162,4 +178,15 @@
   font-size: var(--text-sm);
   color: var(--color-accent-text);
   text-underline-offset: 3px;
+}
+
+/* Sign-off: the ATLAXIA lettering across the frame, from one frame line to the
+   other like the top strip, standing on the mesh like a signature at the foot
+   of a letter */
+.signature {
+  display: block;
+  width: calc(100% - 2 * var(--frame-inset));
+  height: auto;
+  margin: clamp(var(--space-16), 12vw, 14rem) auto 0;
+  color: var(--color-text);
 }

@@ -5,7 +5,7 @@
 export const company = {
   name: "ATLAXIA",
   email: "hola@atlaxia.es",
-  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://atlaxia.es").replace(/\/+$/, ""),
+  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || "https://atlaxia.es").replace(/\/+$/, ""),
   demoUrl: "https://demo.atlaxia.es",
 
   legal: {

@@ -210,6 +210,23 @@
   color: var(--color-text);
 }
 
+/*
+  Phones: the sheet is under 600px wide, so its size would put the names at
+  4px. A floor of 11px, and then only the letters (LT, PT...) fit inside the
+  node's ring; the numbers stay in the plan's own tags and the text of the layer.
+*/
+@media (max-width: 47.99rem) {
+  .label {
+    font-size: max(11px, calc(var(--w) * 0.0125));
+  }
+}
+
+@container (max-width: 30rem) {
+  .label span + span {
+    display: none;
+  }
+}
+
 /* Static version */
 .static {
   display: grid;

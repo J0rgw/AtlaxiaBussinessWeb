@@ -14,7 +14,6 @@ import { Hero } from "@/sections/Hero/Hero";
 import { Team } from "@/sections/Team/Team";
 import { Vision } from "@/sections/Vision/Vision";
 import { PendingTag } from "@/shell/PendingTag";
-import { SiteFooter } from "@/shell/SiteFooter/SiteFooter";
 import { SiteNav } from "@/shell/SiteNav/SiteNav";
 import styles from "./Home.module.css";
 
@@ -62,7 +61,8 @@ export function Home({ locale }: HomeProps) {
           }
         })}
       </main>
-      <SiteFooter locale={locale} dict={dict} />
+      {/* Footer hidden for now (owner, 2026-10-20): the ATLAXIA signature at the
+          foot of Contact closes the page. SiteFooter and its copy stay ready. */}
     </>
   );
 }

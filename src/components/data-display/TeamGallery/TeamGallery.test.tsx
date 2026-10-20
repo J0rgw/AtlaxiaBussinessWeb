@@ -85,6 +85,50 @@ describe("TeamGallery", () => {
     ]);
   });
 
+  it("keeps the links of closed sheets out of the tab order, and those of the pinned one in", () => {
+    setWide(true);
+    render(
+      <TeamGallery
+        members={members.map((member) => ({
+          ...member,
+          linkedin: "https://www.linkedin.com/in/example",
+          linkedinText: `LinkedIn de ${member.name}`,
+        }))}
+      />,
+    );
+    const link = (name: string) => screen.getByRole("link", { name: `LinkedIn de ${name}` });
+
+    // Ana is open: her link is reachable, the other two are not
+    expect(link("Ana")).not.toHaveAttribute("tabindex");
+    expect(link("Bea")).toHaveAttribute("tabindex", "-1");
+    expect(link("Carla")).toHaveAttribute("tabindex", "-1");
+
+    // Pinning another tile moves the tab stop with it
+    act(() => fireEvent.click(screen.getByRole("button", { name: "Bea" })));
+    expect(link("Ana")).toHaveAttribute("tabindex", "-1");
+    expect(link("Bea")).not.toHaveAttribute("tabindex");
+
+    // Closed all (Escape): none of them
+    act(() => fireEvent.keyDown(screen.getByRole("button", { name: "Bea" }), { key: "Escape" }));
+    for (const name of ["Ana", "Bea", "Carla"]) {
+      expect(link(name)).toHaveAttribute("tabindex", "-1");
+    }
+  });
+
+  it("leaves every link in the tab order when the sheets are stacked", () => {
+    setWide(false);
+    render(
+      <TeamGallery
+        members={members.map((member) => ({
+          ...member,
+          linkedin: "https://www.linkedin.com/in/example",
+          linkedinText: `LinkedIn de ${member.name}`,
+        }))}
+      />,
+    );
+    for (const link of screen.getAllByRole("link")) expect(link).not.toHaveAttribute("tabindex");
+  });
+
   it("draws a list value (skills) as a list of tags under its label", () => {
     setWide(true);
     render(

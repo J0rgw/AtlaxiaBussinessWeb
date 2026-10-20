@@ -47,8 +47,10 @@ const ROW_QUERY = "(min-width: 60rem) and (scripting: enabled)";
  * The founders side by side, the name and role inside each portrait. On wide
  * screens one tile is open: it widens and shows its sheet while the others
  * narrow to make room. Hovering or tabbing to a tile previews it; clicking
- * (or Enter) pins it; Escape closes. On phones the tiles stack and every
- * sheet is in view. The sheets are always in the document, so assistive
+ * (or Enter) pins it; Escape closes. Tab visits the name buttons and the
+ * links of the pinned sheet only: a sheet that is merely previewed, or closed
+ * and clipped out of sight, is not in the tab order (its links still work
+ * with the pointer). On phones the tiles stack and every sheet is in view. The sheets are always in the document, so assistive
  * technology reads them whichever tile is open.
  */
 export function TeamGallery({ members, labelledBy, defaultOpen, className }: TeamGalleryProps) {
@@ -166,6 +168,9 @@ export function TeamGallery({ members, labelledBy, defaultOpen, className }: Tea
                     <a
                       className={styles.link}
                       href={member.linkedin}
+                      // On the row, only the pinned sheet takes the focus: the others are
+                      // clipped out of sight, or only a preview, and the button pins them
+                      tabIndex={row && !isOpen ? -1 : undefined}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

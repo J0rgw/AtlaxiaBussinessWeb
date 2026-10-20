@@ -33,7 +33,8 @@ const people = (withPhoto: boolean): TeamMember[] =>
 /**
  * The founders side by side. Hover, tab to or click a tile: it opens to its
  * sheet (profile, role and skills as tags) while the others narrow. Escape
- * closes. Below 60rem they stack.
+ * closes. Tab goes through the name buttons and the links of the pinned
+ * sheet (Enter pins). Below 60rem they stack.
  */
 const meta = {
   title: "Data display/TeamGallery",

@@ -182,3 +182,10 @@
 .static .figure > * {
   max-height: none;
 }
+
+/* Phones in landscape: a figure as wide as the screen would be taller than it */
+@media (max-height: 36rem) {
+  .static .figure > * {
+    max-height: 70svh;
+  }
+}

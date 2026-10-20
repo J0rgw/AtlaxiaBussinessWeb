@@ -209,26 +209,28 @@ SHOTS=1 ONLY=320x568,844x390 PATHS=/ node scripts/qa/responsive-audit.mjs   # ca
 
 ## 7. Estado tras la corrección
 
-Rama `claude/great-cannon-6qk1rj`, commits locales (sin push). Estado final: `npm run check` y `npm run format:check` en verde, overflow 0 px en los 16 viewports.
+Rama `claude/great-cannon-6qk1rj`, rebasada sobre `main` (`cc25ac1`); commits locales (sin push). Estado final: `npm run check` y `npm run format:check` en verde, overflow 0 px en los 16 viewports.
 
 | ID  | Estado           | Commit    | Nota                                                                                                                                                                  |
 | --- | ---------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| R1  | hecho            | `a121eda` | Lockfile regenerado sin tocar `package.json`; `rm -rf node_modules && npm ci` y `npm run check` pasan.                                                                |
-| R2  | hecho            | `ff10424` | `ScrollScene` pasa a estático con `(max-height: 36rem)` y sigue la rotación; tests con `matchMedia` simulado.                                                          |
-| R3  | hecho            | `b122039` | Columna `minmax(0, 1fr)` en `.product` y `.productTop`; para que la tabla cupiera hizo falta el padding de R13.                                                        |
-| R4  | hecho            | `8241f4f` | `scroll-padding-bottom` bajo 60rem con la altura del dock. Tab a 390x844, 844x390, 320x568 y 768x1024: ningún foco tapado.                                             |
-| R5  | hecho (variante) | `a44736a` | `tabIndex={-1}` en el enlace de las fichas no fijadas, en el componente, en lugar de `visibility` o `inert`: así la vista previa y el clic con puntero siguen funcionando. |
-| R6  | hecho            | `8fe9b7f` | Topes de `svh` y de ancho en `--device-w` y en el titular; 1440x900 y 1920x1080 idénticos píxel a píxel. Añade `animation-range` más corto con `max-height: 36rem`.      |
-| R7  | hecho            | `eef0923` | Sin `x` en el titular; el borde izquierdo coincide con el gutter durante toda la escena.                                                                               |
-| R8  | hecho            | `75054ee` | Solo a ≥ 60rem; a 768 y 820 el marco ya quedaba entero tras R2 y R7. A 1024x1366 quedan ~400 px libres bajo la ilustración (no es parte de la aceptación).             |
-| R9  | hecho            | `f2ccbe5` | Medida `sangría + 55ch` (máx. 75 caracteres con el espacio final) y bloque centrado de 48rem a 59.99rem.                                                               |
-| R10 | hecho (parcial)  | `3fe06b8` | Nombres de nodo (HTML) a 11 px mínimo, solo letras en hoja estrecha. Los textos SVG del plano siguen a 15 unidades (6,5 a 8 px reales a 320–375): con 17 o 20 se solapan. |
-| R11 | hecho            | `f367a06` | `--sheet-w` con segunda pendiente bajo 80rem: fichas cerradas de 150 px a 1024 y nombres en 2 líneas. Los cargos siguen en 3 líneas.                                    |
-| R12 | hecho (acotado)  | `a67d8a5` | Sin pantallas vacías en 16 viewports, ES y EN, salvo apaisado, corregido con espaciado. Los huecos de 300–450 px de las escenas fijadas dependen de D4 y no se tocan.   |
-| R13 | hecho            | `b122039` | Padding de celda reducido bajo 30rem; "Dentro de límites" en 2 líneas a 375 y en 3 a 320.                                                                              |
-| R14 | hecho            | `5a03404` | `align-items: start`.                                                                                                                                                  |
-| R15 | hecho            | `ce7bee0` | `summary` 24/44 px, ES/EN 24/44 px, enlaces sueltos con padding y margen negativo. Queda el botón de nombre del equipo (22 px de alto) a ≥ 60rem, fuera de la lista.     |
-| R16 | hecho            | `7d96b80` | `minmax(12rem, 1fr)` y hueco `space-8` entre 48rem y 60rem: tres columnas a 768.                                                                                       |
-| R17 | hecho (2 de 4)   | `7684e84` | Corregidos el punto del indicador y "Historizador" a 430 px. Sin cambio: tangente de la A del hero y correo a 11 px (depende del scroll).                              |
+| R1  | hecho            | `94b0edf` | Lockfile regenerado sin tocar `package.json`; `rm -rf node_modules && npm ci` y `npm run check` pasan.                                                                |
+| R2  | hecho            | `6055f7c` | `ScrollScene` pasa a estático con `(max-height: 36rem)` y sigue la rotación; tests con `matchMedia` simulado.                                                          |
+| R3  | hecho            | `8183cb7` | Columna `minmax(0, 1fr)` en `.product` y `.productTop`; para que la tabla cupiera hizo falta el padding de R13.                                                        |
+| R4  | hecho            | `d14f926` | `scroll-padding-bottom` bajo 60rem con la altura del dock. Tab a 390x844, 844x390, 320x568 y 768x1024: ningún foco tapado.                                             |
+| R5  | hecho (variante) | `a2eeb2d` | `tabIndex={-1}` en el enlace de las fichas no fijadas, en el componente, en lugar de `visibility` o `inert`: así la vista previa y el clic con puntero siguen funcionando. |
+| R6  | hecho            | `0c97391` | Topes de `svh` y de ancho en `--device-w` y en el titular; 1440x900 y 1920x1080 idénticos píxel a píxel. Añade `animation-range` más corto con `max-height: 36rem`.      |
+| R7  | hecho            | `a375624` | Sin `x` en el titular; el borde izquierdo coincide con el gutter durante toda la escena.                                                                               |
+| R8  | hecho            | `b4cbbc7` | Solo a ≥ 60rem; a 768 y 820 el marco ya quedaba entero tras R2 y R7. A 1024x1366 quedan ~400 px libres bajo la ilustración (no es parte de la aceptación).             |
+| R9  | hecho            | `000a75b` | Medida `sangría + 55ch` (máx. 75 caracteres con el espacio final) y bloque centrado de 48rem a 59.99rem.                                                               |
+| R10 | hecho (parcial)  | `a4bb782` | Nombres de nodo (HTML) a 11 px mínimo, solo letras en hoja estrecha. Los textos SVG del plano siguen a 15 unidades (6,5 a 8 px reales a 320–375): con 17 o 20 se solapan. |
+| R11 | hecho            | `50f7f74` | `--sheet-w` con segunda pendiente bajo 80rem: fichas cerradas de 150 px a 1024 y nombres en 2 líneas. Los cargos siguen en 3 líneas.                                    |
+| R12 | hecho (acotado)  | `0bd7a74` | Sin pantallas vacías en 16 viewports, ES y EN, salvo apaisado, corregido con espaciado. Los huecos de 300–450 px de las escenas fijadas dependen de D4 y no se tocan.   |
+| R13 | hecho            | `8183cb7` | Padding de celda reducido bajo 30rem; "Dentro de límites" en 2 líneas a 375 y en 3 a 320.                                                                              |
+| R14 | hecho            | `35ebf92` | `align-items: start`.                                                                                                                                                  |
+| R15 | hecho            | `a69d074` | `summary` 24/44 px, ES/EN 24/44 px, enlaces sueltos con padding y margen negativo. Queda el botón de nombre del equipo (22 px de alto) a ≥ 60rem, fuera de la lista.     |
+| R16 | hecho            | `b8977b1` | `minmax(12rem, 1fr)` y hueco `space-8` entre 48rem y 60rem: tres columnas a 768.                                                                                       |
+| R17 | hecho (2 de 4)   | `c6e6995` | Corregidos el punto del indicador y "Historizador" a 430 px. Sin cambio: tangente de la A del hero y correo a 11 px (depende del scroll).                              |
+
+Tras el rebase sobre `cc25ac1` (galería del equipo con `--team-open`, indicador de la nav con `scaleX` y firma en Contacto): R11 se integró sobre la nueva fila y los nombres cerrados caben en 1 línea a 1024; R5 y R17 siguen válidos (Tab sin foco tapado ni oculto a 390x844, 844x390 y 1280x720). Con la nueva escala del nombre en `cqi`, el botón de nombre cerrado mide 15 px de alto a 1024 (22 px a 1280).
 
 Decisiones D1–D5: sin implementar. D4 sigue abierta y condiciona los huecos de R12; D5 se queda con la escala de R6 (a 320 px el equipo cruza 2 líneas).

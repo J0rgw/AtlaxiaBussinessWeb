@@ -127,6 +127,33 @@ describe("Capabilities", () => {
     }
   });
 
+  it("on phones, shows one step at a time in the same place, then how it works inside", () => {
+    // A step shows while its frame and its title are both lit
+    const shown = (state: ReturnType<typeof stateAt>, id: string) =>
+      (state.get(`step-${id}`)?.opacity ?? 1) * (state.get(`title-${id}`)?.opacity ?? 1);
+    for (let progress = 0; progress <= 1; progress += 0.0025) {
+      const state = stateAt(cues, progress);
+      const visible = [
+        ...stepOrder.filter((id) => shown(state, id) > 0.15),
+        ...((state.get("inside")?.opacity ?? 1) > 0.15 ? ["inside"] : []),
+      ];
+      expect(visible.length, `progress ${progress.toFixed(4)}`).toBeLessThanOrEqual(1);
+    }
+    stepOrder.forEach((id, i) => {
+      const middle = stateAt(cues, middleOf(i));
+      expect(shown(middle, id), `step ${id}`).toBe(1);
+      // The bar has one part filled per step reached
+      stepOrder.forEach((other, j) => {
+        expect(middle.get(`tick-${other}`)?.scaleX ?? 1, `bar ${other} at ${id}`).toBe(
+          j <= i ? 1 : 0,
+        );
+      });
+    });
+    const end = stateAt(cues, middleOf(stepOrder.length));
+    expect(stepOrder.filter((id) => shown(end, id) > 0)).toEqual([]);
+    expect(end.get("inside")?.opacity).toBe(1);
+  });
+
   it("switches to the static version with reduced motion", () => {
     document.documentElement.dataset.motion = "reduce";
     const { container } = render(<Capabilities content={dictionaries.es.capabilities} />);

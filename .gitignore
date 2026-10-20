@@ -18,3 +18,6 @@ prompts/
 
 # Anatomy figure previews (scripts/anatomy/build.mjs), local review only
 scripts/anatomy/preview/
+
+# Responsive QA output (scripts/qa/responsive-audit.mjs), local only
+scripts/qa/out/

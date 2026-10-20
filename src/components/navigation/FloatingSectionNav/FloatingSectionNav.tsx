@@ -41,10 +41,24 @@ const NO_IDS: string[] = [];
 
 const placementClass = { bottom: "bottom", top: "top", "top-frame": "topFrame" } as const;
 
+/** Longest a clicked section holds the indicator if the scroll never reaches it (anchor glides last up to 1.2 s). */
+const INTENT_TIMEOUT_MS = 2000;
+
+/** Keys that scroll the page: pressing one means the reader took over. */
+const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]);
+
+/**
+ * Layout width of the indicator. Its real width goes in a scaleX, so sliding
+ * from one link to another animates transform only and stays on the compositor
+ * while heavy scenes keep the main thread busy.
+ */
+const THUMB_BASE_WIDTH = 100;
+
 /**
  * Section navigation for long single pages: one floating bar at every width.
  * Sections are plain links; a single accent underline slides to the section
- * being read, and slides out past the track edge when none is active.
+ * being read (straight to a clicked one while the page scrolls there), and
+ * slides out past the track edge when none is active.
  * On narrow screens, items with an icon collapse to the icon.
  */
 export function FloatingSectionNav({
@@ -57,8 +71,10 @@ export function FloatingSectionNav({
   className,
 }: FloatingSectionNavProps) {
   const ids = useMemo(() => items.map((item) => item.id), [items]);
-  const trackedId = useActiveSection(controlledActiveId === undefined ? ids : NO_IDS);
-  const activeId = controlledActiveId === undefined ? trackedId : controlledActiveId;
+  const uncontrolled = controlledActiveId === undefined;
+  const trackedId = useActiveSection(uncontrolled ? ids : NO_IDS);
+  const intendedId = useIntendedSection(uncontrolled ? ids : NO_IDS, trackedId);
+  const activeId = uncontrolled ? (intendedId ?? trackedId) : controlledActiveId;
 
   const scrolled = useScrolled(placement === "top-frame");
 
@@ -112,6 +128,57 @@ function useScrolled(enabled: boolean) {
   }, [enabled]);
 
   return scrolled;
+}
+
+/**
+ * The section a same-page link asked for (in the bar or anywhere in the page),
+ * until the scroll gets there. Meanwhile the indicator goes straight to it
+ * instead of visiting every section the glide passes, or the one a long jump
+ * cuts to. Released when the section is reached, when the reader scrolls on
+ * their own, or after INTENT_TIMEOUT_MS.
+ */
+function useIntendedSection(ids: readonly string[], trackedId: string | null) {
+  const [intendedId, setIntendedId] = useState<string | null>(null);
+  const key = ids.join("|");
+
+  // Arrived: tracking takes over again.
+  if (intendedId !== null && trackedId === intendedId) setIntendedId(null);
+
+  useEffect(() => {
+    if (!key) return;
+    const sectionIds = new Set(key.split("|"));
+    function onClick(event: MouseEvent) {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      const link = (event.target as Element | null)?.closest?.("a[href^='#']");
+      if (!(link instanceof HTMLAnchorElement)) return;
+      const id = decodeURIComponent(link.hash.slice(1));
+      if (sectionIds.has(id)) setIntendedId(id);
+    }
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [key]);
+
+  useEffect(() => {
+    if (intendedId === null) return;
+    const release = () => setIntendedId(null);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (SCROLL_KEYS.has(event.key)) release();
+    };
+    const timer = window.setTimeout(release, INTENT_TIMEOUT_MS);
+    window.addEventListener("wheel", release, { passive: true });
+    window.addEventListener("touchmove", release, { passive: true });
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("wheel", release);
+      window.removeEventListener("touchmove", release);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [intendedId]);
+
+  return intendedId;
 }
 
 function SectionTrack({ items, activeId }: { items: SectionNavItem[]; activeId: string | null }) {
@@ -172,8 +239,8 @@ function SectionTrack({ items, activeId }: { items: SectionNavItem[]; activeId: 
         data-parked={thumb?.parked ?? undefined}
         className={cx(styles.thumb, animate && styles.thumbAnimated)}
         style={{
-          width: thumb?.width ?? 0,
-          transform: `translateX(${thumb?.x ?? 0}px)`,
+          width: THUMB_BASE_WIDTH,
+          transform: `translateX(${thumb?.x ?? 0}px) scaleX(${(thumb?.width ?? 0) / THUMB_BASE_WIDTH})`,
           opacity: thumb ? 1 : 0,
         }}
       />

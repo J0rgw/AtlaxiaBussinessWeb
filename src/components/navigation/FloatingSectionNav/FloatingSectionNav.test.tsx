@@ -1,4 +1,4 @@
-import { act, render, renderHook, screen } from "@testing-library/react";
+import { act, fireEvent, render, renderHook, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mockIntersectionObserver } from "@/test/intersectionObserver";
 import { FloatingSectionNav, type SectionNavItem } from "./FloatingSectionNav";
@@ -114,6 +114,64 @@ describe("FloatingSectionNav", () => {
     act(() => io.setIntersecting("about", true));
 
     expect(screen.getByRole("link", { name: "Quiénes somos" })).toHaveAttribute(
+      "aria-current",
+      "location",
+    );
+  });
+
+  it("goes straight to a clicked section while the page scrolls there", () => {
+    render(
+      <>
+        <Sections />
+        <FloatingSectionNav items={items} label="Navegación" />
+      </>,
+    );
+    act(() => io.setIntersecting("vision", true));
+
+    fireEvent.click(screen.getByRole("link", { name: "Quiénes somos" }));
+    const about = screen.getByRole("link", { name: "Quiénes somos" });
+    expect(about).toHaveAttribute("aria-current", "location");
+
+    // The glide passes "Qué hacemos" on its way: the indicator stays on the target.
+    act(() => {
+      io.setIntersecting("vision", false);
+      io.setIntersecting("capabilities", true);
+    });
+    expect(about).toHaveAttribute("aria-current", "location");
+    expect(screen.getByRole("link", { name: "Qué hacemos" })).not.toHaveAttribute("aria-current");
+
+    // Arrived: scrolling back afterwards is tracked again.
+    act(() => {
+      io.setIntersecting("capabilities", false);
+      io.setIntersecting("about", true);
+    });
+    act(() => {
+      io.setIntersecting("about", false);
+      io.setIntersecting("capabilities", true);
+    });
+    expect(screen.getByRole("link", { name: "Qué hacemos" })).toHaveAttribute(
+      "aria-current",
+      "location",
+    );
+  });
+
+  it("follows the reader again when they scroll during the glide", () => {
+    render(
+      <>
+        <Sections />
+        <FloatingSectionNav items={items} label="Navegación" />
+      </>,
+    );
+    act(() => io.setIntersecting("vision", true));
+
+    fireEvent.click(screen.getByRole("link", { name: "Quiénes somos" }));
+    act(() => {
+      io.setIntersecting("vision", false);
+      io.setIntersecting("capabilities", true);
+    });
+    fireEvent.wheel(window);
+
+    expect(screen.getByRole("link", { name: "Qué hacemos" })).toHaveAttribute(
       "aria-current",
       "location",
     );

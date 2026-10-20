@@ -137,8 +137,11 @@
   bottom: -8px;
 }
 
+/* The brand cell reaches down over the strip's lower edge, so it sits on what
+   scrolls below without a hairline of paper (or of the scrolled line) under it */
 .topFrame .brand {
   align-self: stretch;
+  margin-block-end: -1px;
   margin-inline-end: auto;
   padding: 0;
 }
@@ -296,12 +299,15 @@
   }
 }
 
-/* The indicator spans the active link; its line is drawn at the foot */
+/* The indicator spans the active link; its line is drawn at the foot.
+   Its width is a scaleX from the left edge (see THUMB_BASE_WIDTH), so the
+   percentage inset of the line scales with it. */
 .thumb {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
+  transform-origin: left;
   pointer-events: none;
 }
 
@@ -314,10 +320,10 @@
   background: var(--color-accent);
 }
 
+/* Transform only: a width transition runs on the main thread and fell out of
+   step with the slide while the page scrolled through heavy scenes */
 .thumbAnimated {
-  transition:
-    transform var(--duration-base) var(--ease-out),
-    width var(--duration-base) var(--ease-out);
+  transition: transform var(--duration-base) var(--ease-out);
 }
 
 /* ------------------------------------------------------------------------ */
@@ -359,7 +365,8 @@
     border-inline-start: 1px solid var(--color-border);
   }
 
-  /* Brand strip: same frame language as the desktop strip, logo only */
+  /* Brand strip: same frame language as the desktop strip, logo only.
+     No lower border: the logo cell reaches the strip's lower edge, as on desktop */
   .dockBrand {
     position: fixed;
     z-index: var(--z-nav);
@@ -369,6 +376,7 @@
     box-sizing: border-box;
     height: var(--frame-bar);
     border: 1px solid var(--color-border);
+    border-block-end: 0;
     background: var(--color-bg-raised);
   }
 
@@ -378,7 +386,7 @@
     z-index: -1;
     top: calc(-1 * var(--frame-inset) - 1px);
     right: calc(-1 * var(--frame-inset) - 1px);
-    bottom: -1px;
+    bottom: 0;
     left: calc(-1 * var(--frame-inset) - 1px);
     background: var(--color-bg);
     border-bottom: 1px solid transparent;

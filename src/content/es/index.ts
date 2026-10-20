@@ -506,9 +506,9 @@ export const es = {
         role: "CMO y desarrollo full-stack",
         profile: "Estudiante de Ingeniería Informática.",
         atlaxia:
-          "Participa en el desarrollo de la plataforma y lleva el marketing y los contactos.",
+          "Desarrolla la plataforma y gestiona el marketing, la estrategia comercial y las relaciones con clientes.",
         skills: {
-          technical: ["Desarrollo full-stack"],
+          technical: ["Desarrollo full-stack", "Diseño UI/UX", "CRM y automatización"],
           social: ["Marketing", "Ventas", "Gestión de contactos"],
         },
       },

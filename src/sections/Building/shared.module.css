@@ -1,6 +1,8 @@
 /* Product today: the hook and its example, what it does, why trust it, the way in */
 .product {
   display: grid;
+  /* An explicit track: an implicit auto one would take the table's min-content */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-10);
   padding-top: var(--space-10);
   border-top: 1px solid var(--color-border);
@@ -8,6 +10,7 @@
 
 .productTop {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-10);
   align-items: center;
 }
@@ -115,6 +118,25 @@
   font-weight: var(--weight-regular, 400);
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
+}
+
+/* Narrow phones: tighter cells, so the table fits its box and the alarm text wraps less */
+@media (max-width: 30rem) {
+  .exampleTable thead th,
+  .exampleTable tbody th,
+  .exampleTable td {
+    padding-inline: var(--space-2);
+  }
+
+  .exampleTable thead th:first-child,
+  .exampleTable tbody th {
+    padding-left: var(--space-3);
+  }
+
+  .exampleTable thead th:last-child,
+  .exampleTable td:last-child {
+    padding-right: var(--space-3);
+  }
 }
 
 /* The alarm column stays quiet: an empty square, nothing raised */
@@ -272,6 +294,14 @@
   color: var(--color-text-muted);
   cursor: pointer;
   list-style: none;
+  min-height: 24px;
+}
+
+/* Touch: a full-size target; it also takes up the air that sat under the folded line */
+@media (pointer: coarse) {
+  .spec summary {
+    min-height: 44px;
+  }
 }
 
 .spec summary::-webkit-details-marker {

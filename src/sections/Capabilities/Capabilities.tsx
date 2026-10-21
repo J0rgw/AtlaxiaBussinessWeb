@@ -62,8 +62,10 @@ export type CapabilitiesProps = {
  * (observe, see a system, learn what is normal, detect the mismatch, point to
  * where). Each step arrives large with its text under it; when the next one
  * comes the text goes and the title stays, so the read steps pile up as an
- * index. It closes on how it works inside, with the five steps lit. The plant
- * model in four layers stays in "Qué estamos construyendo".
+ * index. It closes on how it works inside, with the five steps lit. On phones
+ * the chart stays on top and the steps take turns in one place under it, with
+ * a five-part bar that fills as they are read. The plant model in four layers
+ * stays in "Qué estamos construyendo".
  */
 export function Capabilities({ content, engine }: CapabilitiesProps) {
   return (
@@ -88,15 +90,26 @@ export function Capabilities({ content, engine }: CapabilitiesProps) {
       >
         <Container className={styles.layout}>
           <div className={styles.text}>
+            {/* Phones: how far along the five steps the reader is */}
+            <div className={styles.progress} aria-hidden="true">
+              {stepOrder.map((id) => (
+                <span key={id} className={styles.tick}>
+                  <CueElement as="span" name={`tick-${id}`} className={styles.tickFill} />
+                </span>
+              ))}
+            </div>
             {/* Each text sits under its own title, over the rows still to come (they are not shown yet) */}
             <ol role="list" className={styles.stepList} aria-label={content.stepsLabel}>
               {stepOrder.map((id, i) => (
                 <li key={id} className={styles.step}>
-                  <CueElement as="h3" name={`title-${id}`} className={styles.stepTitle}>
-                    <StepTitle content={content} id={id} i={i} />
-                  </CueElement>
-                  <CueElement as="p" name={`body-${id}`} className={styles.stepBody}>
-                    <StepText content={content} id={id} />
+                  {/* Phones: the whole step leaves for the next one; wide screens: no box of its own */}
+                  <CueElement name={`step-${id}`} className={styles.stepFrame}>
+                    <CueElement as="h3" name={`title-${id}`} className={styles.stepTitle}>
+                      <StepTitle content={content} id={id} i={i} />
+                    </CueElement>
+                    <CueElement as="p" name={`body-${id}`} className={styles.stepBody}>
+                      <StepText content={content} id={id} />
+                    </CueElement>
                   </CueElement>
                 </li>
               ))}

@@ -36,6 +36,9 @@
 .email {
   color: var(--color-accent-text);
   text-underline-offset: 0.2em;
+  /* A 24px target without moving anything: the padding is taken back by the margin */
+  padding-block: 4px;
+  margin-block: -4px;
 }
 
 .legal {

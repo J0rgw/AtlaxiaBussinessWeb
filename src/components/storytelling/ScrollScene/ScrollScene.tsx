@@ -102,6 +102,9 @@ function createProgress(): SceneProgress & { set: (value: number) => void } {
   };
 }
 
+/** Stages shorter than this are shown static: pinned at one screen they would be cut. */
+const SHORT_STAGE = "(max-height: 36rem)";
+
 export type ScrollSceneProps = {
   /** Scroll length of the scene, in viewport heights. The stage stays pinned meanwhile. */
   length?: number;
@@ -116,7 +119,8 @@ export type ScrollSceneProps = {
  * Publishes its progress (0 to 1) two ways, so nothing re-renders per frame:
  * - the `--scene-progress` custom property, for CSS (ParallaxLayer, cues);
  * - a subscription (useSceneProgress), for JavaScript (ScrubFigure, ScrubLottie).
- * Reduced motion: no pinning, the stage shows its final state in the flow.
+ * Reduced motion, or a viewport shorter than 36rem: no pinning, the stage shows
+ * its final state in the flow.
  */
 export function ScrollScene({ length = 3, className, stageClassName, children }: ScrollSceneProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -134,7 +138,7 @@ export function ScrollScene({ length = 3, className, stageClassName, children }:
     }
 
     let written = "";
-    return track({
+    const scene: Measured = {
       measure() {
         const rect = element.getBoundingClientRect();
         const travel = rect.height - window.innerHeight;
@@ -146,7 +150,32 @@ export function ScrollScene({ length = 3, className, stageClassName, children }:
         written = text;
         progress.set(value);
       },
-    });
+    };
+
+    // Too short for a pinned stage (phones in landscape): the same static
+    // state, switching live as the phone rotates. Same threshold as ChoreographedScene.
+    const short = window.matchMedia(SHORT_STAGE);
+    let untrack: (() => void) | null = null;
+    const sync = () => {
+      if (short.matches) {
+        untrack?.();
+        untrack = null;
+        // An inline --scene-progress would win over the static rule's 1
+        element.style.removeProperty("--scene-progress");
+        written = "";
+        element.dataset.static = "";
+        progress.set(1);
+      } else if (!untrack) {
+        delete element.dataset.static;
+        untrack = track(scene);
+      }
+    };
+    sync();
+    short.addEventListener("change", sync);
+    return () => {
+      short.removeEventListener("change", sync);
+      untrack?.();
+    };
   }, [progress]);
 
   return (

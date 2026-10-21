@@ -19,6 +19,13 @@ type NextThumbInput = {
 };
 
 /**
+ * Extra pixels past the track edge when parked: the track's inner width is
+ * rounded (clientWidth) but its box is not, so parking exactly on the rounded
+ * edge left a sliver of the line inside the clip (a dot after "Equipo").
+ */
+const PARK_GAP = 1;
+
+/**
  * Where the active-section indicator goes next.
  * With a target it sits on it. Without one it slides out past the track edge on
  * the side the reader is heading to: right after the last items (towards the
@@ -37,5 +44,5 @@ export function nextThumb({
 
   const side = lastActiveIndex !== null && lastActiveIndex >= itemCount / 2 ? "right" : "left";
   const width = previous?.width ?? fallbackWidth;
-  return { x: side === "right" ? trackWidth : -width, width, parked: side };
+  return { x: side === "right" ? trackWidth + PARK_GAP : -width - PARK_GAP, width, parked: side };
 }

@@ -27,11 +27,16 @@
   order: -1;
 }
 
-@media (min-width: 60rem) {
-  .stage {
-    align-content: center;
-  }
+/*
+  The block is shorter than the screen (screens too short for it get the
+  static version, see the end of the file), so it sits in the middle rather
+  than leaving all the empty space below.
+*/
+.stage {
+  align-content: center;
+}
 
+@media (min-width: 60rem) {
   .layout {
     grid-template-columns: minmax(0, 32rem) minmax(0, 1fr);
     align-items: center;
@@ -102,6 +107,9 @@
   top: 100%;
   left: 0;
   right: 0;
+  /* The reading measure, 62ch, counts the indent too, and a ch is wider than the
+     average letter: 55ch of text is about 72 characters a line, under the 75 of --measure-text */
+  max-width: calc(var(--step-number) + 55ch);
   padding: var(--space-2) 0 0 var(--step-number);
   font-size: var(--step-text);
   line-height: var(--leading-snug);
@@ -136,6 +144,94 @@
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
+}
+
+/* Wide screens: the frame of a step has no box, so its title and text lay out as above */
+.stepFrame {
+  display: contents;
+}
+
+.progress {
+  display: none;
+}
+
+/*
+  Phones (owner, 2026-10-20): the chart on top and one step at a time under
+  it. Every step, and then how it works inside, takes the same place, as tall
+  as the longest of them, so nothing moves while they take turns. Above them,
+  a bar in five parts fills as the steps are read.
+*/
+@media (max-width: 47.99rem) {
+  /* The floating bar is about 71px over the bottom edge: a closer clearance than other scenes */
+  .section {
+    --stage-bottom: calc(var(--space-16) + var(--space-5));
+  }
+
+  .layout {
+    gap: var(--space-4);
+  }
+
+  /* The phone drawing keeps its 11px labels: it does not grow past a large phone's width */
+  .chart {
+    justify-self: center;
+    width: min(100%, 24rem);
+  }
+
+  .text {
+    --step-title: 1.75rem;
+
+    justify-self: center;
+    width: min(100%, 34rem);
+    grid-template-areas:
+      "progress"
+      "slot";
+    gap: var(--space-3);
+  }
+
+  .progress {
+    grid-area: progress;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-1);
+  }
+
+  .tick {
+    height: 2px;
+    background-color: var(--color-border);
+  }
+
+  .tickFill {
+    display: block;
+    height: 100%;
+    background-color: var(--color-accent);
+    transform-origin: 0 50%;
+  }
+
+  .stepList,
+  .inside {
+    grid-area: slot;
+  }
+
+  .step {
+    grid-area: 1 / 1;
+  }
+
+  .stepFrame {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  /* One step at a time: the text takes the full width under its title */
+  .stepBody {
+    position: static;
+    max-width: none;
+    padding: 0;
+  }
+
+  .inside {
+    min-height: 0;
+    padding-left: 0;
+  }
 }
 
 /* Static version: the same steps in the flow, each text under its title */
@@ -192,18 +288,17 @@
 
 /*
   Screens too short for the pinned scene get the static version instead of
-  cut text. Below 60rem the chart is as wide as the screen, and under it go
-  the five titles and the longest text, so the height needed grows with the
-  width (measured: 857px at 390 wide, 934 at 430, 1026 at 540, 982 at 768,
-  1106 at 959), plus room for the floating bar at 390 (QA: under 864px the
-  closing note met the bar in English). Each band switches just under its need.
+  cut text. Phones need the chart, the longest step and the bar (measured
+  every 8px, ES and EN: up to 736px under 392 wide, where the levels under
+  the chart take two lines; 719 up to 487; 699 above). Tablets in portrait
+  pile the five titles under a chart as wide as the screen, so their need
+  grows with the width (982 at 768 wide, 1106 at 959). Each band switches
+  just under its need.
 */
-@media (max-width: 24.375rem) and (max-height: 54rem),
-  (min-width: 24.376rem) and (max-width: 26rem) and (max-height: 56rem),
-  (min-width: 26.001rem) and (max-width: 26.875rem) and (max-height: 58.5rem),
-  (min-width: 26.876rem) and (max-width: 37.5rem) and (max-height: 65rem),
-  (min-width: 37.501rem) and (max-width: 45rem) and (max-height: 59rem),
-  (min-width: 45.001rem) and (max-width: 52rem) and (max-height: 63.5rem),
+@media (max-width: 24.4375rem) and (max-height: 46.25rem),
+  (min-width: 24.438rem) and (max-width: 30.4375rem) and (max-height: 45.25rem),
+  (min-width: 30.438rem) and (max-width: 47.99rem) and (max-height: 44rem),
+  (min-width: 48rem) and (max-width: 52rem) and (max-height: 63.5rem),
   (min-width: 52.001rem) and (max-width: 59.999rem) and (max-height: 70rem) {
   .steps [data-scene] {
     display: none;

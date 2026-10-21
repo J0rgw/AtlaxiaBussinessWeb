@@ -267,10 +267,16 @@
     width: max-content;
   }
 
+  /* Tall screens (tablets in portrait): the row is far taller than a drawing can be wide, so
+     the width of the page caps the height too (height per width of the frame: 4/5) */
   .panelDrawing {
     width: auto;
-    height: 100%;
+    height: min(100%, calc((100vw - 2 * var(--gutter)) * 0.8));
     max-height: none;
+  }
+
+  .panelDrawing[data-drawing="anatomy"] {
+    height: min(100%, calc((100vw - 2 * var(--gutter)) * 2 / 3));
   }
 
   .sectorName {
@@ -285,6 +291,9 @@
 [data-static] .whereLayout,
 [data-static] .sectorsLayout {
   height: auto;
+  /* Nothing is pinned here: no need to keep clear of the bars as the stage does,
+     which left a screen of air between scenes */
+  padding-block: var(--space-10);
 }
 
 [data-static] .lottie {

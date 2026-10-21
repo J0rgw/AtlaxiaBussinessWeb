@@ -115,13 +115,14 @@ export type Layout = {
 
 /**
  * Two drawings of the same chart, so labels stay at 11px: one for the
- * column beside the steps and one for phones.
+ * column beside the steps and one for phones. The phone one keeps the level
+ * plot low, so the chart and one step fit on the screen together.
  */
 export function layout(kind: "wide" | "narrow"): Layout {
   const narrow = kind === "narrow";
   const width = narrow ? 340 : 720;
   const pad = narrow ? 4 : 8;
-  const main: Box = { x: pad, y: 24, w: width - pad * 2, h: narrow ? 150 : 220 };
+  const main: Box = { x: pad, y: 24, w: width - pad * 2, h: narrow ? 124 : 220 };
   const pump: Box = { x: pad, y: main.y + main.h + 52, w: main.w, h: narrow ? 24 : 32 };
   const outflow: Box = { x: pad, y: pump.y + pump.h + 24, w: main.w, h: 18 };
   return {

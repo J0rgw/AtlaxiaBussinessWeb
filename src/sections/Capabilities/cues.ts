@@ -6,6 +6,10 @@ import type { Cue, Range } from "@/lib/choreography/choreography";
   title; at the next boundary the text leaves, the title stays (a little
   dimmer) and the next step arrives in the row below. The chart gains one
   sheet per step. Between boundaries the scene does no work.
+
+  Phones play the same cues in another layout: every step sits in the same
+  place, and its frame (`step-*`, without a box of its own on wide screens)
+  takes the title away with the text.
 */
 
 export const stepOrder = ["observe", "system", "normal", "mismatch", "where"] as const;
@@ -59,6 +63,12 @@ const stepCues = stepOrder.flatMap((id, i): Cue[] => {
   }
   // Every text leaves in place (it hangs right under its title); the last gives way to the closing note
   list.push({ target: `body-${id}`, at: leaving(i + 1), opacity: [1, 0] });
+  // Phones: the whole step leaves with its text, so the next one can take its place
+  list.push({ target: `step-${id}`, at: leaving(i + 1), opacity: [1, 0] });
+  // Phones: one more part of the bar fills as the step arrives (the first one is full from the start)
+  if (!first) {
+    list.push({ target: `tick-${id}`, at: arriving(i), scaleX: [0, 1], ease: "out" });
+  }
   if ((chartLayers as readonly string[]).includes(id)) {
     list.push({ target: `layer-${id}`, at: boundary(i), opacity: [0, 1] });
   }

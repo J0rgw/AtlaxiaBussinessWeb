@@ -1,7 +1,7 @@
 /*
   Cover of a chapter. Pinned: one screen, the text and the figure side by
-  side (stacked on phones, figure first). The chapter number sits large in
-  the background and drifts with the scroll.
+  side (stacked on tablets, figure first; phones leave the figure out). The
+  chapter number sits large in the background and drifts with the scroll.
 */
 
 .stage {
@@ -31,7 +31,7 @@
   margin-inline: auto;
 }
 
-/* Phones: the figure first, small, so the text keeps its room */
+/* Stacked (tablets): the figure first, small, so the text keeps its room */
 .withFigure .figure {
   order: -1;
 }
@@ -86,9 +86,25 @@
   three-line title would run off the stage (16svh changes nothing from about
   780px tall).
 */
+.layout {
+  --title-alone: clamp(2.75rem, min(1rem + 7.5vw, 16svh), 8rem);
+}
+
 .layout:not(.withFigure):not(.static) .title {
   max-width: 16ch;
-  font-size: clamp(2.75rem, min(1rem + 7.5vw, 16svh), 8rem);
+  font-size: var(--title-alone);
+}
+
+/* Phones leave the figure out (owner, 2026-10-20): the cover is text only, also in the static version */
+@media (max-width: 47.99rem) {
+  .withFigure .figure {
+    display: none;
+  }
+
+  .withFigure:not(.static) .title {
+    max-width: 16ch;
+    font-size: var(--title-alone);
+  }
 }
 
 /* Each word moves on its own (inline-block, so its transform applies) */
@@ -123,7 +139,7 @@
   min-width: 0;
 }
 
-/* Phones: the figure stays small (it is the stage's first casualty) */
+/* Stacked (tablets): the figure stays small (it is the stage's first casualty) */
 .figure > * {
   width: 100%;
   max-height: 24svh;
@@ -181,4 +197,11 @@
 
 .static .figure > * {
   max-height: none;
+}
+
+/* Phones in landscape: a figure as wide as the screen would be taller than it */
+@media (max-height: 36rem) {
+  .static .figure > * {
+    max-height: 70svh;
+  }
 }

@@ -55,6 +55,18 @@
 
 .link {
   composes: option from "../../primitives/SegmentedControl/SegmentedControl.module.css";
+  /* Two letters are 16px wide: a target of 24px with a mouse, 44px by touch */
+  min-width: 24px;
+}
+
+@media (pointer: coarse) {
+  .list {
+    gap: 0;
+  }
+
+  .link {
+    min-width: 44px;
+  }
 }
 
 .current {

@@ -172,4 +172,11 @@
   .deviceLabel {
     font-size: 15px;
   }
+
+  /* The device boxes are drawn for 9.5 units: with tracking at 15, "Historizador" met their sides */
+  .label,
+  .deviceLabel {
+    font-size: 14px;
+    letter-spacing: 0;
+  }
 }

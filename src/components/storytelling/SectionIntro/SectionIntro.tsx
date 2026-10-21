@@ -112,7 +112,7 @@ export type SectionIntroProps = {
   emphasis?: string;
   /** The lead, one sentence per beat. */
   beats: readonly IntroBeat[];
-  /** Drawing beside the text, made of CueElements; time it with `introTimeline`. */
+  /** Drawing beside the text, made of CueElements; time it with `introTimeline`. Not shown on phones. */
   figure?: ReactNode;
   figureCues?: readonly Cue[];
   /** Scroll length, in viewport heights. */

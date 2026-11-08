@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Único comando que puede lanzar la clave de despliegue de GitHub Actions.
+# Instalar como root:root, modo 0755, en /usr/local/bin/atlaxia-www-deploy (ver README.md).
+# Hace lo mismo que el script en línea del workflow anterior; no lee nada de la conexión SSH.
+#
+# Toda la salida va a un log local del VPS. Los logs de Actions del repositorio son públicos y antes
+# mostraban el proyecto compose, los volúmenes, las rutas de Caddy y el usuario root. Hacia GitHub solo sale
+# una línea y el código de salida.
+set -euo pipefail
+
+LOG=/var/log/atlaxia-www-deploy.log
+
+exec 3>&1
+exec >>"$LOG" 2>&1
+trap 'status=$?; echo "=== $(date -Is) fallo (código $status)"; echo "Despliegue fallido (código $status). Detalle en el log del VPS." >&3; exit "$status"' ERR
+
+echo "=== $(date -Is) inicio"
+cd /root/local-ai-packaged
+docker compose rm -sf atlaxia-www-build
+docker compose up atlaxia-www-build
+docker exec caddy caddy reload --config /etc/caddy/Caddyfile
+echo "=== $(date -Is) fin"
+
+echo "Despliegue correcto." >&3

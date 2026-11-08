@@ -1,21 +1,51 @@
+# Despliegue de la web en el VPS.
+#
+# - Sin acciones de terceros: usa el OpenSSH del runner, así que no hay ninguna etiqueta que alguien pueda
+#   reasignar (el caso tj-actions/changed-files de 2025).
+# - Verifica la clave de host del VPS contra el secreto VPS_KNOWN_HOSTS (StrictHostKeyChecking=yes).
+# - La clave solo puede lanzar un comando: el servidor la ata con restrict,command="..." en authorized_keys
+#   (ver deploy/vps/README.md). Quien la robe puede redesplegar la web, no abrir una shell ni tocar el resto
+#   del VPS.
+# - El VPS guarda la salida del despliegue en un log local; aquí solo llega el código de salida, porque los
+#   logs de Actions de este repositorio son públicos.
+# - El GITHUB_TOKEN no tiene permisos: este job no necesita leer el repositorio.
+# - Los secretos viven en el entorno "vps", limitado a la rama main y con revisor obligatorio (se configura
+#   en Settings > Environments).
 name: Deploy to VPS
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: vps
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /root/local-ai-packaged
-            docker compose rm -sf atlaxia-www-build
-            docker compose up atlaxia-www-build
-            docker exec caddy caddy reload --config /etc/caddy/Caddyfile
+      - name: Despliega por SSH
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          # El argumento "deploy" es decorativo: el servidor ejecuta siempre su comando forzado.
+          ssh -i ~/.ssh/deploy_key \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o BatchMode=yes \
+            -o ConnectTimeout=20 \
+            "${VPS_USER}@${VPS_HOST}" deploy
